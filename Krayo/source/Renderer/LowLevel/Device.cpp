@@ -25,7 +25,10 @@ Device::~Device()
     mQueueManager.Release();
 
     if (mDevice != VK_NULL_HANDLE)
+    {
         vkDestroyDevice(mDevice, nullptr);
+        mDevice = VK_NULL_HANDLE;
+    }
 }
 
 VkPhysicalDevice Device::SelectPhysicalDevice()

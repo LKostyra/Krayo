@@ -12,6 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deps", "Deps", "{184D21F7-4
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KrayoGame", "KrayoGame\KrayoGame.vcxproj", "{0E7BD129-3AF4-4A84-8696-3461997B408E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{911DDC85-6A05-4904-9F6C-3D168B28E3DB} = {911DDC85-6A05-4904-9F6C-3D168B28E3DB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

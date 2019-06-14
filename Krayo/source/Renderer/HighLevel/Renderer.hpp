@@ -60,11 +60,11 @@ class Renderer final
     Buffer mLightContainer;
 
     GridFrustumsGenerator mGridFrustumsGenerator;
-    ParticleEngine mParticleEngine;
+    //ParticleEngine mParticleEngine;
     DepthPrePass mDepthPrePass;
     LightCuller mLightCuller;
     ForwardPass mForwardPass;
-    ParticlePass mParticlePass;
+    //ParticlePass mParticlePass;
 
 public:
     Renderer();

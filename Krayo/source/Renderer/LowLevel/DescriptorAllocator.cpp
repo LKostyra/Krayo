@@ -60,12 +60,15 @@ bool DescriptorAllocator::Init(const DevicePtr& device, const DescriptorAllocato
     VkDescriptorPoolSize size;
     for (uint32_t i = 0; i < VK_DESCRIPTOR_TYPE_RANGE_SIZE; ++i)
     {
-        mLimits.limits[i] = desc.limits[i];
+        if (desc.limits[i] > 0)
+        {
+            mLimits.limits[i] = desc.limits[i];
 
-        mMaxSets += mLimits.limits[i];
-        size.descriptorCount = mLimits.limits[i];
-        size.type = static_cast<VkDescriptorType>(i);
-        mPoolSizes.push_back(size);
+            mMaxSets += mLimits.limits[i];
+            size.descriptorCount = mLimits.limits[i];
+            size.type = static_cast<VkDescriptorType>(i);
+            mPoolSizes.push_back(size);
+        }
     }
 
     // TODO check if we do not exceed device's limits

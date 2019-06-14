@@ -48,7 +48,6 @@ std::string TranslateShaderCompilationStatusToString(shaderc_compilation_status 
     case shaderc_compilation_status_internal_error: return "Internal error";
     case shaderc_compilation_status_null_result_object: return "Null result object";
     case shaderc_compilation_status_invalid_assembly: return "Invalid assembly";
-    case shaderc_compilation_status_validation_error: return "Validation error";
     default: return"Unknown";
     }
 }

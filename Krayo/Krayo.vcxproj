@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\API\Engine.cpp" />
+    <ClCompile Include="source\API\EngineImpl.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Math\AABB.cpp" />
     <ClCompile Include="source\Math\Frustum.cpp" />
@@ -59,6 +61,7 @@
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp" />
     <ClInclude Include="include\Krayo\Engine.hpp" />
+    <ClInclude Include="source\API\EngineImpl.hpp" />
     <ClInclude Include="source\Math\AABB.hpp" />
     <ClInclude Include="source\Math\Frustum.hpp" />
     <ClInclude Include="source\Math\Plane.hpp" />
@@ -154,7 +157,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;KRAYO_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;KRAYO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -175,7 +178,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;KRAYO_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;KRAYO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>

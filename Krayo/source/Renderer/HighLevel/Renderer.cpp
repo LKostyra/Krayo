@@ -206,10 +206,10 @@ bool Renderer::Init(const RendererDesc& desc)
     genDesc.pixelsPerGridFrustum = PIXELS_PER_GRID_FRUSTUM;
     if (!mGridFrustumsGenerator.Generate(genDesc))
         return false;
-
+    /*
     if (!mParticleEngine.Init(mDevice))
         return false;
-
+        */
     DepthPrePassDesc dppDesc;
     dppDesc.width = mBackbuffer.GetWidth();
     dppDesc.height = mBackbuffer.GetHeight();
@@ -240,7 +240,7 @@ bool Renderer::Init(const RendererDesc& desc)
     fpDesc.gridLightDataPtr = mLightCuller.GetGridLightData();
     if (!mForwardPass.Init(mDevice, fpDesc))
         return false;
-
+    /*
     ParticlePassDesc ppDesc;
     ppDesc.targetTexture = &mForwardPass.GetTargetTexture();
     ppDesc.depthTexture = mDepthPrePass.GetDepthTexture();
@@ -250,7 +250,7 @@ bool Renderer::Init(const RendererDesc& desc)
         lkCommon::System::FS::JoinPaths(ResourceDir::DATA_ROOT, ResourceDir::TEXTURES), "particle.png");
     if (!mParticlePass.Init(mDevice, ppDesc))
         return false;
-
+        */
     return true;
 }
 
@@ -282,13 +282,13 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     ////////////////////////////
     // Particle Engine update //
     ////////////////////////////
-    mParticleEngine.UpdateEmitters(scene);
+    /*mParticleEngine.UpdateEmitters(scene);
     ParticleEngineDispatchDesc peDesc;
     peDesc.cameraPos = camera.GetPosition();
     peDesc.deltaTime = deltaTime;
     peDesc.signalSem = mParticleEngineSem;
     peDesc.simulationFence = mParticleEngineFence;
-    mParticleEngine.Dispatch(peDesc);
+    mParticleEngine.Dispatch(peDesc);*/
 
 
     //////////////////////////////////
@@ -340,10 +340,11 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     forwardDesc.waitFlags = { VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
     forwardDesc.waitSems = { mCullingSem, mImageAcquiredSem };
     forwardDesc.signalSem = mRenderSem;
+    forwardDesc.fence = mFrameFence;
     mForwardPass.Draw(scene, forwardDesc);
 
     // Particle pass
-    ParticlePassDrawDesc particleDesc;
+   /* ParticlePassDrawDesc particleDesc;
     particleDesc.cameraPos = camera.GetPosition();
     particleDesc.particleDataBuffer = mParticleEngine.GetParticleDataBuffer();
     particleDesc.emitterDataBuffer = mParticleEngine.GetEmitterDataBuffer();
@@ -353,11 +354,11 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     particleDesc.waitSems = { mParticleEngineSem, mRenderSem };
     particleDesc.signalSem = mParticlePassSem;
     particleDesc.fence = mFrameFence;
-    mParticlePass.Draw(particleDesc);
+    mParticlePass.Draw(particleDesc);*/
 
     mRingBuffer.MarkFinishedFrame();
 
-    if (!mBackbuffer.Present(mForwardPass.GetTargetTexture(), mParticlePassSem))
+    if (!mBackbuffer.Present(mForwardPass.GetTargetTexture(), mRenderSem))
         LOGE("Error during image presentation");
 }
 
