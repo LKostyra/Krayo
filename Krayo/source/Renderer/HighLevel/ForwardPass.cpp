@@ -50,7 +50,7 @@ VkDescriptorSet ForwardPass::AcquireDescriptorSetFromTexture(const TexturePtr& t
     VkDescriptorSet set = tex->GetDescriptorSet();
     if (set == VK_NULL_HANDLE)
     {
-        tex->AllocateDescriptorSet(mFragmentShaderTextureLayout);
+        tex->AllocateDescriptorSet(mFragmentShaderTextureLayout, mSampler);
         set = tex->GetDescriptorSet();
     }
 
@@ -252,6 +252,11 @@ void ForwardPass::Draw(const Scene::Scene& scene, const ForwardPassDrawDesc& des
         mCommandBuffer.SetViewport(0, 0, mTargetTexture.GetWidth(), mTargetTexture.GetHeight(), 0.0f, 1.0f);
         mCommandBuffer.SetScissor(0, 0, mTargetTexture.GetWidth(), mTargetTexture.GetHeight());
 
+        mDepthTexture->Transition(&mCommandBuffer,
+                                  VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                                  VK_ACCESS_MEMORY_READ_BIT, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+                                  mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS),
+                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
         mTargetTexture.Transition(&mCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                   0, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
                                   VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,

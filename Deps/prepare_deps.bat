@@ -112,6 +112,9 @@ if %ERRORLEVEL% GEQ 1 (
 
 cd ..\..
 
+cd "%script_path%"
+copy /y nul "%build_done_file%"
+
 echo.
 echo Script is done
 echo.
@@ -148,29 +151,30 @@ set build_dir=%script_path%build
 set bin_dir=%script_path%Bin
 set cmake_dir=%build_dir%\%msbuild_platform%\%config%
 set output_dir=%bin_dir%\%msbuild_platform%\%config%
-if %clean% EQU 1 (
-    REM if we cleanin, remove the build dir so it gets recreated later on
-    >nul 2>nul rmdir /s /q "%cmake_dir%"
-    >nul 2>nul dir /a-d /s "%build_dir%"
-    if %ERRORLEVEL% EQU 1 (
-        REM FIXME this does not enter when run through VS
-        rmdir /s /q "%build_dir%"
-    )
-    >nul 2>nul rmdir /s /q "%output_dir%"
-    >nul 2>nul dir /a-d /s "%bin_dir%"
-    if %ERRORLEVEL% EQU 1 (
-        REM FIXME this does not enter when run through VS
-        rmdir /s /q "%bin_dir%"
-    )
-    echo CLEAN
-    exit /b 1
-)
+set build_done_file=%output_dir%\.build_done
 
 REM check if build tree already exists and exit early if it does
 REM TODO add check for build artifacts
-if EXIST "%output_dir%" (
+if EXIST "%build_done_file%" (
     echo ALREADY BUILT
     exit /b 1
+)
+
+REM clean leftover outputs to clean rebuild the deps
+REM this also covers the situation where build was paused halfway-through, or failed
+
+REM remove the build dir so it gets recreated later on
+>nul 2>nul rmdir /s /q "%cmake_dir%"
+>nul 2>nul dir /a-d /s "%build_dir%"
+if %ERRORLEVEL% EQU 1 (
+    REM FIXME this does not enter when run through VS
+    rmdir /s /q "%build_dir%"
+)
+>nul 2>nul rmdir /s /q "%output_dir%"
+>nul 2>nul dir /a-d /s "%bin_dir%"
+if %ERRORLEVEL% EQU 1 (
+    REM FIXME this does not enter when run through VS
+    rmdir /s /q "%bin_dir%"
 )
 
 mkdir "%cmake_dir%"

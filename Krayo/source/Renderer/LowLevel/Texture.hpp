@@ -113,7 +113,7 @@ public:
                     VkAccessFlags fromAccess, VkAccessFlags toAccess,
                     uint32_t fromQueueFamily, uint32_t toQueueFamily,
                     VkImageLayout targetLayout);
-    bool AllocateDescriptorSet(VkDescriptorSetLayout layout);
+    bool AllocateDescriptorSet(VkDescriptorSetLayout layout, VkSampler sampler);
 };
 
 } // namespace Renderer

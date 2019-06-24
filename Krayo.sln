@@ -16,6 +16,21 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KrayoGame", "KrayoGame\Kray
 		{911DDC85-6A05-4904-9F6C-3D168B28E3DB} = {911DDC85-6A05-4904-9F6C-3D168B28E3DB}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A93C423F-19FD-49C3-A81E-B6BAB5666ED9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{C61EF277-0DBB-496E-92C6-D4340BB4E043}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Shaders\BitonicSorter.comp = Data\Shaders\BitonicSorter.comp
+		Data\Shaders\DepthPrePass.vert = Data\Shaders\DepthPrePass.vert
+		Data\Shaders\ForwardPass.frag = Data\Shaders\ForwardPass.frag
+		Data\Shaders\ForwardPass.vert = Data\Shaders\ForwardPass.vert
+		Data\Shaders\GridFrustumsGenerator.comp = Data\Shaders\GridFrustumsGenerator.comp
+		Data\Shaders\LightCuller.comp = Data\Shaders\LightCuller.comp
+		Data\Shaders\ParticleEngine.comp = Data\Shaders\ParticleEngine.comp
+		Data\Shaders\ParticlePass.frag = Data\Shaders\ParticlePass.frag
+		Data\Shaders\ParticlePass.vert = Data\Shaders\ParticlePass.vert
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,6 +48,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C61EF277-0DBB-496E-92C6-D4340BB4E043} = {A93C423F-19FD-49C3-A81E-B6BAB5666ED9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {111DE834-D42A-4602-B0ED-2F128FA1BB55}

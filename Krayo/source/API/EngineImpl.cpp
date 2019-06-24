@@ -41,8 +41,8 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     rendDesc.debugEnable = desc.debug;
     rendDesc.window = desc.window;
     rendDesc.noAsync = true;
-    rendDesc.nearZ = 0.1f;
-    rendDesc.farZ = 1000.0f;
+    rendDesc.nearZ = 0.2f;
+    rendDesc.farZ = 500.0f;
     rendDesc.fov = 60.0f;
     if (!mRenderer.Init(rendDesc))
     {
@@ -56,10 +56,35 @@ bool Engine::Impl::Init(const EngineDesc& desc)
         return false;
     }
 
+    Scene::MaterialDesc matDesc;
+    matDesc.color = lkCommon::Utils::PixelFloat4(0.2f, 0.5f, 0.8f, 1.0f);
+
+    Scene::Material* mat = mScene.GetMaterial("mat0").first;
+    if (!mat->Init(matDesc))
+        return false;
+
+    Scene::ModelDesc modelDesc;
+    modelDesc.materials.emplace_back(mat);
+
+    Scene::Model* m = dynamic_cast<Scene::Model*>(mScene.GetComponent(Scene::ComponentType::Model, "obj0").first);
+    if (!m->Init(modelDesc)) return false;
+    m->SetPosition(0.0f, 0.0f, 0.0f);
+
+    Scene::Object* o = mScene.CreateObject();
+    o->SetComponent(m);
+
+    auto lightResult = mScene.GetComponent(Scene::ComponentType::Light, "light0");
+    Scene::Light* light = dynamic_cast<Krayo::Scene::Light*>(lightResult.first);
+    light->SetDiffuseIntensity(1.0f, 1.0f, 1.0f);
+    light->SetPosition(3.0f, 5.0f, 0.0f);
+
+    Krayo::Scene::Object* lightObj = mScene.CreateObject();
+    lightObj->SetComponent(light);
+
     Scene::CameraDesc camDesc;
-    camDesc.pos = lkCommon::Math::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-    camDesc.at = lkCommon::Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-    camDesc.up = lkCommon::Math::Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+    camDesc.pos = lkCommon::Math::Vector4(0.0f, 1.0f,-2.0f, 1.0f);
+    camDesc.at = lkCommon::Math::Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+    camDesc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f);
     mCamera.Update(camDesc);
 
     return true;

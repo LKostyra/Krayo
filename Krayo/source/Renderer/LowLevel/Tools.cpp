@@ -226,11 +226,13 @@ void Tools::UpdateBufferDescriptorSet(const DevicePtr& device, VkDescriptorSet s
     vkUpdateDescriptorSets(device->GetDevice(), 1, &write, 0, nullptr);
 }
 
-void Tools::UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, VkImageView view)
+void Tools::UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, Texture* texture, VkSampler sampler)
 {
     VkDescriptorImageInfo imgInfo;
     LKCOMMON_ZERO_MEMORY(imgInfo);
-    imgInfo.imageView = view;
+    imgInfo.sampler = sampler;
+    imgInfo.imageView = texture->GetView();
+    imgInfo.imageLayout = texture->GetImageLayout();
 
     VkWriteDescriptorSet writeSet;
     LKCOMMON_ZERO_MEMORY(writeSet);

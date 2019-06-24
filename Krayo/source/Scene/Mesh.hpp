@@ -4,7 +4,6 @@
 #include "Scene/Material.hpp"
 
 #include "Math/AABB.hpp"
-#include "Renderer/HighLevel/ResourceManager.hpp"
 
 #include <fbxsdk.h>
 

@@ -24,7 +24,7 @@
     <ClCompile Include="source\Renderer\HighLevel\ParticleEngine.cpp" />
     <ClCompile Include="source\Renderer\HighLevel\ParticlePass.cpp" />
     <ClCompile Include="source\Renderer\HighLevel\Renderer.cpp" />
-    <ClCompile Include="source\Renderer\HighLevel\ResourceManager.cpp" />
+    <ClCompile Include="source\Renderer\HighLevel\ResourceFactory.cpp" />
     <ClCompile Include="source\Renderer\HighLevel\ShaderMacroDefinitions.cpp" />
     <ClCompile Include="source\Renderer\LowLevel\Backbuffer.cpp" />
     <ClCompile Include="source\Renderer\LowLevel\Buffer.cpp" />
@@ -73,7 +73,7 @@
     <ClInclude Include="source\Renderer\HighLevel\ParticleEngine.hpp" />
     <ClInclude Include="source\Renderer\HighLevel\ParticlePass.hpp" />
     <ClInclude Include="source\Renderer\HighLevel\Renderer.hpp" />
-    <ClInclude Include="source\Renderer\HighLevel\ResourceManager.hpp" />
+    <ClInclude Include="source\Renderer\HighLevel\ResourceFactory.hpp" />
     <ClInclude Include="source\Renderer\HighLevel\ShaderMacroDefinitions.hpp" />
     <ClInclude Include="source\Renderer\LowLevel\Backbuffer.hpp" />
     <ClInclude Include="source\Renderer\LowLevel\Buffer.hpp" />
@@ -185,7 +185,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lkCommon.lib;libfbxsdk-mt.lib;shaderc.lib;shaderc_util.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lkCommon.lib;libfbxsdk-mt.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslang.lib;HLSL.lib;OSDependent.lib;OGLCompiler.lib;SPIRV.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Deps\fbxsdk\lib\vs2015\$(PlatformShortName)\$(Configuration)\;$(SolutionDir)Deps\Bin\$(Platform)\$(Configuration)\;$(VULKAN_SDK)\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -195,7 +195,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <Target Name="AfterClean">
-    <Exec Command="&quot;$(SolutionDir)Deps\prepare_deps.bat&quot; $(Platform) $(Configuration) Clean" />
-  </Target>
 </Project>

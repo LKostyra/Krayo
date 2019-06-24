@@ -93,6 +93,21 @@ bool DepthPrePass::Init(const DevicePtr& device, const DepthPrePassDesc& desc)
     if (!mCommandBuffer.Init(mDevice, DeviceQueueType::GRAPHICS))
         return false;
 
+    mCommandBuffer.Begin();
+    mDepthTexture.Transition(&mCommandBuffer,
+                             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                             0, 0,
+                             mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE),
+                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    mCommandBuffer.End();
+
+    if (!mDevice->Execute(DeviceQueueType::GRAPHICS, &mCommandBuffer))
+    {
+        LOGE("Failed to transition depth texture to shader read only layout on init");
+        return false;
+    }
+
+    mDevice->Wait(DeviceQueueType::GRAPHICS);
 
     return true;
 }

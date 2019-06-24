@@ -87,9 +87,6 @@
     <ClCompile Include="source\Renderer\HighLevel\Renderer.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClCompile>
-    <ClCompile Include="source\Renderer\HighLevel\ResourceManager.cpp">
-      <Filter>source\Renderer\HighLevel</Filter>
-    </ClCompile>
     <ClCompile Include="source\Renderer\HighLevel\ShaderMacroDefinitions.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClCompile>
@@ -173,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="source\API\EngineImpl.cpp">
       <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\HighLevel\ResourceFactory.cpp">
+      <Filter>source\Renderer\HighLevel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,9 +272,6 @@
     <ClInclude Include="source\Renderer\HighLevel\Renderer.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClInclude>
-    <ClInclude Include="source\Renderer\HighLevel\ResourceManager.hpp">
-      <Filter>source\Renderer\HighLevel</Filter>
-    </ClInclude>
     <ClInclude Include="source\Renderer\HighLevel\ShaderMacroDefinitions.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClInclude>
@@ -325,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="source\API\EngineImpl.hpp">
       <Filter>source\API</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\HighLevel\ResourceFactory.hpp">
+      <Filter>source\Renderer\HighLevel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

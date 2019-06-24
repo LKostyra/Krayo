@@ -98,7 +98,7 @@ bool sphereFrustumIntersection(Sphere s, Frustum f, float minDepth, float maxDep
         result = false;
 
     for (uint i = 0; i < 4 && result; ++i)
-    { 
+    {
         float d = dot(f.plane[i].N, s.pos) - f.plane[i].d;
         if (d < -s.r)
             result = false;

@@ -42,8 +42,8 @@ bool Material::CreateRendererTexture(const std::string& imagePath, VkImageUsageF
     texDesc.mipmapCount = static_cast<uint32_t>(textures.size());
     texDesc.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     texDesc.format = VK_FORMAT_B8G8R8A8_UNORM;
-    
-    texture = Renderer::ResourceManager::Instance().GetTexture(texDesc);
+
+    texture = Renderer::ResourceFactory::Instance().CreateTexture(texDesc);
     return (texture != nullptr);
 }
 

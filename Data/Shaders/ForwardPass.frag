@@ -41,17 +41,17 @@ layout (set = 1, binding = 1) uniform _materialParams
     vec4 color;
 } materialParams;
 
-layout (set = 1, binding = 2) buffer _lightData
+layout (set = 1, binding = 2) buffer readonly _lightData
 {
     LightData light[];
 } lightData;
 
-layout (set = 1, binding = 3) buffer _culledLights
+layout (set = 1, binding = 3) buffer readonly _culledLights
 {
     uint data[];
 } culledLights;
 
-layout (set = 1, binding = 4) buffer _gridLightData
+layout (set = 1, binding = 4) buffer readonly _gridLightData
 {
     GridLight data[];
 } gridBuffer;
@@ -112,7 +112,7 @@ void main()
         color += vec4(curLight.diffuse * coeff * att, 1.0f);
     }
 
-    color *= materialParams.color;
+    color = materialParams.color;
 
 #if HAS_TEXTURE == 1
     color *= texture(diffTex, VertUV);

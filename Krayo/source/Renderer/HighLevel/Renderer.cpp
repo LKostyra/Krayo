@@ -6,6 +6,8 @@
 #include "Renderer/LowLevel/Extensions.hpp"
 #include "Renderer/LowLevel/Translations.hpp"
 
+#include "Renderer/HighLevel/ResourceFactory.hpp"
+
 #include <lkCommon/System/FS.hpp>
 #include <lkCommon/Utils/Logger.hpp>
 #include <lkCommon/Math/Matrix4.hpp>
@@ -56,6 +58,8 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+    ResourceFactory::Instance().Release();
+    DescriptorAllocator::Instance().Release();
 }
 
 bool Renderer::Init(const RendererDesc& desc)
@@ -87,7 +91,7 @@ bool Renderer::Init(const RendererDesc& desc)
     if (!DescriptorAllocator::Instance().Init(mDevice, daDesc))
         return false;
 
-    if (!ResourceManager::Instance().Init(mDevice))
+    if (!ResourceFactory::Instance().Init(mDevice))
         return false;
 
     if (!mGridFrustumsGenerator.Init(mDevice))
@@ -312,6 +316,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     ///////////////
     // Rendering //
     ///////////////
+
 
     // Depth pass
     DepthPrePassDrawDesc depthDesc;

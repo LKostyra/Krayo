@@ -8,7 +8,7 @@ enum DeviceQueueType
     GRAPHICS = 0,
     TRANSFER,
     COMPUTE,
-    COUNT // used only as a counter
+    COUNT
 };
 
 enum ClearType

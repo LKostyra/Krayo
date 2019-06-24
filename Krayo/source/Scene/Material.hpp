@@ -2,7 +2,7 @@
 
 #include <lkCommon/Utils/Pixel.hpp>
 
-#include "Renderer/HighLevel/ResourceManager.hpp"
+#include "Renderer/HighLevel/ResourceFactory.hpp"
 
 
 namespace Krayo {

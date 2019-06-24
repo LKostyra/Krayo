@@ -193,13 +193,13 @@ void Texture::Transition(CommandBuffer* cmdBuffer, VkPipelineStageFlags fromStag
     mImageLayout = targetLayout;
 }
 
-bool Texture::AllocateDescriptorSet(VkDescriptorSetLayout layout)
+bool Texture::AllocateDescriptorSet(VkDescriptorSetLayout layout, VkSampler sampler)
 {
     mImageDescriptorSet = DescriptorAllocator::Instance().AllocateDescriptorSet(layout);
     if (mImageDescriptorSet == VK_NULL_HANDLE)
         return false;
 
-    Tools::UpdateTextureDescriptorSet(mDevice, mImageDescriptorSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 0, mImageView);
+    Tools::UpdateTextureDescriptorSet(mDevice, mImageDescriptorSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 0, this, sampler);
     return true;
 }
 

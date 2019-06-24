@@ -81,6 +81,7 @@ void DescriptorAllocator::Release()
         vkDestroyDescriptorPool(mDevice->GetDevice(), p.pool, nullptr);
 
     mDescriptorPools.clear();
+    mDevice.reset();
 }
 
 VkDescriptorSet DescriptorAllocator::AllocateDescriptorSet(const VkDescriptorSetLayout layout)

@@ -40,14 +40,14 @@ bool Mesh::InitBuffers(const std::vector<Vertex>& vertices,
     vbDesc.dataSize = vertices.size() * sizeof(Vertex);
     vbDesc.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     vbDesc.type = BufferType::Static;
-    mVertexBuffer = ResourceManager::Instance().GetBuffer(vbDesc);
-    if (mVertexBuffer == nullptr)
+    mVertexBuffer = ResourceFactory::Instance().CreateBuffer(vbDesc);
+    if (!mVertexBuffer)
         return false;
 
     vbDesc.data = vertexParams.data();
     vbDesc.dataSize = vertexParams.size() * sizeof(VertexParams);
-    mVertexParamsBuffer = ResourceManager::Instance().GetBuffer(vbDesc);
-    if (mVertexParamsBuffer == nullptr)
+    mVertexParamsBuffer = ResourceFactory::Instance().CreateBuffer(vbDesc);
+    if (!mVertexParamsBuffer)
         return false;
 
     mByIndices = false;
@@ -60,8 +60,8 @@ bool Mesh::InitBuffers(const std::vector<Vertex>& vertices,
         ibDesc.dataSize = indexCount * sizeof(uint32_t);
         ibDesc.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
         ibDesc.type = BufferType::Static;
-        mIndexBuffer = ResourceManager::Instance().GetBuffer(ibDesc);
-        if (mIndexBuffer == nullptr)
+        mIndexBuffer = ResourceFactory::Instance().CreateBuffer(ibDesc);
+        if (!mIndexBuffer)
             return false;
 
         mByIndices = true;

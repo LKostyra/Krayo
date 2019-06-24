@@ -76,7 +76,7 @@ class GameWindow: public lkCommon::System::Window
         updateDir = lkCommon::Math::Matrix4::CreateRotationX(mAngleY) * lkCommon::Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
         updateDir = lkCommon::Math::Matrix4::CreateRotationY(mAngleX) * updateDir;
         updateDir.Normalize();
-        
+
         Krayo::Scene::CameraDesc desc;
         desc.pos = mCamera.GetPosition() + newPos;
         desc.at = desc.pos + updateDir;

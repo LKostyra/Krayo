@@ -125,9 +125,25 @@ bool LightCuller::Init(const DevicePtr& device, const LightCullerDesc& desc)
     Tools::UpdateBufferDescriptorSet(mDevice, mLightCullerSet, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 5,
                                      mGridLightData.GetBuffer(), mGridLightData.GetSize());
     Tools::UpdateTextureDescriptorSet(mDevice, mLightCullerSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 6,
-                                      desc.depthTexture->GetView());
+                                      desc.depthTexture, mSampler);
 
     mDepthTexture = desc.depthTexture;
+
+    mCommandBuffer.Begin();
+    mDepthTexture->Transition(&mCommandBuffer,
+                              VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                              0, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+                              mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS),
+                              VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    mCommandBuffer.End();
+
+    if (!mDevice->Execute(DeviceQueueType::COMPUTE, &mCommandBuffer))
+    {
+        LOGE("Failed to transition depth texture to depth stencil attachment layout on init");
+        return false;
+    }
+
+    mDevice->Wait(DeviceQueueType::COMPUTE);
 
     return true;
 }
@@ -156,6 +172,11 @@ void LightCuller::Dispatch(const LightCullerDispatchDesc& desc)
         mCommandBuffer.BufferBarrier(&mGridLightData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
                                      0, VK_ACCESS_SHADER_WRITE_BIT,
                                      mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+        mDepthTexture->Transition(&mCommandBuffer,
+                                  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                  VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT,
+                                  mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE),
+                                  VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         mCommandBuffer.Dispatch(mFrustumsPerWidth, mFrustumsPerHeight, 1);
 

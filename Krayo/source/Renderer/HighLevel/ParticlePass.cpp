@@ -177,7 +177,7 @@ bool ParticlePass::Init(const DevicePtr& device, const ParticlePassDesc& desc)
     Tools::UpdateBufferDescriptorSet(mDevice, mVertexShaderSet, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0,
                                      desc.vertexShaderBuffer->GetBuffer(), desc.vertexShaderBuffer->GetSize());
     Tools::UpdateTextureDescriptorSet(mDevice, mFragmentShaderSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 0,
-                                      mParticleTexture.GetView());
+                                      &mParticleTexture, mSampler);
 
     return true;
 }
