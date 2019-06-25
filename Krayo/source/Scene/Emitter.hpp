@@ -12,8 +12,7 @@
 namespace Krayo {
 namespace Scene {
 
-LKCOMMON_ALIGN(16)
-struct EmitterData
+struct alignas(16) EmitterData
 {
     lkCommon::Math::Vector4 pos;
     uint32_t particleLimit;

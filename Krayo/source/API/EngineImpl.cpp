@@ -13,33 +13,63 @@ Engine::Impl::Impl()
     , mScene()
     , mCamera()
 {
-    LOGI("Engine implementation created");
 }
 
 Engine::Impl::~Impl()
 {
     mRenderer.WaitForAll();
-    LOGI("Engine implementation destroyed");
+    LOGI("Engine destroyed");
+}
+
+bool Engine::Impl::SetDirTree() const
+{
+    std::string cwd = lkCommon::System::FS::GetParentDir(lkCommon::System::FS::GetExecutablePath());
+
+    if (!lkCommon::System::FS::SetCWD(
+            lkCommon::System::FS::JoinPaths(cwd, std::string(KRAYO_ROOT_REL_TO_BIN))
+        ))
+    {
+        LOGE("Failed to set CWD to project's root");
+        return false;
+    }
+
+    // TODO check if required resources (ex. shaders) exist
+
+    if (!lkCommon::System::FS::Exists(ResourceDir::SHADER_CACHE))
+    {
+        if (!lkCommon::System::FS::CreateDir(ResourceDir::SHADER_CACHE))
+        {
+            LOGE("Failed to create directory for Shader Cache");
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool Engine::Impl::Init(const EngineDesc& desc)
 {
+    #ifdef KRAYO_ROOT_DIR
+    lkCommon::Utils::Logger::SetRootPathToStrip(std::string(KRAYO_ROOT_DIR));
+    #endif
+
     if (desc.window == nullptr)
     {
         LOGE("Window is required to initialize Engine!");
         return false;
     }
 
-    #ifdef KRAYO_ROOT_DIR
-    lkCommon::Utils::Logger::SetRootPathToStrip(std::string(KRAYO_ROOT_DIR));
-    #endif
-
-    if (!lkCommon::System::FS::Exists(ResourceDir::SHADER_CACHE))
-        lkCommon::System::FS::CreateDir(ResourceDir::SHADER_CACHE);
+    if (!SetDirTree())
+    {
+        LOGE("Failed to set directory tree to project root");
+        return false;
+    }
 
     Renderer::RendererDesc rendDesc;
     rendDesc.debugEnable = desc.debug;
+    rendDesc.debugVerbose = desc.debugVerbose;
     rendDesc.window = desc.window;
+    rendDesc.vsync = desc.vsync;
     rendDesc.noAsync = true;
     rendDesc.nearZ = 0.2f;
     rendDesc.farZ = 500.0f;

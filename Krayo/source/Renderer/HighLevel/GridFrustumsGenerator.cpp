@@ -8,8 +8,7 @@
 
 namespace {
 
-LKCOMMON_ALIGN(16)
-struct GridFrustumsInfoBuffer
+struct alignas(16) GridFrustumsInfoBuffer
 {
     lkCommon::Math::Matrix4 proj;
     uint32_t viewportWidth;

@@ -1,19 +1,22 @@
-#include "PCH.hpp"
-#include "LinuxBackbuffer.hpp"
-#include "../Backbuffer.hpp"
-#include "../Extensions.hpp"
-#include "../Util.hpp"
+#include "Renderer/LowLevel/Linux/LinuxBackbuffer.hpp"
 
-#include "Common/Common.hpp"
-#include "Common/Logger.hpp"
+#include "Renderer/LowLevel/Backbuffer.hpp"
+#include "Renderer/LowLevel/Extensions.hpp"
+#include "Renderer/LowLevel/Util.hpp"
 
-namespace ABench {
+#include <vulkan/vulkan.h>
+
+#include <lkCommon/lkCommon.hpp>
+#include <lkCommon/Utils/Logger.hpp>
+
+
+namespace Krayo {
 namespace Renderer {
 
 bool Backbuffer::CreateSurface(const BackbufferDesc& desc)
 {
     VkXcbSurfaceCreateInfoKHR info;
-    ZERO_MEMORY(info);
+    LKCOMMON_ZERO_MEMORY(info);
     info.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
     info.connection = desc.windowDesc.connection;
     info.window = desc.windowDesc.window;
@@ -23,5 +26,5 @@ bool Backbuffer::CreateSurface(const BackbufferDesc& desc)
     return true;
 }
 
-} // namespace ABench
 } // namespace Renderer
+} // namespace ABench

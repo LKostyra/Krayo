@@ -13,7 +13,7 @@ Makefile
 
 # intermediate/build directories
 /Obj
-/build
+/build*
 
 # Output dir and files
 /Bin

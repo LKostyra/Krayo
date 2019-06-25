@@ -1,6 +1,9 @@
 #pragma once
 
-namespace ABench {
+#include <xcb/xcb.h>
+
+
+namespace Krayo {
 namespace Renderer {
 
 struct BackbufferWindowDesc
@@ -15,5 +18,5 @@ struct BackbufferWindowDesc
     }
 };
 
-} // namespace ABench
 } // namespace Renderer
+} // namespace Krayo

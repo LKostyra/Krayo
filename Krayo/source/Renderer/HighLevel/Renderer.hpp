@@ -29,11 +29,23 @@ struct RendererDesc
 {
     bool debugEnable;
     bool debugVerbose;
+    bool vsync;
     bool noAsync;
     float fov;
     float nearZ;
     float farZ;
     lkCommon::System::Window* window;
+
+    RendererDesc()
+        : debugEnable(false)
+        , debugVerbose(false)
+        , vsync(false)
+        , noAsync(false)
+        , fov(60.0f)
+        , nearZ(0.1f)
+        , farZ(100.0f)
+        , window(nullptr)
+    {}
 };
 
 class Renderer final

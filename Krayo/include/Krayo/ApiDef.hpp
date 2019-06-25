@@ -7,5 +7,9 @@
         #define KRAYO_API __declspec(dllimport)
     #endif
 #else
-    #error "Target platform not supported"
+    #ifdef KRAYO_EXPORTS
+        #define KRAYO_API __attribute__((visibility("default")))
+    #else // KRAYO_EXPORTS
+        #define KRAYO_API
+    #endif
 #endif

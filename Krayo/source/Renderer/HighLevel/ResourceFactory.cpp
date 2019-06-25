@@ -32,7 +32,7 @@ void ResourceFactory::Release()
 
 BufferPtr ResourceFactory::CreateBuffer(const BufferDesc& desc)
 {
-    BufferPtr& b = std::make_shared<Buffer>();
+    BufferPtr b = std::make_shared<Buffer>();
     if (!b->Init(mDevice, desc))
         return nullptr;
 
@@ -41,7 +41,7 @@ BufferPtr ResourceFactory::CreateBuffer(const BufferDesc& desc)
 
 TexturePtr ResourceFactory::CreateTexture(const TextureDesc& desc)
 {
-    TexturePtr& t = std::make_shared<Texture>();
+    TexturePtr t = std::make_shared<Texture>();
     if (!t->Init(mDevice, desc))
         return nullptr;
 

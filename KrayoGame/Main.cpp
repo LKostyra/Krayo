@@ -134,35 +134,7 @@ int main(int argc, char* argv[])
             gNoAsync = true;
             */
 
-    std::string path = lkCommon::System::FS::GetParentDir(lkCommon::System::FS::GetExecutablePath());
-    if (!lkCommon::System::FS::SetCWD(path + "/../../.."))
-        return -1;
-
     /*
-    Krayo::Renderer::Renderer rend;
-    Krayo::Renderer::RendererDesc rendDesc;
-    rendDesc.debugEnable = debug;
-    rendDesc.debugVerbose = false;
-    rendDesc.window = &window;
-    rendDesc.fov = 60.0f;
-    rendDesc.nearZ = 0.2f;
-    rendDesc.farZ = 500.0f;
-    rendDesc.noAsync = gNoAsync;
-    if (!rend.Init(rendDesc))
-    {
-        LOGE("Failed to initialize Renderer");
-        return -1;
-    }
-
-    Krayo::Scene::CameraDesc desc;
-    desc.pos = lkCommon::Math::Vector4(0.0f, 1.0f,-2.0f, 1.0f);
-    desc.at = lkCommon::Math::Vector4(0.0f, 1.0f, 1.0f, 1.0f);
-    desc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f); // to comply with Vulkan's coord system
-    window.GetCamera().Update(desc);
-
-    Krayo::Scene::Scene scene;
-    scene.Init();
-
     auto matResult = scene.GetMaterial("boxMaterial");
     Krayo::Scene::Material* boxMat = matResult.first;
     if (matResult.second)
@@ -218,7 +190,7 @@ int main(int argc, char* argv[])
 
     obj = scene.CreateObject();
     obj->SetComponent(model2);
-    
+
     auto lightResult = scene.GetComponent(Krayo::Scene::ComponentType::Light, "light");
     gLight = dynamic_cast<Krayo::Scene::Light*>(lightResult.first);
     gLight->SetDiffuseIntensity(1.0f, 1.0f, 1.0f);
@@ -280,6 +252,8 @@ int main(int argc, char* argv[])
 
     Krayo::EngineDesc engineDesc;
     engineDesc.debug = debug;
+    engineDesc.debugVerbose = true;
+    engineDesc.vsync = false;
     engineDesc.window = &window;
     Krayo::Engine engine;
     if (!engine.Init(engineDesc))

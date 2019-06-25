@@ -2,11 +2,12 @@
 
 #include "Renderer/LowLevel/DescriptorAllocator.hpp"
 
+#include <algorithm>
+
 
 namespace {
 
-LKCOMMON_ALIGN(16)
-struct ParticleEngineParams
+struct alignas(16) ParticleEngineParams
 {
     lkCommon::Math::Vector4 cameraPos;
     float deltaTime;
@@ -15,8 +16,7 @@ struct ParticleEngineParams
     float randomSeedB;
 };
 
-LKCOMMON_ALIGN(16)
-struct ParticleData
+struct alignas(16) ParticleData
 {
     lkCommon::Math::Vector4 pos;
     float color[3];// TODO was lkCommon::Math::Vector3 color;
@@ -26,8 +26,7 @@ struct ParticleData
     float cameraDistance;
 };
 
-LKCOMMON_ALIGN(16)
-struct SortParams
+struct alignas(16) SortParams
 {
     uint32_t sortSpace;
     uint32_t offset;

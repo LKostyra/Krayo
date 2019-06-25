@@ -115,7 +115,7 @@ bool Renderer::Init(const RendererDesc& desc)
     bbDesc.requestedFormat = VK_FORMAT_B8G8R8A8_UNORM;
     bbDesc.width = desc.window->GetWidth();
     bbDesc.height = desc.window->GetHeight();
-    bbDesc.vsync = false;
+    bbDesc.vsync = desc.vsync;
     if (!mBackbuffer.Init(mDevice, bbDesc))
         return false;
 

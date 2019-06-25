@@ -9,7 +9,10 @@ IF(WIN32)
     ELSE("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         ADD_DEFINITIONS("/MT")
     ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-ENDIF(WIN32)
+ELSEIF(UNIX)
+    # force Position Independent Code - required when linking deps with libKrayo.so
+    ADD_DEFINITIONS("-fPIC")
+ENDIF()
 
 # in case we get called as root CMakeLists.txt, ex from MSVC solution
 IF(NOT DEFINED KRAYO_DEPS_DIRECTORY)

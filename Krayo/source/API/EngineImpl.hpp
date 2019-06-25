@@ -13,6 +13,9 @@ class Engine::Impl
     Scene::Scene mScene;
     Scene::Camera mCamera;
 
+    // captures CWD, navigates to app root dir and verifies if it's correct
+    bool SetDirTree() const;
+
 public:
     Impl();
     ~Impl();

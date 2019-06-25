@@ -12,8 +12,7 @@ namespace Scene {
 
 // workaround to allow easy storage of Light data
 // this way we will be able to easily pass all the params to shaders
-LKCOMMON_ALIGN(16)
-struct LightData
+struct alignas(16) LightData
 {
     lkCommon::Math::Vector4 position;
     lkCommon::Utils::Pixel<float, 3> diffuseIntensity;

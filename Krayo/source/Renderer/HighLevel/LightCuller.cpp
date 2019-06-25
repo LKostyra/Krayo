@@ -5,8 +5,7 @@
 
 namespace {
 
-LKCOMMON_ALIGN(16)
-struct GridLightData
+struct alignas(16) GridLightData
 {
     uint32_t offset;
     uint32_t count;

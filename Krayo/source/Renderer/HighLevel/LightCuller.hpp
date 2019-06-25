@@ -50,8 +50,7 @@ struct LightCullerDispatchDesc
 
 class LightCuller final
 {
-    LKCOMMON_ALIGN(16)
-    struct CullingParams
+    struct alignas(16) CullingParams
     {
         lkCommon::Math::Matrix4 projMat;
         lkCommon::Math::Matrix4 viewMat;
