@@ -1,28 +1,38 @@
-#include <lkCommon/System/Window.hpp>
-#include <lkCommon/Utils/Logger.hpp>
-#include <lkCommon/Utils/Pixel.hpp>
-#include <lkCommon/Utils/Timer.hpp>
-#include <lkCommon/System/FS.hpp>
-#include <lkCommon/Math/Constants.hpp>
-#include <lkCommon/Math/Matrix4.hpp>
-#include <lkCommon/Math/RingAverage.hpp>
-
 #include <Krayo/Engine.hpp>
+
+
+int main(int argc, char* argv[])
+{
+    bool debug = false;
+
+#ifdef _DEBUG
+    debug = true;
+#endif
+
+    Krayo::EngineDesc engineDesc;
+    engineDesc.debug = debug;
+    engineDesc.debugVerbose = true;
+    engineDesc.vsync = false;
+    engineDesc.windowWidth = 1280;
+    engineDesc.windowHeight = 720;
+    Krayo::Engine engine;
+    if (!engine.Init(engineDesc))
+    {
+        return 1;
+    }
+
+    engine.MainLoop();
+
+    return 0;
+}
+
+
+
+// OLD PARAMETERS USED TO RENDER SCENES
 /*
-#include "Krayo/Renderer/HighLevel/Renderer.hpp"
-#include "Krayo/Scene/Camera.hpp"
-#include "Krayo/Scene/Mesh.hpp"
-#include "Krayo/Scene/Light.hpp"
-#include "Krayo/Scene/Scene.hpp"
+const uint32_t windowWidth = 1280;
+const uint32_t windowWidth = 720;
 
-#include "Krayo/ResourceDir.hpp"
-*/
-#include <vector>
-
-
-uint32_t windowWidth = 1280;
-uint32_t windowHeight = 720;
-/*
 const int32_t EMITTERS_LIMIT = 1;
 Krayo::Scene::Emitter* gEmitters[EMITTERS_LIMIT * 2 + 1];
 
@@ -33,27 +43,24 @@ std::vector<Krayo::Scene::Light*> gLights;
 
 uint32_t EMITTERS_PARTICLE_LIMIT = 128;
 uint32_t LIGHT_COUNT = 128;
-
-bool gNoAsync = false;
-bool gTestMode = false;
-const std::string NOASYNC_COMMAND = "noasync";
-const std::string TEST_COMMAND = "test";
 */
+
+
+// OLD WINDOW IMPLEMENTATION DERIVED FROM LKCOMMON'S WINDOW
+/*
 class GameWindow: public lkCommon::System::Window
 {
     //Krayo::Scene::Camera mCamera;
 
     float mAngleX = -LKCOMMON_PIF * 0.3f;
     float mAngleY = -LKCOMMON_PIF * 0.2f;
-    bool mLightFollowsCamera = false;
-    bool mCameraOnRails = false;
 
     float mCameraAnimMoment = 0.0f;
 
     uint32_t mFrameCounter = 0;
 
     void OnUpdate(float deltaTime) override
-    {/*
+    {
         lkCommon::Math::Vector4 newPos;
         lkCommon::Math::Vector4 updateDir;
 
@@ -81,7 +88,7 @@ class GameWindow: public lkCommon::System::Window
         desc.pos = mCamera.GetPosition() + newPos;
         desc.at = desc.pos + updateDir;
         desc.up = mCamera.GetUpVector();
-        mCamera.Update(desc);*/
+        mCamera.Update(desc);
     }
 
     void OnMouseMove(uint32_t x, uint32_t y, int deltaX, int deltaY) override
@@ -98,43 +105,13 @@ class GameWindow: public lkCommon::System::Window
 
     void OnKeyDown(lkCommon::System::KeyCode key) override
     {
-        if (key == lkCommon::System::KeyCode::T)
-            mLightFollowsCamera ^= true;
-
-        if (key == lkCommon::System::KeyCode::F1)
-        {
-            mCameraOnRails ^= true;
-            if (mCameraOnRails)
-            {
-                mCameraAnimMoment = 0.0f;
-                mFrameCounter = 0;
-            }
-        }
     }
-
-public:
-    /*LKCOMMON_INLINE Krayo::Scene::Camera& GetCamera()
-    {
-        return mCamera;
-    }*/
 };
+*/
 
-int main(int argc, char* argv[])
-{
-    // TODO REPLACE WITH lkCommon::Utils::ArgParser
-/*    if (argc >= 2)
-        LIGHT_COUNT = std::stoi(argv[1]);
-    if (argc >= 3)
-        EMITTERS_PARTICLE_LIMIT = std::stoi(argv[2]);
-    if (argc >= 4)
-        if (TEST_COMMAND == argv[3])
-            gTestMode = true;
-    if (argc >= 5)
-        if (NOASYNC_COMMAND == argv[4])
-            gNoAsync = true;
-            */
 
-    /*
+// OLD API USE EXAMPLE
+/*
     auto matResult = scene.GetMaterial("boxMaterial");
     Krayo::Scene::Material* boxMat = matResult.first;
     if (matResult.second)
@@ -234,50 +211,4 @@ int main(int argc, char* argv[])
         Krayo::Scene::Object* o = scene.CreateObject();
         o->SetComponent(gEmitters[i + EMITTERS_LIMIT]);
     }
-    */
-
-    GameWindow window;
-    window.Init();
-    if (!window.Open(200, 200, windowWidth, windowHeight, "Krayo"))
-    {
-        LOGE("Failed to initialize Window");
-        return -1;
-    }
-
-    bool debug = false;
-
-#ifdef _DEBUG
-    debug = true;
-#endif
-
-    Krayo::EngineDesc engineDesc;
-    engineDesc.debug = debug;
-    engineDesc.debugVerbose = true;
-    engineDesc.vsync = false;
-    engineDesc.window = &window;
-    Krayo::Engine engine;
-    if (!engine.Init(engineDesc))
-    {
-        LOGE("Failed to initialize Krayo Engine");
-        return 1;
-    }
-
-    lkCommon::Utils::Timer timer;
-    lkCommon::Math::RingAverage<float, 30> avgTime;
-    timer.Start();
-
-    while (window.IsOpened())
-    {
-        float frameTime = static_cast<float>(timer.Stop());
-        timer.Start();
-        avgTime.Add(frameTime);
-        float time = avgTime.Get();
-        float fps = 1.0f / time;
-
-        window.SetTitle("Krayo - " + std::to_string(fps) + " FPS (" + std::to_string(time * 1000.0f) + " ms)");
-        window.Update(frameTime);
-        engine.Draw(frameTime);
-    }
-
-    return 0;
-}
+*/

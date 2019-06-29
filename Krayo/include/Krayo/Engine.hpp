@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Krayo/ApiDef.hpp"
+#include "Krayo/Events.hpp"
 
 #include <lkCommon/System/Window.hpp>
 
@@ -28,15 +29,21 @@ struct EngineDesc
     bool vsync;
 
     /**
-     * Pointer to Window to which Engine should render.
+     * Engine window's width
      */
-    lkCommon::System::Window* window; // TODO THIS MUST BE REMOVED, Krayo should only set out its independent api
+    uint32_t windowWidth;
+
+    /**
+     * Engine window's height
+     */
+    uint32_t windowHeight;
 
     EngineDesc()
         : debug(false)
         , debugVerbose(false)
         , vsync(true)
-        , window(nullptr)
+        , windowWidth(640)
+        , windowHeight(480)
     {
     }
 };
@@ -50,8 +57,44 @@ public:
     Engine();
     ~Engine();
 
+    /**
+     * Initialize Engine instance
+     *
+     * @p[in] desc Initial properties of the Engine
+     */
     bool Init(const EngineDesc& desc);
-    void Draw(const float frameTime) const;
+
+    /**
+     * Enter Engine's main loop.
+     *
+     * This function exits automatically when Engine's window is closed.
+     */
+    void MainLoop();
+
+
+    /**
+     * @defgroup EventAPI Event API
+     * @{
+     */
+
+    /**
+     * Register Event Context to an event.
+     *
+     * @p[in] id         ID of an event to register to.
+     * @p[in] subscriber Context which will be used in case an Event appears.
+     */
+    bool RegisterToEvent(const EventID id, IEventSubscriber* subscriber);
+
+    /**
+     * Emit a custom event.
+     *
+     * @p[in] message Message to emit to registered objects.
+     */
+    void EmitEvent(IEventMessage* message);
+
+    /**
+     * @}
+     */
 };
 
 } // namespace Krayo

@@ -4,12 +4,16 @@
 
 #include "Renderer/HighLevel/Renderer.hpp"
 
+#include "Events/EventManager.hpp"
+
 
 namespace Krayo {
 
 class Engine::Impl
 {
+    lkCommon::System::Window mWindow;
     Renderer::Renderer mRenderer;
+    Events::EventManager mEventManager;
     Scene::Scene mScene;
     Scene::Camera mCamera;
 
@@ -21,7 +25,9 @@ public:
     ~Impl();
 
     bool Init(const EngineDesc& desc);
-    void Draw(const float frameTime);
+    void MainLoop();
+    bool RegisterToEvent(EventID id, IEventSubscriber* subscriber);
+    void EmitEvent(IEventMessage* message);
 };
 
 } // namespace Krayo

@@ -4,6 +4,8 @@
 
 #include <lkCommon/System/FS.hpp>
 #include <lkCommon/Utils/Logger.hpp>
+#include <lkCommon/Utils/Timer.hpp>
+#include <lkCommon/Math/RingAverage.hpp>
 
 
 namespace Krayo {
@@ -53,22 +55,28 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     lkCommon::Utils::Logger::SetRootPathToStrip(std::string(KRAYO_ROOT_DIR));
     #endif
 
-    if (desc.window == nullptr)
-    {
-        LOGE("Window is required to initialize Engine!");
-        return false;
-    }
-
     if (!SetDirTree())
     {
         LOGE("Failed to set directory tree to project root");
         return false;
     }
 
+    if (!mWindow.Init())
+    {
+        LOGE("Failed to initialize Window");
+        return false;
+    }
+
+    if (!mWindow.Open(200, 200, desc.windowWidth, desc.windowHeight, "Krayo"))
+    {
+        LOGE("Failed to open Window");
+        return false;
+    }
+
     Renderer::RendererDesc rendDesc;
     rendDesc.debugEnable = desc.debug;
     rendDesc.debugVerbose = desc.debugVerbose;
-    rendDesc.window = desc.window;
+    rendDesc.window = &mWindow;
     rendDesc.vsync = desc.vsync;
     rendDesc.noAsync = true;
     rendDesc.nearZ = 0.2f;
@@ -120,9 +128,34 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     return true;
 }
 
-void Engine::Impl::Draw(const float frameTime)
+void Engine::Impl::MainLoop()
 {
-    mRenderer.Draw(mScene, mCamera, frameTime);
+    lkCommon::Utils::Timer timer;
+    lkCommon::Math::RingAverage<float, 30> avgTime;
+    timer.Start();
+
+    while (mWindow.IsOpened())
+    {
+        float frameTime = static_cast<float>(timer.Stop());
+        timer.Start();
+        avgTime.Add(frameTime);
+        float time = avgTime.Get();
+        float fps = 1.0f / time;
+
+        mWindow.SetTitle("Krayo - " + std::to_string(fps) + " FPS (" + std::to_string(time * 1000.0f) + " ms)");
+        mWindow.Update(frameTime);
+        mRenderer.Draw(mScene, mCamera, frameTime);
+    }
+}
+
+bool Engine::Impl::RegisterToEvent(const EventID id, IEventSubscriber* subscriber)
+{
+    return mEventManager.RegisterToEvent(id, subscriber);
+}
+
+void Engine::Impl::EmitEvent(IEventMessage* message)
+{
+    mEventManager.EmitEvent(message);
 }
 
 } // namespace Krayo

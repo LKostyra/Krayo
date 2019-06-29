@@ -34,6 +34,9 @@
     <Filter Include="source\API">
       <UniqueIdentifier>{889b6429-bfcf-4792-aad2-62480be9b1ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Events">
+      <UniqueIdentifier>{90ce4195-b2bb-4600-be23-640286e453d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -173,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="source\Renderer\HighLevel\ResourceFactory.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Events\EventManager.cpp">
+      <Filter>source\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +331,12 @@
     </ClInclude>
     <ClInclude Include="source\Renderer\HighLevel\ResourceFactory.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Events\EventManager.hpp">
+      <Filter>source\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Events.hpp">
+      <Filter>include\Krayo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

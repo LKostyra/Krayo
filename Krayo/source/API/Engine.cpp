@@ -20,9 +20,19 @@ bool Engine::Init(const EngineDesc& desc)
     return mImpl->Init(desc);
 }
 
-void Engine::Draw(const float frameTime) const
+void Engine::MainLoop()
 {
-    return mImpl->Draw(frameTime);
+    return mImpl->MainLoop();
+}
+
+bool Engine::RegisterToEvent(EventID id, IEventSubscriber* subscriber)
+{
+    return mImpl->RegisterToEvent(id, subscriber);
+}
+
+void Engine::EmitEvent(IEventMessage* message)
+{
+    mImpl->EmitEvent(message);
 }
 
 } // namespace Krayo
