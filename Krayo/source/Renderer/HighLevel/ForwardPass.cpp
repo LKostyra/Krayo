@@ -158,11 +158,11 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
 
     // Shader layouts and sets
     std::vector<DescriptorSetLayoutDesc> fsLayoutDesc;
-    fsLayoutDesc.push_back({VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, VK_NULL_HANDLE});
-    fsLayoutDesc.push_back({VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, VK_NULL_HANDLE});
-    fsLayoutDesc.push_back({VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, VK_NULL_HANDLE});
-    fsLayoutDesc.push_back({VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, VK_NULL_HANDLE});
-    fsLayoutDesc.push_back({VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, VK_NULL_HANDLE});
+    fsLayoutDesc.emplace_back(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, static_cast<VkSampler>(VK_NULL_HANDLE));
+    fsLayoutDesc.emplace_back(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, VK_SHADER_STAGE_FRAGMENT_BIT, static_cast<VkSampler>(VK_NULL_HANDLE));
+    fsLayoutDesc.emplace_back(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, static_cast<VkSampler>(VK_NULL_HANDLE));
+    fsLayoutDesc.emplace_back(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, static_cast<VkSampler>(VK_NULL_HANDLE));
+    fsLayoutDesc.emplace_back(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, static_cast<VkSampler>(VK_NULL_HANDLE));
     mFragmentShaderLayout = Tools::CreateDescriptorSetLayout(mDevice, fsLayoutDesc);
     if (!mFragmentShaderLayout)
         return false;
@@ -183,11 +183,11 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
 
 
     std::vector<VkDescriptorSetLayout> layouts;
-    layouts.push_back(desc.vertexShaderLayout);
-    layouts.push_back(mFragmentShaderLayout);
-    layouts.push_back(mFragmentShaderTextureLayout);
-    layouts.push_back(mFragmentShaderTextureLayout);
-    layouts.push_back(mFragmentShaderTextureLayout);
+    layouts.emplace_back(desc.vertexShaderLayout);
+    layouts.emplace_back(mFragmentShaderLayout);
+    layouts.emplace_back(mFragmentShaderTextureLayout);
+    layouts.emplace_back(mFragmentShaderTextureLayout);
+    layouts.emplace_back(mFragmentShaderTextureLayout);
     mPipelineLayout = Tools::CreatePipelineLayout(mDevice, layouts);
     if (!mPipelineLayout)
         return false;
@@ -198,7 +198,7 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     pipeDesc.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     pipeDesc.renderPass = mRenderPass;
     pipeDesc.pipelineLayout = mPipelineLayout;
-    pipeDesc.enableDepth = true;
+    pipeDesc.enableDepth = false;
     pipeDesc.enableDepthWrite = false;
     pipeDesc.enableColor = true;
 
@@ -262,7 +262,7 @@ void ForwardPass::Draw(const Scene::Scene& scene, const ForwardPassDrawDesc& des
                                   VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
                                   VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
-        float clearValue[] = {0.1f, 0.1f, 0.1f, 0.0f};
+        float clearValue[] = {0.1f, 0.1f, 0.1f, 1.0f};
         VkPipelineBindPoint bindPoint =  VK_PIPELINE_BIND_POINT_GRAPHICS;
         mCommandBuffer.BeginRenderPass(mRenderPass, &mFramebuffer, ClearType::COLOR, clearValue, 0.0f);
 

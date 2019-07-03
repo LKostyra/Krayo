@@ -15,6 +15,8 @@ namespace Krayo {
 enum class EventID: unsigned int
 {
     Unknown = 0,
+    InputKeyboard,
+    InputMouse,
     BuiltInCount, //< Count of built in event ID's
 };
 

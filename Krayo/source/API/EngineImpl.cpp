@@ -6,6 +6,7 @@
 #include <lkCommon/Utils/Logger.hpp>
 #include <lkCommon/Utils/Timer.hpp>
 #include <lkCommon/Math/RingAverage.hpp>
+#include <lkCommon/Math/Constants.hpp>
 
 
 namespace Krayo {
@@ -81,7 +82,7 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     rendDesc.noAsync = true;
     rendDesc.nearZ = 0.2f;
     rendDesc.farZ = 500.0f;
-    rendDesc.fov = 60.0f;
+    rendDesc.fov = LKCOMMON_DEG_TO_RADF(70.0f);
     if (!mRenderer.Init(rendDesc))
     {
         LOGE("Failed to initialize Engine's Renderer");
@@ -120,8 +121,8 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     lightObj->SetComponent(light);
 
     Scene::CameraDesc camDesc;
-    camDesc.pos = lkCommon::Math::Vector4(0.0f, 1.0f,-2.0f, 1.0f);
-    camDesc.at = lkCommon::Math::Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+    camDesc.pos = lkCommon::Math::Vector4(2.0f, 1.0f,-5.0f, 1.0f);
+    camDesc.at = lkCommon::Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f);
     camDesc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f);
     mCamera.Update(camDesc);
 

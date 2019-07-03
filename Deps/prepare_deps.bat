@@ -1,4 +1,4 @@
-REM @echo off
+@echo off
 
 REM TODO:
 REM  * Discover CPU count
@@ -13,6 +13,7 @@ set cmake_generator="Visual Studio 16 2019"
 set cmake_architecture=""
 set msbuild_platform=""
 set msbuild_rtlib=""
+set to_rebuild=
 
 :argparse_loop
 if NOT "%1" == "" (
@@ -27,9 +28,12 @@ if NOT "%1" == "" (
     ) else if "%1" == "Win32" (
         set msbuild_platform=Win32
         set cmake_architecture="Win32"
+    ) else if "%1" == "Rebuild" (
+        set to_rebuild=%2
+        shift /1
     )
 
-    shift
+    shift /1
     goto :argparse_loop
 )
 
@@ -54,7 +58,7 @@ if %ERRORLEVEL% GEQ 1 (
 )
 
 REM Check if FBX SDK is where it's supposed to be
-echo | set /p=Checking for FBX SDK... 
+echo | set /p=Checking for FBX SDK...
 if NOT EXIST fbxsdk (
     echo NOT FOUND
     echo.
@@ -76,15 +80,28 @@ if NOT EXIST fbxsdk (
     )
 )
 
+if NOT "%to_rebuild%" == "" (
+    cd %to_rebuild%
+    call :ms_build %to_rebuild% %to_rebuild% Rebuild
+    if %ERRORLEVEL% GEQ 1 (
+        echo.
+        echo Failed to rebuild %to_rebuild%
+        echo.
+        exit /b %ERRORLEVEL%
+    )
+
+    popd .
+    exit /b 0
+)
+
 REM lkCommon
-echo before cmake %cd%
 cd lkCommon
 call :ms_build lkCommon lkCommon
 if %ERRORLEVEL% GEQ 1 (
     echo.
     echo Failed to build lkCommon
     echo.
-    exit /b %ERORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 cd ..
 
@@ -94,7 +111,7 @@ if %ERRORLEVEL% GEQ 1 (
     echo.
     echo Failed to create build files from CMake
     echo.
-    exit /b %ERORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 cd %cmake_dir%
@@ -107,7 +124,7 @@ if %ERRORLEVEL% GEQ 1 (
     echo.
     echo Failed to build shaderc
     echo.
-    exit /b %ERORLEVEL%
+    exit /b %ERRORLEVEL%
 )
 
 cd ..\..
@@ -130,7 +147,7 @@ REM ========== Functions ==========
 REM Checks if executable exists in PATH
 REM   %1 - name of execuable to check
 :path_check
-echo | set /p=Checking for %1... 
+echo | set /p=Checking for %1...
 for %%X in (%1) do (set FOUND=%%~$PATH:X)
 if defined FOUND (
     echo FOUND
@@ -146,12 +163,18 @@ exit /b 0
 
 REM Sets up build tree for dependencies. Returns 1 if tree is already done
 :setup_build_tree
-echo | set /p=Setting up build tree... 
+echo | set /p=Setting up build tree...
 set build_dir=%script_path%build
 set bin_dir=%script_path%Bin
 set cmake_dir=%build_dir%\%msbuild_platform%\%config%
 set output_dir=%bin_dir%\%msbuild_platform%\%config%
 set build_done_file=%output_dir%\.build_done
+
+REM check if we're rebuilding something
+if NOT "%to_rebuild%" == "" (
+    echo REBUILDING %to_rebuild%
+    exit /b 0
+)
 
 REM check if build tree already exists and exit early if it does
 REM TODO add check for build artifacts
@@ -190,12 +213,16 @@ REM Builds given project from solution using msbuild. Forces output to predefine
 REM   %1 - Solution to select project from.
 REM   %2 - Project to be built. Can be omitted - then assumes same project name as solution.
 :ms_build
-if NOT "%2"=="" ( 
+if NOT "%2"=="" (
     set project=%2
     set solution=%1.sln
 ) else (
     set project=%1
     set solution=%project%.sln
+)
+
+if "%3" == "Rebuild" (
+    set project=%project%:Rebuild
 )
 
 msbuild %solution% /t:%project% /p:Configuration=%config%;Platform=%msbuild_platform% /p:OutDir="%output_dir%\\"

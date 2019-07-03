@@ -5,23 +5,6 @@
 
 namespace Krayo {
 
-namespace Common {
-
-class FBXFile;
-class Library;
-class Timer;
-class Window;
-
-} // namespace Common
-
-namespace Math {
-
-class Vector3;
-class Vector4;
-class Matrix;
-
-} // namespace Math
-
 namespace Renderer {
 
 class Instance;
