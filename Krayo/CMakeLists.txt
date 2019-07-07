@@ -1,6 +1,8 @@
 SET(KRAYO_SRCS source/ResourceDir.cpp
                source/API/Engine.cpp
                source/API/EngineImpl.cpp
+               source/API/Events.cpp
+               source/Events/EventManager.cpp
                source/Math/AABB.cpp
                source/Math/Frustum.cpp
                source/Math/Plane.cpp
@@ -47,6 +49,8 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
 
 SET(KRAYO_HDRS source/Prerequisites.hpp
                source/ResourceDir.hpp
+               source/API/EngineImpl.hpp
+               source/Events/EventManager.hpp
                source/Math/AABB.hpp
                source/Math/Frustum.hpp
                source/Math/Plane.hpp
@@ -97,6 +101,7 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
 SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp
                    include/Krayo/ApiPrerequisites.hpp
                    include/Krayo/Engine.hpp
+                   include/Krayo/Events.hpp
                    )
 
 ADD_LIBRARY(${KRAYO_TARGET} SHARED

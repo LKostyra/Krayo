@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="source\API\Engine.cpp" />
     <ClCompile Include="source\API\EngineImpl.cpp" />
+    <ClCompile Include="source\API\Events.cpp" />
     <ClCompile Include="source\Events\EventManager.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Math\AABB.cpp" />

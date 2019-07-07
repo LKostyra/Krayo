@@ -155,12 +155,12 @@ bool Renderer::Init(const RendererDesc& desc)
     // View frustum definition
     float aspect = static_cast<float>(desc.window->GetWidth()) / static_cast<float>(desc.window->GetHeight());
     mProjection = lkCommon::Math::Matrix4::CreateRHProjection(desc.fov, aspect, desc.nearZ, desc.farZ);
-    Math::FrustumDesc fdesc;
+    /*Math::FrustumDesc fdesc;
     fdesc.fov = desc.fov;
     fdesc.ratio = aspect;
     fdesc.nearZ = desc.nearZ;
     fdesc.farZ = desc.farZ;
-    mViewFrustum.Init(fdesc);
+    mViewFrustum.Init(fdesc);*/
 
     // Common shader descriptor sets
     std::vector<DescriptorSetLayoutDesc> vsLayoutDesc;
@@ -258,15 +258,18 @@ bool Renderer::Init(const RendererDesc& desc)
     return true;
 }
 
-void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, float deltaTime)
+void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, float deltaTime, float interpolation)
 {
+    LKCOMMON_UNUSED(deltaTime);
+
     // Perform view frustum culling for next scene
-    mViewFrustum.Refresh(camera.GetPosition(), camera.GetAtPosition(), camera.GetUpVector());
+    // TODO readd
     scene.ForEachObject([&](const Scene::Object* o) -> bool {
         if (o->GetComponent()->GetType() == Scene::ComponentType::Model)
         {
             Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
-            model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
+            //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
+            model->SetToRender(true);
         }
 
         return true;
@@ -299,7 +302,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     // Rendering descriptors update //
     //////////////////////////////////
     VertexShaderCBuffer vsBuffer;
-    vsBuffer.viewMatrix = camera.GetView();
+    vsBuffer.viewMatrix = camera.GetView(interpolation);
     vsBuffer.projMatrix = mProjection;
     if (!mVertexShaderCBuffer.Write(&vsBuffer, sizeof(vsBuffer)))
         LOGW("Failed to update Vertex Shader Uniform Buffer");
@@ -328,8 +331,8 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     // Light culling dispatch
     LightCullerDispatchDesc cullingDesc;
     cullingDesc.lightCount = lightCount;
-    cullingDesc.projMat = mProjection;
-    cullingDesc.viewMat = camera.GetView();
+    cullingDesc.viewMat = vsBuffer.viewMatrix;
+    cullingDesc.projMat = vsBuffer.projMatrix;
     cullingDesc.waitFlags = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
     cullingDesc.waitSems = { mDepthSem };
     cullingDesc.signalSem = mCullingSem;
@@ -369,9 +372,12 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
 
 void Renderer::WaitForAll() const
 {
-    mDevice->Wait(DeviceQueueType::GRAPHICS);
-    mDevice->Wait(DeviceQueueType::COMPUTE);
-    mDevice->Wait(DeviceQueueType::TRANSFER);
+    if (mDevice && *mDevice)
+    {
+        mDevice->Wait(DeviceQueueType::GRAPHICS);
+        mDevice->Wait(DeviceQueueType::COMPUTE);
+        mDevice->Wait(DeviceQueueType::TRANSFER);
+    }
 }
 
 } // namespace Renderer

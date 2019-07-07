@@ -91,6 +91,12 @@ bool Device::Init(const InstancePtr& inst, bool noAsync)
     mInstance = inst;
     mPhysicalDevice = SelectPhysicalDevice();
 
+    if (mPhysicalDevice == VK_NULL_HANDLE)
+    {
+        LOGE("Invalid Physical Device acquired");
+        return false;
+    }
+
     // Memory properties (for further use)
     vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &mMemoryProperties);
 

@@ -1,5 +1,19 @@
 #include <Krayo/Engine.hpp>
 
+#include <iostream>
+
+
+class KeyDownSubscriber: public Krayo::Events::ISubscriber
+{
+public:
+    void Call(const Krayo::Events::IMessage* message) override
+    {
+        const Krayo::Events::KeyDownMessage* msg = dynamic_cast<const Krayo::Events::KeyDownMessage*>(message);
+
+        if (!msg)
+            return;
+    }
+};
 
 int main(int argc, char* argv[])
 {
@@ -17,6 +31,11 @@ int main(int argc, char* argv[])
     engineDesc.windowHeight = 720;
     Krayo::Engine engine;
     if (!engine.Init(engineDesc))
+    {
+        return 1;
+    }
+
+    if (!engine.RegisterToEvent(Krayo::Events::ID::KeyDown, new KeyDownSubscriber()))
     {
         return 1;
     }

@@ -81,16 +81,20 @@ public:
      * Register Event Context to an event.
      *
      * @p[in] id         ID of an event to register to.
-     * @p[in] subscriber Context which will be used in case an Event appears.
+     * @p[in] subscriber Subscriber to an event, which will be used in case an Event appears.
+     *                   Must be an extension of Krayo::Events::ISubscriber class.
+     *
+     * @note @p subscriber pointer is captured by std::unique_ptr in-engine, so caller does not
+     *       have to worry about freeing the pointer after the app is done.
      */
-    bool RegisterToEvent(const EventID id, IEventSubscriber* subscriber);
+    bool RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber);
 
     /**
      * Emit a custom event.
      *
      * @p[in] message Message to emit to registered objects.
      */
-    void EmitEvent(IEventMessage* message);
+    void EmitEvent(const Events::ID id, const Events::IMessage* message);
 
     /**
      * @}

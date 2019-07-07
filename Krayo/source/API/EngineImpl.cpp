@@ -5,11 +5,106 @@
 #include <lkCommon/System/FS.hpp>
 #include <lkCommon/Utils/Logger.hpp>
 #include <lkCommon/Utils/Timer.hpp>
-#include <lkCommon/Math/RingAverage.hpp>
 #include <lkCommon/Math/Constants.hpp>
+#include <lkCommon/Math/Utilities.hpp>
 
 
 namespace Krayo {
+
+
+class Window: public lkCommon::System::Window
+{
+    Events::EventManager& mEventManager;
+    Scene::Camera& mCamera;
+    Scene::CameraDesc mCameraDesc;
+    float mAngleX, mAngleY;
+
+protected:
+    void OnUpdate(float deltaTime) override
+    {
+        const lkCommon::Math::Vector4 cameraFrontDir = (mCameraDesc.at - mCameraDesc.pos).Normalize();
+        const lkCommon::Math::Vector4 cameraRightDir = cameraFrontDir.Cross(mCameraDesc.up).Normalize();
+        const lkCommon::Math::Vector4 cameraUpDir = cameraRightDir.Cross(cameraFrontDir);
+
+        lkCommon::Math::Vector4 newPos;
+        if (IsKeyPressed(lkCommon::System::KeyCode::W)) newPos += cameraFrontDir;
+        if (IsKeyPressed(lkCommon::System::KeyCode::S)) newPos -= cameraFrontDir;
+        if (IsKeyPressed(lkCommon::System::KeyCode::D)) newPos += cameraRightDir;
+        if (IsKeyPressed(lkCommon::System::KeyCode::A)) newPos -= cameraRightDir;
+        if (IsKeyPressed(lkCommon::System::KeyCode::R)) newPos -= cameraUpDir;
+        if (IsKeyPressed(lkCommon::System::KeyCode::F)) newPos += cameraUpDir;
+
+        float speed = 2.0f * deltaTime;
+        newPos *= speed;
+
+        // new direction
+        lkCommon::Math::Vector4 updateDir = lkCommon::Math::Matrix4::CreateRotationX(mAngleY) * lkCommon::Math::Vector4(0.0f, 0.0f, 1.0f, 0.0f);
+        updateDir = lkCommon::Math::Matrix4::CreateRotationY(mAngleX) * updateDir;
+        updateDir.Normalize();
+
+        mCameraDesc.pos += newPos;
+        mCameraDesc.at = mCameraDesc.pos + updateDir;
+        mCamera.Update(mCameraDesc);
+    }
+
+    void OnKeyDown(const lkCommon::System::KeyCode key) override
+    {
+        Events::KeyDownMessage msg(static_cast<int>(key));
+        mEventManager.EmitEvent(Events::ID::KeyDown, &msg);
+    }
+
+    void OnKeyUp(const lkCommon::System::KeyCode key) override
+    {
+        mEventManager.EmitEvent(Events::ID::KeyUp, new Events::KeyUpMessage(static_cast<int>(key)));
+    }
+
+    void OnMouseDown(const uint32_t button) override
+    {
+        mEventManager.EmitEvent(Events::ID::MouseDown, new Events::MouseDownMessage(button));
+    }
+
+    void OnMouseUp(const uint32_t button) override
+    {
+        mEventManager.EmitEvent(Events::ID::MouseUp, new Events::MouseUpMessage(button));
+    }
+
+    void OnMouseMove(const uint32_t x, const uint32_t y, const int32_t deltaX, const int32_t deltaY)
+    {
+        Events::MouseMoveMessage msg(x, y, deltaX, deltaY);
+        mEventManager.EmitEvent(Events::ID::MouseMove, &msg);
+
+        if (IsMouseKeyPressed(0))
+        {
+            mAngleX += deltaX * 0.005f;
+            mAngleY += deltaY * 0.005f;
+        }
+    }
+
+public:
+    Window(Events::EventManager& manager, Scene::Camera& camera)
+        : mEventManager(manager)
+        , mCamera(camera)
+        , mCameraDesc()
+        , mAngleX(0.0f)
+        , mAngleY(0.0f)
+    {
+        mCameraDesc.pos = lkCommon::Math::Vector4(2.0f, 1.0f,-5.0f, 1.0f);
+        mCameraDesc.at = lkCommon::Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+        mCameraDesc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f);
+    }
+};
+
+namespace {
+
+// TEMPORARY
+std::unique_ptr<Window> gWindow;
+
+const float TICK_TIME = 0.01f; // 10ms update loop
+const float TICK_TIME_INV = 1.0f / TICK_TIME;
+const uint32_t MAX_FRAMESKIP = 5;
+
+} // namespace
+
 
 Engine::Impl::Impl()
     : mRenderer()
@@ -50,6 +145,11 @@ bool Engine::Impl::SetDirTree() const
     return true;
 }
 
+void Engine::Impl::Update()
+{
+    gWindow->Update(static_cast<float>(TICK_TIME));
+}
+
 bool Engine::Impl::Init(const EngineDesc& desc)
 {
     #ifdef KRAYO_ROOT_DIR
@@ -62,13 +162,16 @@ bool Engine::Impl::Init(const EngineDesc& desc)
         return false;
     }
 
-    if (!mWindow.Init())
+    mEventManager.Init();
+
+    gWindow = std::make_unique<Window>(mEventManager, mCamera);
+    if (!gWindow->Init())
     {
         LOGE("Failed to initialize Window");
         return false;
     }
 
-    if (!mWindow.Open(200, 200, desc.windowWidth, desc.windowHeight, "Krayo"))
+    if (!gWindow->Open(200, 200, desc.windowWidth, desc.windowHeight, "Krayo"))
     {
         LOGE("Failed to open Window");
         return false;
@@ -77,12 +180,12 @@ bool Engine::Impl::Init(const EngineDesc& desc)
     Renderer::RendererDesc rendDesc;
     rendDesc.debugEnable = desc.debug;
     rendDesc.debugVerbose = desc.debugVerbose;
-    rendDesc.window = &mWindow;
+    rendDesc.window = gWindow.get();
     rendDesc.vsync = desc.vsync;
     rendDesc.noAsync = true;
-    rendDesc.nearZ = 0.2f;
+    rendDesc.nearZ = 0.1f;
     rendDesc.farZ = 500.0f;
-    rendDesc.fov = LKCOMMON_DEG_TO_RADF(70.0f);
+    rendDesc.fov = LKCOMMON_DEG_TO_RADF(60.0f);
     if (!mRenderer.Init(rendDesc))
     {
         LOGE("Failed to initialize Engine's Renderer");
@@ -122,7 +225,7 @@ bool Engine::Impl::Init(const EngineDesc& desc)
 
     Scene::CameraDesc camDesc;
     camDesc.pos = lkCommon::Math::Vector4(2.0f, 1.0f,-5.0f, 1.0f);
-    camDesc.at = lkCommon::Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+    camDesc.at = lkCommon::Math::Vector4(2.0f, 1.0f, 0.0f, 1.0f);
     camDesc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f);
     mCamera.Update(camDesc);
 
@@ -132,31 +235,52 @@ bool Engine::Impl::Init(const EngineDesc& desc)
 void Engine::Impl::MainLoop()
 {
     lkCommon::Utils::Timer timer;
-    lkCommon::Math::RingAverage<float, 30> avgTime;
+    lkCommon::Utils::Timer updateTimer;
     timer.Start();
+    updateTimer.Start();
 
-    while (mWindow.IsOpened())
+    while (gWindow->IsOpened())
     {
         float frameTime = static_cast<float>(timer.Stop());
         timer.Start();
-        avgTime.Add(frameTime);
-        float time = avgTime.Get();
-        float fps = 1.0f / time;
 
-        mWindow.SetTitle("Krayo - " + std::to_string(fps) + " FPS (" + std::to_string(time * 1000.0f) + " ms)");
-        mWindow.Update(frameTime);
-        mRenderer.Draw(mScene, mCamera, frameTime);
+        uint32_t updateLoop = 0;
+        float updateTime = static_cast<float>(updateTimer.Stop());
+        while (updateTime > TICK_TIME && updateLoop < MAX_FRAMESKIP)
+        {
+            updateTime -= TICK_TIME;
+            updateLoop++;
+
+            if (updateTime < TICK_TIME)
+            {
+                updateTimer.Start(updateTime);
+            }
+
+            Update();
+
+            // notify about update frameskip if it happens
+            if (updateLoop >= MAX_FRAMESKIP && updateTime > TICK_TIME)
+            {
+                LOGW("Skipping " << static_cast<int>(updateTime * TICK_TIME_INV) << " update frames, updateTime " << updateTime);
+                updateTimer.Start();
+            }
+        }
+
+        float interpolation = updateTime * TICK_TIME_INV;
+        if (interpolation > 1.0f)
+            interpolation = 1.0f;
+        mRenderer.Draw(mScene, mCamera, frameTime, interpolation);
     }
 }
 
-bool Engine::Impl::RegisterToEvent(const EventID id, IEventSubscriber* subscriber)
+bool Engine::Impl::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)
 {
     return mEventManager.RegisterToEvent(id, subscriber);
 }
 
-void Engine::Impl::EmitEvent(IEventMessage* message)
+void Engine::Impl::EmitEvent(const Events::ID id, const Events::IMessage* message)
 {
-    mEventManager.EmitEvent(message);
+    mEventManager.EmitEvent(id, message);
 }
 
 } // namespace Krayo

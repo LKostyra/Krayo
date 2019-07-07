@@ -64,7 +64,6 @@ class Renderer final
     VkRAII<VkFence> mFrameFence;
 
     lkCommon::Math::Matrix4 mProjection;
-    Math::Frustum mViewFrustum;
     VkRAII<VkDescriptorSetLayout> mVertexShaderLayout;
     VkDescriptorSet mVertexShaderSet;
     Buffer mVertexShaderCBuffer;
@@ -83,7 +82,7 @@ public:
     ~Renderer();
 
     bool Init(const RendererDesc& desc);
-    void Draw(const Scene::Scene& scene, const Scene::Camera& camera, float deltaTime);
+    void Draw(const Scene::Scene& scene, const Scene::Camera& camera, float deltaTime, float interpolation);
 
     // this function should be used only when application finishes
     void WaitForAll() const;

@@ -4,12 +4,17 @@
 namespace Krayo {
 namespace Scene {
 
+Camera::Camera()
+    : mCurrentDesc(0)
+    , mNewDesc(1)
+    , mCameraDescs{}
+{
+}
+
 void Camera::Update(const CameraDesc& desc)
 {
-    mView = lkCommon::Math::Matrix4::CreateRHLookAt(desc.pos, desc.at, desc.up);
-    mPosition = desc.pos;
-    mAtPosition = desc.at;
-    mUpVector = desc.up;
+    mCameraDescs[mCurrentDesc] = desc;
+    std::swap(mCurrentDesc, mNewDesc);
 }
 
 } // namespace Scene

@@ -38,6 +38,11 @@ public:
                  const VkPipelineStageFlags* waitFlags, const VkSemaphore* waitSemaphores,
                  VkSemaphore signalSemaphore, VkFence waitFence) const;
 
+    LKCOMMON_INLINE operator bool() const
+    {
+        return (mDevice != VK_NULL_HANDLE);
+    }
+
     LKCOMMON_INLINE VkDevice GetDevice() const
     {
         return mDevice;

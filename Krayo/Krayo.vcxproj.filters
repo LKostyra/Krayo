@@ -180,6 +180,9 @@
     <ClCompile Include="source\Events\EventManager.cpp">
       <Filter>source\Events</Filter>
     </ClCompile>
+    <ClCompile Include="source\API\Events.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp">

@@ -14,9 +14,9 @@ namespace Events {
 
 class EventManager
 {
-    using EventSubscribers = std::vector<std::unique_ptr<IEventSubscriber>>;
+    using EventSubscribers = std::vector<std::unique_ptr<ISubscriber>>;
     using BuiltInEvents = std::vector<EventSubscribers>;
-    using CustomEvents = std::map<EventID, EventSubscribers>;
+    using CustomEvents = std::map<ID, EventSubscribers>;
 
     BuiltInEvents mBuiltInEvents;
     CustomEvents mCustomEvents;
@@ -27,8 +27,8 @@ public:
 
     void Init();
 
-    bool RegisterToEvent(EventID id, IEventSubscriber* subscriber);
-    void EmitEvent(IEventMessage* message);
+    bool RegisterToEvent(const ID id, ISubscriber* subscriber);
+    void EmitEvent(const ID id, const IMessage* message);
 };
 
 

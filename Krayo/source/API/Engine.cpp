@@ -25,14 +25,14 @@ void Engine::MainLoop()
     return mImpl->MainLoop();
 }
 
-bool Engine::RegisterToEvent(EventID id, IEventSubscriber* subscriber)
+bool Engine::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)
 {
     return mImpl->RegisterToEvent(id, subscriber);
 }
 
-void Engine::EmitEvent(IEventMessage* message)
+void Engine::EmitEvent(const Events::ID id, const Events::IMessage* message)
 {
-    mImpl->EmitEvent(message);
+    mImpl->EmitEvent(id, message);
 }
 
 } // namespace Krayo

@@ -6,12 +6,15 @@
 
 #include "Events/EventManager.hpp"
 
+#include <lkCommon/Math/RingAverage.hpp>
+
 
 namespace Krayo {
 
 class Engine::Impl
 {
-    lkCommon::System::Window mWindow;
+    lkCommon::Math::RingAverage<float, 300> mAvgTime;
+
     Renderer::Renderer mRenderer;
     Events::EventManager mEventManager;
     Scene::Scene mScene;
@@ -19,6 +22,7 @@ class Engine::Impl
 
     // captures CWD, navigates to app root dir and verifies if it's correct
     bool SetDirTree() const;
+    void Update();
 
 public:
     Impl();
@@ -26,8 +30,8 @@ public:
 
     bool Init(const EngineDesc& desc);
     void MainLoop();
-    bool RegisterToEvent(EventID id, IEventSubscriber* subscriber);
-    void EmitEvent(IEventMessage* message);
+    bool RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber);
+    void EmitEvent(const Events::ID id, const Events::IMessage* message);
 };
 
 } // namespace Krayo

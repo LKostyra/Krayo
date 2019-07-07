@@ -3,6 +3,7 @@
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Math/Vector4.hpp>
 #include <lkCommon/Math/Matrix4.hpp>
+#include <lkCommon/Math/Utilities.hpp>
 
 #include "Math/Frustum.hpp"
 
@@ -25,32 +26,35 @@ struct CameraDesc
 
 class Camera final
 {
-    lkCommon::Math::Vector4 mPosition;
-    lkCommon::Math::Vector4 mAtPosition;
-    lkCommon::Math::Vector4 mUpVector;
-    lkCommon::Math::Matrix4 mView;
+    uint32_t mCurrentDesc;
+    uint32_t mNewDesc;
+    CameraDesc mCameraDescs[2];
 
 public:
+    Camera();
+
     void Update(const CameraDesc& desc);
 
-    LKCOMMON_INLINE const lkCommon::Math::Vector4& GetPosition() const
+    LKCOMMON_INLINE lkCommon::Math::Vector4 GetPosition(float interpolation) const
     {
-        return mPosition;
+        return lkCommon::Math::Util::Lerp(mCameraDescs[mCurrentDesc].pos, mCameraDescs[mNewDesc].pos, interpolation);
     }
 
-    LKCOMMON_INLINE const lkCommon::Math::Vector4& GetAtPosition() const
+    LKCOMMON_INLINE lkCommon::Math::Vector4 GetAtPosition(float interpolation) const
     {
-        return mAtPosition;
+        return lkCommon::Math::Util::Lerp(mCameraDescs[mCurrentDesc].at, mCameraDescs[mNewDesc].at, interpolation);
     }
 
-    LKCOMMON_INLINE const lkCommon::Math::Vector4& GetUpVector() const
+    LKCOMMON_INLINE lkCommon::Math::Vector4 GetUpVector(float interpolation) const
     {
-        return mUpVector;
+        return lkCommon::Math::Util::Lerp(mCameraDescs[mCurrentDesc].up, mCameraDescs[mNewDesc].up, interpolation);
     }
 
-    LKCOMMON_INLINE const lkCommon::Math::Matrix4& GetView() const
+    LKCOMMON_INLINE lkCommon::Math::Matrix4 GetView(float interpolation) const
     {
-        return mView;
+        return lkCommon::Math::Matrix4::CreateRHLookAt(
+            GetPosition(interpolation), GetAtPosition(interpolation), GetUpVector(interpolation)
+        );
     }
 };
 

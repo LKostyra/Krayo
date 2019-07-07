@@ -10,14 +10,14 @@
 namespace Krayo {
 namespace Renderer {
 
-VkRAII<VkFence> Tools::CreateFence(const DevicePtr& device, bool signaled)
+VkRAII<VkFence> Tools::CreateFence(const DevicePtr& device, bool signalled)
 {
     VkFence fence;
 
     VkFenceCreateInfo info;
     LKCOMMON_ZERO_MEMORY(info);
     info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    if (signaled)
+    if (signalled)
         info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
     VkResult result = vkCreateFence(device->GetDevice(), &info, nullptr, &fence);

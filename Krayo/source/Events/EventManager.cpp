@@ -6,24 +6,24 @@
 namespace Krayo {
 namespace Events {
 
-LKCOMMON_INLINE bool IsBuiltInEvent(EventID id)
+LKCOMMON_INLINE bool IsBuiltInEvent(ID id)
 {
     return !(static_cast<uint32_t>(id) & 0x80000000);
 }
 
-LKCOMMON_INLINE bool IsCustomEvent(EventID id)
+LKCOMMON_INLINE bool IsCustomEvent(ID id)
 {
     return !IsBuiltInEvent(id);
 }
 
 void EventManager::Init()
 {
-    mBuiltInEvents.resize(static_cast<uint32_t>(EventID::BuiltInCount));
+    mBuiltInEvents.resize(static_cast<uint32_t>(ID::BuiltInCount));
 }
 
-bool EventManager::RegisterToEvent(EventID id, IEventSubscriber* subscriber)
+bool EventManager::RegisterToEvent(const ID id, ISubscriber* subscriber)
 {
-    if (id == EventID::Unknown)
+    if (id == ID::Unknown)
     {
         LOGE("Unknown Event ID");
         return false;
@@ -33,7 +33,8 @@ bool EventManager::RegisterToEvent(EventID id, IEventSubscriber* subscriber)
 
     if (IsBuiltInEvent(id))
     {
-        LKCOMMON_ASSERT(static_cast<uint32_t>(id) < static_cast<uint32_t>(EventID::BuiltInCount), "Invalid built-in Event ID");
+        LKCOMMON_ASSERT(static_cast<uint32_t>(id) < static_cast<uint32_t>(ID::BuiltInCount), "Invalid built-in Event ID");
+        LKCOMMON_ASSERT(mBuiltInEvents.size() != 0, "Built-in events not initialized");
 
         mBuiltInEvents[castedId].emplace_back(subscriber);
     }
@@ -55,14 +56,13 @@ bool EventManager::RegisterToEvent(EventID id, IEventSubscriber* subscriber)
     return true;
 }
 
-void EventManager::EmitEvent(IEventMessage* message)
+void EventManager::EmitEvent(const ID id, const IMessage* message)
 {
-    EventID id = message->GetID();
-    LKCOMMON_ASSERT(id != EventID::Unknown, "Invalid built-in Event ID");
+    LKCOMMON_ASSERT(id != ID::Unknown, "Invalid built-in Event ID");
 
     if (IsBuiltInEvent(id))
     {
-        LKCOMMON_ASSERT(static_cast<uint32_t>(id) < static_cast<uint32_t>(EventID::BuiltInCount), "Invalid built-in Event ID");
+        LKCOMMON_ASSERT(static_cast<uint32_t>(id) < static_cast<uint32_t>(ID::BuiltInCount), "Invalid built-in Event ID");
 
         EventSubscribers& subs = mBuiltInEvents[static_cast<uint32_t>(id)];
         for (auto& s: subs)
