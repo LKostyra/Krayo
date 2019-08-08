@@ -13,6 +13,29 @@ AABB::AABB(const lkCommon::Math::Vector4& min, const lkCommon::Math::Vector4& ma
 {
 }
 
+void AABB::Contains(const AABB& other)
+{
+    auto minReplace = [](float& src, const float& b) -> void
+    {
+        if (b < src)
+            src = b;
+    };
+
+    auto maxReplace = [](float& src, const float& b) -> void
+    {
+        if (b > src)
+            src = b;
+    };
+
+    minReplace(mVert[AABBVert::MIN][0], other[AABBVert::MIN][0]);
+    minReplace(mVert[AABBVert::MIN][1], other[AABBVert::MIN][1]);
+    minReplace(mVert[AABBVert::MIN][2], other[AABBVert::MIN][2]);
+
+    maxReplace(mVert[AABBVert::MAX][0], other[AABBVert::MAX][0]);
+    maxReplace(mVert[AABBVert::MAX][1], other[AABBVert::MAX][1]);
+    maxReplace(mVert[AABBVert::MAX][2], other[AABBVert::MAX][2]);
+}
+
 void AABB::Realign()
 {
     // select which vertices are higher

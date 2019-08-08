@@ -26,6 +26,7 @@ public:
     AABB();
     AABB(const lkCommon::Math::Vector4& min, const lkCommon::Math::Vector4& max);
 
+    void Contains(const AABB& other);
     void Realign();
 
     LKCOMMON_INLINE const lkCommon::Math::Vector4& operator[](AABBVert v) const
