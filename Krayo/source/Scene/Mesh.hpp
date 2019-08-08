@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Object.hpp"
+#include "Krayo/Object.hpp"
 #include "Scene/Material.hpp"
 
 #include "Math/AABB.hpp"

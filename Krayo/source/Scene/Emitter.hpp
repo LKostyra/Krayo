@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
-#include "Scene/Component.hpp"
+#include "Krayo/Component.hpp"
 
 #include <lkCommon/Math/Vector4.hpp>
 #include <lkCommon/System/Memory.hpp>
@@ -65,7 +65,7 @@ struct EmitterDesc
     }
 };
 
-class Emitter: public Component
+class Emitter: public Krayo::Component
 {
     friend class Renderer::ParticleEngine;
 

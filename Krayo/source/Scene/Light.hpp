@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.hpp"
+#include "Krayo/Component.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Math/Vector4.hpp>
@@ -26,7 +26,7 @@ struct alignas(16) LightData
     }
 };
 
-class Light: public Component
+class Light: public Krayo::Component
 {
     friend class Scene;
 

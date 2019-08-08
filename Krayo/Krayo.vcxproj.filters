@@ -37,15 +37,18 @@
     <Filter Include="source\Events">
       <UniqueIdentifier>{90ce4195-b2bb-4600-be23-640286e453d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Krayo\Component">
+      <UniqueIdentifier>{0f11d565-605c-49f1-a13d-ab5d1e0f55a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\API\Component">
+      <UniqueIdentifier>{0edafe2e-c390-445a-bdb9-b0221aa8b0f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\Scene\Camera.cpp">
-      <Filter>source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scene\Component.cpp">
       <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\Scene\Emitter.cpp">
@@ -61,12 +64,6 @@
       <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\Scene\Model.cpp">
-      <Filter>source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scene\Object.cpp">
-      <Filter>source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scene\Scene.cpp">
       <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\Renderer\HighLevel\DepthPrePass.cpp">
@@ -182,6 +179,21 @@
     </ClCompile>
     <ClCompile Include="source\API\Events.cpp">
       <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\Map.cpp">
+      <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Map.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Object.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component\Light.cpp">
+      <Filter>source\API\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +314,6 @@
     <ClInclude Include="source\Scene\Camera.hpp">
       <Filter>source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="source\Scene\Component.hpp">
-      <Filter>source\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="source\Scene\Emitter.hpp">
       <Filter>source\Scene</Filter>
     </ClInclude>
@@ -318,12 +327,6 @@
       <Filter>source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Scene\Model.hpp">
-      <Filter>source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\Object.hpp">
-      <Filter>source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\Scene.hpp">
       <Filter>source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\Krayo\Engine.hpp">
@@ -340,6 +343,24 @@
     </ClInclude>
     <ClInclude Include="include\Krayo\Events.hpp">
       <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\ApiPrerequisites.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Component.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Map.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Object.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Component\Light.hpp">
+      <Filter>include\Krayo\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\Map.hpp">
+      <Filter>source\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -25,6 +25,26 @@ void Engine::MainLoop()
     return mImpl->MainLoop();
 }
 
+Krayo::Map* Engine::CreateMap(const std::string& name)
+{
+    return mImpl->CreateMap(name);
+}
+
+void Engine::SetCurrentMap(Krayo::Map* map)
+{
+    mImpl->SetCurrentMap(map);
+}
+
+Krayo::Map* Engine::GetCurrentMap()
+{
+    return mImpl->GetCurrentMap();
+}
+
+Krayo::Material* Engine::CreateMaterial(const std::string& name)
+{
+    return mImpl->CreateMaterial(name);
+}
+
 bool Engine::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)
 {
     return mImpl->RegisterToEvent(id, subscriber);

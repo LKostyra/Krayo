@@ -1,7 +1,12 @@
 SET(KRAYO_SRCS source/ResourceDir.cpp
+               source/API/Component.cpp
                source/API/Engine.cpp
                source/API/EngineImpl.cpp
                source/API/Events.cpp
+               source/API/Map.cpp
+               source/API/Material.cpp
+               source/API/Object.cpp
+               source/API/Component/Light.cpp
                source/Events/EventManager.cpp
                source/Math/AABB.cpp
                source/Math/Frustum.cpp
@@ -36,14 +41,12 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Renderer/HighLevel/ResourceFactory.cpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.cpp
                source/Scene/Camera.cpp
-               source/Scene/Component.cpp
                source/Scene/Emitter.cpp
                source/Scene/Light.cpp
+               source/Scene/Map.cpp
                source/Scene/Material.cpp
                source/Scene/Mesh.cpp
                source/Scene/Model.cpp
-               source/Scene/Object.cpp
-               source/Scene/Scene.cpp
                source/Utils/FBXFile.cpp
                )
 
@@ -86,22 +89,25 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
                source/Renderer/HighLevel/ResourceFactory.hpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.hpp
                source/Scene/Camera.hpp
-               source/Scene/Component.hpp
                source/Scene/Emitter.hpp
                source/Scene/Light.hpp
+               source/Scene/Map.hpp
                source/Scene/Material.hpp
                source/Scene/Mesh.hpp
                source/Scene/Model.hpp
-               source/Scene/Object.hpp
-               source/Scene/Scene.hpp
                source/Utils/FBXFile.hpp
                source/Utils/Traits.hpp
                )
 
 SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp
                    include/Krayo/ApiPrerequisites.hpp
+                   include/Krayo/Component.hpp
                    include/Krayo/Engine.hpp
                    include/Krayo/Events.hpp
+                   include/Krayo/Map.hpp
+                   include/Krayo/Material.hpp
+                   include/Krayo/Object.hpp
+                   include/Krayo/Component/Light.hpp
                    )
 
 ADD_LIBRARY(${KRAYO_TARGET} SHARED

@@ -8,25 +8,6 @@
 namespace Krayo {
 namespace Scene {
 
-struct MaterialDesc
-{
-    std::string materialName;
-
-    lkCommon::Utils::PixelFloat4 color;
-    std::string diffusePath;
-    std::string normalPath;
-    std::string maskPath;
-
-    MaterialDesc()
-        : materialName()
-        , color(1.0f)
-        , diffusePath()
-        , normalPath()
-        , maskPath()
-    {
-    }
-};
-
 class Material
 {
     friend class Mesh;
@@ -44,7 +25,12 @@ public:
     Material(const std::string& name);
     ~Material();
 
-    bool Init(const MaterialDesc& desc);
+    LKCOMMON_INLINE void SetColor(float R, float G, float B)
+    {
+        mColor[0] = R;
+        mColor[1] = G;
+        mColor[2] = B;
+    }
 
     LKCOMMON_INLINE const lkCommon::Utils::PixelFloat4& GetColor() const
     {

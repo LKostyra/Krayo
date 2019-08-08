@@ -4,7 +4,7 @@
 #include "Renderer/LowLevel/MultiPipeline.hpp"
 #include "Renderer/LowLevel/Tools.hpp"
 
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 
 namespace Krayo {

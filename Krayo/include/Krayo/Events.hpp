@@ -37,12 +37,12 @@ enum class ID: unsigned int
  * Abstraction layer for Event messages
  *
  */
-class KRAYO_API IMessage
+class IMessage
 {
 public:
     virtual ~IMessage() {}
 
-    virtual const ID GetID() const = 0;
+    KRAYO_API virtual const ID GetID() const = 0;
 };
 
 
@@ -52,12 +52,12 @@ public:
  * Inherit this object and provide whichever additional data you require in order to properly
  * process the event.
  */
-class KRAYO_API ISubscriber
+class ISubscriber
 {
 public:
     virtual ~ISubscriber() {}
 
-    virtual void Call(const IMessage* message) = 0;
+    KRAYO_API virtual void Call(const IMessage* message) = 0;
 };
 
 
@@ -75,7 +75,7 @@ public:
  *
  * @p mKeyID Contains pressed key ID.
  */
-class KRAYO_API KeyDownMessage: public IMessage
+class KeyDownMessage: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -92,7 +92,7 @@ public:
  *
  * @p mKeyID Contains ID of key that was let go.
  */
-class KRAYO_API KeyUpMessage: public IMessage
+class KeyUpMessage: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -109,7 +109,7 @@ public:
  *
  * @p mKeyID Contains pressed key ID.
  */
-class KRAYO_API MouseDownMessage: public IMessage
+class MouseDownMessage: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -126,7 +126,7 @@ public:
  *
  * @p mKeyID Contains ID of key that was let go.
  */
-class KRAYO_API MouseUpMessage: public IMessage
+class MouseUpMessage: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -146,7 +146,7 @@ public:
  * @p mDeltaX Difference between previous and current X position of mouse cursor.
  * @p mDeltaY Difference between previous and current Y position of mouse cursor.
  */
-class KRAYO_API MouseMoveMessage: public IMessage
+class MouseMoveMessage: public IMessage
 {
     uint32_t mPosX;
     uint32_t mPosY;

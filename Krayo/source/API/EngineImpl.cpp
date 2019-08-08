@@ -108,7 +108,9 @@ const uint32_t MAX_FRAMESKIP = 5;
 
 Engine::Impl::Impl()
     : mRenderer()
-    , mScene()
+    , mEventManager()
+    , mMaps()
+    , mCurrentMap(nullptr)
     , mCamera()
 {
 }
@@ -148,6 +150,40 @@ bool Engine::Impl::SetDirTree() const
 void Engine::Impl::Update()
 {
     gWindow->Update(static_cast<float>(TICK_TIME));
+}
+
+Krayo::Map* Engine::Impl::CreateDefaultMap()
+{
+    Krayo::Map* defaultMap = CreateMap("DEFAULT");
+
+    //Krayo::Material* mat = CreateMaterial("mat0");
+    // HACK
+    Scene::Material* mat = new Scene::Material("mat0");
+    mat->SetColor(0.2f, 0.5f, 0.8f);
+
+    Scene::ModelDesc modelDesc;
+    modelDesc.materials.emplace_back(mat);
+
+    Scene::Model* m = dynamic_cast<Scene::Model*>(defaultMap->CreateComponent(ComponentType::Model, "obj0"));
+    if (!m->Init(modelDesc))
+    {
+        LOGE("Failed to init cube");
+        return nullptr;
+    }
+    m->SetPosition(0.0f, 0.0f, 0.0f);
+
+    Krayo::Object* o = defaultMap->CreateObject("o0");
+    o->SetComponent(m);
+
+    Krayo::Component* lightResult = defaultMap->CreateComponent(ComponentType::Light, "light0");
+    Scene::Light* light = dynamic_cast<Krayo::Scene::Light*>(lightResult);
+    light->SetDiffuseIntensity(1.0f, 1.0f, 1.0f);
+    light->SetPosition(3.0f, 5.0f, 0.0f);
+
+    Krayo::Object* lightObj = defaultMap->CreateObject("l0");
+    lightObj->SetComponent(light);
+
+    return defaultMap;
 }
 
 bool Engine::Impl::Init(const EngineDesc& desc)
@@ -192,36 +228,12 @@ bool Engine::Impl::Init(const EngineDesc& desc)
         return false;
     }
 
-    if (!mScene.Init())
+    mCurrentMap = CreateDefaultMap();
+    if (!mCurrentMap)
     {
-        LOGE("Failed to create empty scene");
+        LOGE("Failed to initialize Engine's default map");
         return false;
     }
-
-    Scene::MaterialDesc matDesc;
-    matDesc.color = lkCommon::Utils::PixelFloat4(0.2f, 0.5f, 0.8f, 1.0f);
-
-    Scene::Material* mat = mScene.GetMaterial("mat0").first;
-    if (!mat->Init(matDesc))
-        return false;
-
-    Scene::ModelDesc modelDesc;
-    modelDesc.materials.emplace_back(mat);
-
-    Scene::Model* m = dynamic_cast<Scene::Model*>(mScene.GetComponent(Scene::ComponentType::Model, "obj0").first);
-    if (!m->Init(modelDesc)) return false;
-    m->SetPosition(0.0f, 0.0f, 0.0f);
-
-    Scene::Object* o = mScene.CreateObject();
-    o->SetComponent(m);
-
-    auto lightResult = mScene.GetComponent(Scene::ComponentType::Light, "light0");
-    Scene::Light* light = dynamic_cast<Krayo::Scene::Light*>(lightResult.first);
-    light->SetDiffuseIntensity(1.0f, 1.0f, 1.0f);
-    light->SetPosition(3.0f, 5.0f, 0.0f);
-
-    Krayo::Scene::Object* lightObj = mScene.CreateObject();
-    lightObj->SetComponent(light);
 
     Scene::CameraDesc camDesc;
     camDesc.pos = lkCommon::Math::Vector4(2.0f, 1.0f,-5.0f, 1.0f);
@@ -269,8 +281,34 @@ void Engine::Impl::MainLoop()
         float interpolation = updateTime * TICK_TIME_INV;
         if (interpolation > 1.0f)
             interpolation = 1.0f;
-        mRenderer.Draw(mScene, mCamera, frameTime, interpolation);
+
+        mRenderer.Draw(*mCurrentMap->mImpl, mCamera, frameTime, interpolation);
     }
+}
+
+Krayo::Map* Engine::Impl::CreateMap(const std::string& name)
+{
+    mMaps.emplace_back(name);
+    return &mMaps.back();
+}
+
+Krayo::Material* Engine::Impl::CreateMaterial(const std::string& name)
+{
+    mMaterials.emplace_back(name);
+    return &mMaterials.back();
+}
+
+void Engine::Impl::SetCurrentMap(Krayo::Map* map)
+{
+    if (map == nullptr)
+        mCurrentMap = &mMaps[0];
+    else
+        mCurrentMap = map;
+}
+
+Krayo::Map* Engine::Impl::GetCurrentMap()
+{
+    return mCurrentMap;
 }
 
 bool Engine::Impl::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)

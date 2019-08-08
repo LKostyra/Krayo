@@ -5,9 +5,9 @@ PROJECT(KrayoDeps)
 IF(WIN32)
     # force using static runtime linking
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        ADD_DEFINITIONS("/MTd")
+        ADD_DEFINITIONS("/MDd")
     ELSE("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        ADD_DEFINITIONS("/MT")
+        ADD_DEFINITIONS("/MD")
     ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 ELSEIF(UNIX)
     # force Position Independent Code - required when linking deps with libKrayo.so

@@ -150,11 +150,11 @@ bool ParticleEngine::Init(const DevicePtr& device)
     return true;
 }
 
-bool ParticleEngine::UpdateEmitters(const Scene::Scene& scene)
+bool ParticleEngine::UpdateEmitters(const Scene::Map& map)
 {
     bool bufferNeedsUpdate = false;
 
-    scene.ForEachEmitter([&](const Scene::Emitter* e) -> bool {
+    map.ForEachEmitter([&](const Scene::Emitter* e) -> bool {
         auto it = std::find_if(mEmitters.begin(), mEmitters.end(), [e](const Scene::Emitter* em) {
             return (e == em);
         });

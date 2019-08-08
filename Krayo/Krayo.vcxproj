@@ -11,9 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\API\Component.cpp" />
+    <ClCompile Include="source\API\Component\Light.cpp" />
     <ClCompile Include="source\API\Engine.cpp" />
     <ClCompile Include="source\API\EngineImpl.cpp" />
     <ClCompile Include="source\API\Events.cpp" />
+    <ClCompile Include="source\API\Map.cpp" />
+    <ClCompile Include="source\API\Object.cpp" />
     <ClCompile Include="source\Events\EventManager.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Math\AABB.cpp" />
@@ -50,20 +54,23 @@
     <ClCompile Include="source\Renderer\LowLevel\Win\WinBackbuffer.cpp" />
     <ClCompile Include="source\ResourceDir.cpp" />
     <ClCompile Include="source\Scene\Camera.cpp" />
-    <ClCompile Include="source\Scene\Component.cpp" />
     <ClCompile Include="source\Scene\Emitter.cpp" />
     <ClCompile Include="source\Scene\Light.cpp" />
+    <ClCompile Include="source\Scene\Map.cpp" />
     <ClCompile Include="source\Scene\Material.cpp" />
     <ClCompile Include="source\Scene\Mesh.cpp" />
     <ClCompile Include="source\Scene\Model.cpp" />
-    <ClCompile Include="source\Scene\Object.cpp" />
-    <ClCompile Include="source\Scene\Scene.cpp" />
     <ClCompile Include="source\Utils\FBXFile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp" />
+    <ClInclude Include="include\Krayo\ApiPrerequisites.hpp" />
+    <ClInclude Include="include\Krayo\Component.hpp" />
+    <ClInclude Include="include\Krayo\Component\Light.hpp" />
     <ClInclude Include="include\Krayo\Engine.hpp" />
     <ClInclude Include="include\Krayo\Events.hpp" />
+    <ClInclude Include="include\Krayo\Map.hpp" />
+    <ClInclude Include="include\Krayo\Object.hpp" />
     <ClInclude Include="source\API\EngineImpl.hpp" />
     <ClInclude Include="source\Events\EventManager.hpp" />
     <ClInclude Include="source\Math\AABB.hpp" />
@@ -103,14 +110,12 @@
     <ClInclude Include="source\Renderer\LowLevel\Win\WinBackbuffer.hpp" />
     <ClInclude Include="source\ResourceDir.hpp" />
     <ClInclude Include="source\Scene\Camera.hpp" />
-    <ClInclude Include="source\Scene\Component.hpp" />
     <ClInclude Include="source\Scene\Emitter.hpp" />
     <ClInclude Include="source\Scene\Light.hpp" />
+    <ClInclude Include="source\Scene\Map.hpp" />
     <ClInclude Include="source\Scene\Material.hpp" />
     <ClInclude Include="source\Scene\Mesh.hpp" />
     <ClInclude Include="source\Scene\Model.hpp" />
-    <ClInclude Include="source\Scene\Object.hpp" />
-    <ClInclude Include="source\Scene\Scene.hpp" />
     <ClInclude Include="source\Utils\FBXFile.hpp" />
     <ClInclude Include="source\Utils\Traits.hpp" />
   </ItemGroup>
@@ -162,12 +167,13 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)Deps\fbxsdk\lib\vs2015\$(PlatformShortName)\$(Configuration)\;$(SolutionDir)Deps\Bin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lkCommon.lib;libfbxsdk-mt.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslangd.lib;HLSLd.lib;OSDependentd.lib;OGLCompilerd.lib;SPIRVd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lkCommon.lib;libfbxsdk-md.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslangd.lib;HLSLd.lib;OSDependentd.lib;OGLCompilerd.lib;SPIRVd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>"$(SolutionDir)Deps\prepare_deps.bat" $(Platform) $(Configuration)</Command>
@@ -183,13 +189,14 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lkCommon.lib;libfbxsdk-mt.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslang.lib;HLSL.lib;OSDependent.lib;OGLCompiler.lib;SPIRV.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lkCommon.lib;libfbxsdk-md.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslang.lib;HLSL.lib;OSDependent.lib;OGLCompiler.lib;SPIRV.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Deps\fbxsdk\lib\vs2015\$(PlatformShortName)\$(Configuration)\;$(SolutionDir)Deps\Bin\$(Platform)\$(Configuration)\;$(VULKAN_SDK)\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>

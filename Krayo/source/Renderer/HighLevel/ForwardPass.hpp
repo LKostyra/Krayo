@@ -12,7 +12,7 @@
 #include "Renderer/LowLevel/Tools.hpp"
 
 #include "Scene/Camera.hpp"
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 
 namespace Krayo {
@@ -94,7 +94,7 @@ public:
     ForwardPass();
 
     bool Init(const DevicePtr& device, const ForwardPassDesc& desc);
-    void Draw(const Scene::Scene& scene, const ForwardPassDrawDesc& desc);
+    void Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc);
 
     LKCOMMON_INLINE Texture& GetTargetTexture()
     {

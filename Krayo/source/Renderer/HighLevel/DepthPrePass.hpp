@@ -11,7 +11,7 @@
 #include "Renderer/LowLevel/Tools.hpp"
 
 #include "Scene/Camera.hpp"
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 
 namespace Krayo {
@@ -60,7 +60,7 @@ class DepthPrePass final
 
 public:
     bool Init(const DevicePtr& device, const DepthPrePassDesc& desc);
-    void Draw(const Scene::Scene& scene, const DepthPrePassDrawDesc& desc);
+    void Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc);
 
     LKCOMMON_INLINE Texture* GetDepthTexture()
     {

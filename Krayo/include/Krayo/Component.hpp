@@ -1,10 +1,11 @@
 #pragma once
 
-#include <lkCommon/lkCommon.hpp>
+#include "Krayo/ApiDef.hpp"
+
+#include <string>
 
 
 namespace Krayo {
-namespace Scene {
 
 enum class ComponentType: unsigned char
 {
@@ -20,15 +21,14 @@ protected:
     std::string mName;
 
 public:
-    Component(const std::string& name);
+    KRAYO_API Component(const std::string& name);
 
-    virtual ComponentType GetType() const = 0;
+    KRAYO_API virtual ComponentType GetType() const = 0;
 
-    LKCOMMON_INLINE std::string GetName() const
+    KRAYO_INLINE std::string GetName() const
     {
         return mName;
     }
 };
 
-} // namespace Scene
 } // namespace Krayo

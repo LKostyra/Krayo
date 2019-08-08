@@ -47,40 +47,5 @@ bool Material::CreateRendererTexture(const std::string& imagePath, VkImageUsageF
     return (texture != nullptr);
 }
 
-bool Material::Init(const MaterialDesc& desc)
-{
-    mColor = desc.color;
-
-    if (!desc.diffusePath.empty())
-    {
-        if (!CreateRendererTexture(desc.diffusePath, VK_IMAGE_USAGE_SAMPLED_BIT, mDiffuseTexture))
-        {
-            LOGE("Failed to create diffuse texture for material " << mMaterialName);
-            return false;
-        }
-    }
-
-    // below textures are optional - create it only when provided
-    if (!desc.normalPath.empty())
-    {
-        if (!CreateRendererTexture(desc.normalPath, VK_IMAGE_USAGE_SAMPLED_BIT, mNormalTexture))
-        {
-            LOGE("Failed to create normal texture for material " << mMaterialName);
-            return false;
-        }
-    }
-
-    if (!desc.maskPath.empty())
-    {
-        if (!CreateRendererTexture(desc.maskPath, VK_IMAGE_USAGE_SAMPLED_BIT, mMaskTexture))
-        {
-            LOGE("Failed to create color mask texture for material " << mMaterialName);
-            return false;
-        }
-    }
-
-    return true;
-}
-
 } // namespace Scene
 } // namespace Krayo

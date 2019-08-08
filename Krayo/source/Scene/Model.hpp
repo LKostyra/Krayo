@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Scene/Object.hpp"
-#include "Scene/Component.hpp"
+#include "Krayo/Object.hpp"
+#include "Krayo/Component.hpp"
 #include "Scene/Mesh.hpp"
+#include "Krayo/Material.hpp"
 #include "Scene/Material.hpp"
 
 #include "Math/AABB.hpp"
@@ -21,7 +22,7 @@ using MeshTraverseCallback = std::function<void(Mesh*)>;
 struct ModelDesc
 {
     FbxMesh* mesh;
-    std::vector<Material*> materials;
+    std::vector<Krayo::Scene::Material*> materials;
 
     ModelDesc()
         : mesh(nullptr)
@@ -30,7 +31,7 @@ struct ModelDesc
     }
 };
 
-class Model final: public Component
+class Model final: public Krayo::Component
 {
     lkCommon::Math::Matrix4 mTransform;
     lkCommon::Math::Vector4 mPosition;

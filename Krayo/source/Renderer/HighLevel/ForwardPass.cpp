@@ -239,7 +239,7 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     return true;
 }
 
-void ForwardPass::Draw(const Scene::Scene& scene, const ForwardPassDrawDesc& desc)
+void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
 {
     LKCOMMON_ASSERT(desc.waitFlags.size() == desc.waitSems.size(), "Wait semaphores count does not match wait flags count");
 
@@ -276,8 +276,8 @@ void ForwardPass::Draw(const Scene::Scene& scene, const ForwardPassDrawDesc& des
             { ShaderMacro::HAS_COLOR_MASK, 0 },
         };
 
-        scene.ForEachObject([&](const Scene::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Scene::ComponentType::Model)
+        map.ForEachObject([&](const Krayo::Object* o) -> bool {
+            if (o->GetComponent()->GetType() == Krayo::ComponentType::Model)
             {
                 Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
 

@@ -7,7 +7,7 @@
 #include "Renderer/LowLevel/Shader.hpp"
 #include "Renderer/LowLevel/RingBuffer.hpp"
 
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 #include <lkCommon/Math/Vector4.hpp>
 
@@ -55,7 +55,7 @@ public:
     ParticleEngine();
 
     bool Init(const DevicePtr& device);
-    bool UpdateEmitters(const Scene::Scene& scene);
+    bool UpdateEmitters(const Scene::Map& map);
     void Dispatch(const ParticleEngineDispatchDesc& desc);
 
     LKCOMMON_INLINE Buffer* GetParticleDataBuffer()

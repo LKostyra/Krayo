@@ -112,7 +112,7 @@ bool DepthPrePass::Init(const DevicePtr& device, const DepthPrePassDesc& desc)
     return true;
 }
 
-void DepthPrePass::Draw(const Scene::Scene& scene, const DepthPrePassDrawDesc& desc)
+void DepthPrePass::Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc)
 {
     // recording Command Buffer
     {
@@ -125,8 +125,8 @@ void DepthPrePass::Draw(const Scene::Scene& scene, const DepthPrePassDrawDesc& d
         mCommandBuffer.BeginRenderPass(mRenderPass, &mFramebuffer, ClearType::DEPTH, nullptr, 1.0f);
 
         MultiGraphicsPipelineShaderMacros emptyMacros;
-        scene.ForEachObject([&](const Scene::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Scene::ComponentType::Model)
+        map.ForEachObject([&](const Krayo::Object* o) -> bool {
+            if (o->GetComponent()->GetType() == Krayo::ComponentType::Model)
             {
                 Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
 

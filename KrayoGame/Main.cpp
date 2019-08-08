@@ -40,6 +40,8 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    Krayo::Map* defaultMap = engine.GetCurrentMap();
+
     engine.MainLoop();
 
     return 0;

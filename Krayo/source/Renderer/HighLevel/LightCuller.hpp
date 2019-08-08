@@ -8,7 +8,7 @@
 #include "Renderer/LowLevel/Buffer.hpp"
 #include "Renderer/LowLevel/Texture.hpp"
 
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 #include <lkCommon/Math/Matrix4.hpp>
 

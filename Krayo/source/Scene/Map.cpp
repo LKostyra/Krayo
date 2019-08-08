@@ -1,4 +1,4 @@
-#include "Scene/Scene.hpp"
+#include "Scene/Map.hpp"
 
 #include <lkCommon/Utils/Logger.hpp>
 
@@ -6,15 +6,75 @@
 namespace Krayo {
 namespace Scene {
 
-Scene::Scene()
+Map::Map(const std::string& name)
+    : mName(name)
 {
 }
 
-Scene::~Scene()
+Map::~Map()
 {
 }
 
-FbxFileTexture* Scene::FileTextureFromMaterial(FbxSurfaceMaterial* material, const std::string& propertyName)
+template <typename ItemType>
+CreateResult<ItemType> Map::CreateItem(ResourceCollection<ItemType>& m, const std::string& name)
+{
+    // TODO do we need to cross-check if name is not duplicated?
+    m.emplace_back(name);
+    return &m.back();
+}
+
+template <typename ItemType>
+void Map::ForEachItem(const ResourceCollection<ItemType>& m, Callback<ItemType>& func) const
+{
+    for (auto& it: m)
+        if (!func(&it))
+            return;
+}
+
+CreateResult<Krayo::Object> Map::CreateObject(const std::string& name)
+{
+    return CreateItem<Krayo::Object>(mObjects, name);
+}
+
+CreateResult<Krayo::Component> Map::CreateComponent(Krayo::ComponentType type, const std::string& name)
+{
+    switch (type)
+    {
+    case Krayo::ComponentType::Model:
+        return CreateItem<Model>(mModelComponents, name);
+    case Krayo::ComponentType::Light:
+        return CreateItem<Light>(mLightComponents, name);
+    case Krayo::ComponentType::Emitter:
+        return CreateItem<Emitter>(mEmitterComponents, name);
+    default:
+        LOGE("Unknown component type provided to create");
+        return nullptr;
+    }
+}
+
+void Map::ForEachLight(Callback<Light> func) const
+{
+    ForEachItem<Light>(mLightComponents, func);
+}
+
+void Map::ForEachEmitter(Callback<Emitter> func) const
+{
+    ForEachItem<Emitter>(mEmitterComponents, func);
+}
+
+void Map::ForEachObject(Callback<Krayo::Object> func) const
+{
+    ForEachItem<Krayo::Object>(mObjects, func);
+}
+
+} // namespace Scene
+} // namespace Krayo
+
+
+/*
+OLD INITIALIZATION CODE LOADING FBX FROM FILE
+
+FbxFileTexture* Map::FileTextureFromMaterial(FbxSurfaceMaterial* material, const std::string& propertyName)
 {
     FbxProperty prop = material->FindProperty(propertyName.c_str());
     if (!prop.IsValid())
@@ -28,7 +88,7 @@ FbxFileTexture* Scene::FileTextureFromMaterial(FbxSurfaceMaterial* material, con
     return texFile; // can return nullptr here if requested property does not exist
 }
 
-lkCommon::Utils::PixelFloat4 Scene::ColorVector4FromMaterial(FbxSurfaceMaterial* material)
+lkCommon::Utils::PixelFloat4 Map::ColorVector4FromMaterial(FbxSurfaceMaterial* material)
 {
     if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
     {
@@ -39,7 +99,7 @@ lkCommon::Utils::PixelFloat4 Scene::ColorVector4FromMaterial(FbxSurfaceMaterial*
     return lkCommon::Utils::PixelFloat4(1.0f);
 }
 
-bool Scene::Init(const std::string& fbxFile)
+bool Map::Init(const std::string& fbxFile)
 {
     if (!fbxFile.empty())
     {
@@ -131,101 +191,4 @@ bool Scene::Init(const std::string& fbxFile)
 
     return true;
 }
-
-Object* Scene::CreateObject()
-{
-    mObjects.emplace_back();
-    return &mObjects.back();
-}
-
-GetResult<Component> Scene::GetModelComponent(const std::string& name)
-{
-    bool created = false;
-    auto mesh = mModelComponents.find(name);
-    if (mesh == mModelComponents.end())
-    {
-        mesh = mModelComponents.insert(std::make_pair(name, std::make_unique<Model>(name))).first;
-        created = true;
-    }
-
-    return std::make_pair(mesh->second.get(), created);
-}
-
-GetResult<Component> Scene::GetLightComponent(const std::string& name)
-{
-    bool created = false;
-    auto light = mLightComponents.find(name);
-    if (light == mLightComponents.end())
-    {
-        light = mLightComponents.insert(std::make_pair(name, std::make_unique<Light>(name))).first;
-        created = true;
-    }
-
-    return std::make_pair(light->second.get(), created);
-}
-
-GetResult<Component> Scene::GetEmitterComponent(const std::string& name)
-{
-    bool created = false;
-    auto emitter = mEmitterComponents.find(name);
-    if (emitter == mEmitterComponents.end())
-    {
-        emitter = mEmitterComponents.insert(std::make_pair(name, std::make_unique<Emitter>(name))).first;
-        created = true;
-    }
-
-    return std::make_pair(emitter->second.get(), created);
-}
-
-GetResult<Component> Scene::GetComponent(ComponentType type, const std::string& name)
-{
-    switch (type)
-    {
-    case ComponentType::Model:
-        return GetModelComponent(name);
-    case ComponentType::Light:
-        return GetLightComponent(name);
-    case ComponentType::Emitter:
-        return GetEmitterComponent(name);
-    default:
-        LOGE("Unknown component type provided to get");
-        return std::make_pair(nullptr, false);
-    }
-}
-
-GetResult<Material> Scene::GetMaterial(const std::string& name)
-{
-    bool created = false;
-    auto mat = mMaterials.find(name);
-    if (mat == mMaterials.end())
-    {
-        mat = mMaterials.insert(std::make_pair(name, std::make_unique<Material>(name))).first;
-        created = true;
-    }
-
-    return std::make_pair(mat->second.get(), created);
-}
-
-void Scene::ForEachLight(Callback<Light> func) const
-{
-    for (auto& l: mLightComponents)
-        if (!func(l.second.get()))
-            return;
-}
-
-void Scene::ForEachObject(Callback<Object> func) const
-{
-    for (auto& o: mObjects)
-        if (!func(&o))
-            return;
-}
-
-void Scene::ForEachEmitter(Callback<Emitter> func) const
-{
-    for (auto& e: mEmitterComponents)
-        if (!func(e.second.get()))
-            return;
-}
-
-} // namespace Scene
-} // namespace Krayo
+*/

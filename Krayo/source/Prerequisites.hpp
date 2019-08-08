@@ -35,9 +35,7 @@ class ParticleEngine;
 namespace Scene {
 
 class Camera;
-class Component;
 class Mesh;
-class Object;
 class Scene;
 
 } // namespace Scene

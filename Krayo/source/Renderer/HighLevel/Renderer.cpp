@@ -258,14 +258,14 @@ bool Renderer::Init(const RendererDesc& desc)
     return true;
 }
 
-void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, float deltaTime, float interpolation)
+void Renderer::Draw(const Scene::Map& map, const Scene::Camera& camera, float deltaTime, float interpolation)
 {
     LKCOMMON_UNUSED(deltaTime);
 
-    // Perform view frustum culling for next scene
+    // Perform view frustum culling for next map
     // TODO readd
-    scene.ForEachObject([&](const Scene::Object* o) -> bool {
-        if (o->GetComponent()->GetType() == Scene::ComponentType::Model)
+    map.ForEachObject([&](const Krayo::Object* o) -> bool {
+        if (o->GetComponent()->GetType() == Krayo::ComponentType::Model)
         {
             Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
             //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
@@ -289,7 +289,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     ////////////////////////////
     // Particle Engine update //
     ////////////////////////////
-    /*mParticleEngine.UpdateEmitters(scene);
+    /*mParticleEngine.UpdateEmitters(map);
     ParticleEngineDispatchDesc peDesc;
     peDesc.cameraPos = camera.GetPosition();
     peDesc.deltaTime = deltaTime;
@@ -308,7 +308,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
         LOGW("Failed to update Vertex Shader Uniform Buffer");
 
     uint32_t lightCount = 0;
-    scene.ForEachLight([&](const Krayo::Scene::Light* l) -> bool {
+    map.ForEachLight([&](const Krayo::Scene::Light* l) -> bool {
         if (!mLightContainer.Write(l->GetData(), sizeof(Scene::LightData), lightCount * sizeof(Scene::LightData)))
             LOGW("Failed to update Light Container Storage Buffer");
         lightCount++;
@@ -326,7 +326,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     depthDesc.ringBufferPtr = &mRingBuffer;
     depthDesc.vertexShaderSet = mVertexShaderSet;
     depthDesc.signalSem = mDepthSem;
-    mDepthPrePass.Draw(scene, depthDesc);
+    mDepthPrePass.Draw(map, depthDesc);
 
     // Light culling dispatch
     LightCullerDispatchDesc cullingDesc;
@@ -349,7 +349,7 @@ void Renderer::Draw(const Scene::Scene& scene, const Scene::Camera& camera, floa
     forwardDesc.waitSems = { mCullingSem, mImageAcquiredSem };
     forwardDesc.signalSem = mRenderSem;
     forwardDesc.fence = mFrameFence;
-    mForwardPass.Draw(scene, forwardDesc);
+    mForwardPass.Draw(map, forwardDesc);
 
     // Particle pass
    /* ParticlePassDrawDesc particleDesc;

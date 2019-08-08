@@ -2,8 +2,7 @@
 
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/Events.hpp"
-
-#include <lkCommon/System/Window.hpp>
+#include "Krayo/Map.hpp"
 
 
 namespace Krayo {
@@ -48,29 +47,56 @@ struct EngineDesc
     }
 };
 
-class KRAYO_API Engine final
+class Engine final
 {
     class Impl;
     Engine::Impl* mImpl;
 
 public:
-    Engine();
-    ~Engine();
+    KRAYO_API Engine();
+    KRAYO_API ~Engine();
 
     /**
      * Initialize Engine instance
      *
      * @p[in] desc Initial properties of the Engine
+     * @return True if initialization succeeded, false in case of error.
      */
-    bool Init(const EngineDesc& desc);
+    KRAYO_API bool Init(const EngineDesc& desc);
 
     /**
      * Enter Engine's main loop.
      *
      * This function exits automatically when Engine's window is closed.
      */
-    void MainLoop();
+    KRAYO_API void MainLoop();
 
+    /**
+     * Create an empty Map.
+     *
+     * @p[in] name Name to be given to a map.
+     * @return Pointer to a Map object, nullptr on error.
+     */
+    KRAYO_API Krayo::Map* CreateMap(const std::string& name);
+
+    /**
+     * Set current Map for Engine to work on.
+     *
+     * @p[in] map Engine's Map to be made current.
+     */
+    KRAYO_API void SetCurrentMap(Krayo::Map* map);
+
+    /**
+     * Acquire current map.
+     *
+     * @return Map currently being processed by Engine.
+     */
+    KRAYO_API Krayo::Map* GetCurrentMap();
+
+    /**
+     * Create new Material;
+     */
+    KRAYO_API Krayo::Material* CreateMaterial(const std::string& name);
 
     /**
      * @defgroup EventAPI Event API
@@ -87,14 +113,14 @@ public:
      * @note @p subscriber pointer is captured by std::unique_ptr in-engine, so caller does not
      *       have to worry about freeing the pointer after the app is done.
      */
-    bool RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber);
+    KRAYO_API bool RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber);
 
     /**
      * Emit a custom event.
      *
      * @p[in] message Message to emit to registered objects.
      */
-    void EmitEvent(const Events::ID id, const Events::IMessage* message);
+    KRAYO_API void EmitEvent(const Events::ID id, const Events::IMessage* message);
 
     /**
      * @}
