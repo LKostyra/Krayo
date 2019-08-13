@@ -20,17 +20,6 @@ Mesh::~Mesh()
 {
 }
 
-bool Mesh::HasNormalMap(FbxMesh* mesh, int materialIndex)
-{
-    FbxNode* node = mesh->GetNode();
-    FbxSurfaceMaterial* material = node->GetSrcObject<FbxSurfaceMaterial>(materialIndex);
-    FbxProperty prop = material->FindProperty(material->sNormalMap);
-    if (!prop.IsValid())
-        return false;
-
-    return (prop.GetSrcObjectCount<FbxTexture>() > 0);
-}
-
 bool Mesh::InitBuffers(const std::vector<Vertex>& vertices,
                        const std::vector<VertexParams>& vertexParams,
                        int* indices, int indexCount)
@@ -69,6 +58,115 @@ bool Mesh::InitBuffers(const std::vector<Vertex>& vertices,
     }
 
     return true;
+}
+
+bool Mesh::InitDefault()
+{
+    std::vector<Vertex> vertices
+    {
+        // front
+        { { -0.5f,-0.5f, 0.5f } }, // 0        7----6
+        { {  0.5f,-0.5f, 0.5f } }, // 1      3----2 |
+        { {  0.5f, 0.5f, 0.5f } }, // 2      | 4--|-5
+        { { -0.5f, 0.5f, 0.5f } }, // 3      0----1
+
+        { { -0.5f,-0.5f,-0.5f } }, // 4
+        { {  0.5f,-0.5f,-0.5f } }, // 5
+        { {  0.5f, 0.5f,-0.5f } }, // 6
+        { { -0.5f, 0.5f,-0.5f } }, // 7
+
+        // side
+        { { -0.5f,-0.5f,-0.5f } }, // 4
+        { { -0.5f,-0.5f, 0.5f } }, // 0
+        { { -0.5f, 0.5f, 0.5f } }, // 3
+        { { -0.5f, 0.5f,-0.5f } }, // 7
+
+        { {  0.5f,-0.5f, 0.5f } }, // 1
+        { {  0.5f,-0.5f,-0.5f } }, // 5
+        { {  0.5f, 0.5f,-0.5f } }, // 6
+        { {  0.5f, 0.5f, 0.5f } }, // 2
+
+        // top
+        { { -0.5f, 0.5f, 0.5f } }, // 3
+        { {  0.5f, 0.5f, 0.5f } }, // 2
+        { {  0.5f, 0.5f,-0.5f } }, // 6
+        { { -0.5f, 0.5f,-0.5f } }, // 7
+
+        { { -0.5f,-0.5f,-0.5f } }, // 4
+        { {  0.5f,-0.5f,-0.5f } }, // 5
+        { {  0.5f,-0.5f, 0.5f } }, // 1
+        { { -0.5f,-0.5f, 0.5f } }, // 0
+    };
+
+    std::vector<VertexParams> vertexParams
+    {
+        // front
+        { {  0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }, // 0        7----6
+        { {  0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } }, // 1      3----2 |
+        { {  0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 2      | 4--|-5
+        { {  0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 3      0----1
+
+        { {  0.0f, 0.0f,-1.0f }, { 0.0f, 1.0f } }, // 4
+        { {  0.0f, 0.0f,-1.0f }, { 1.0f, 1.0f } }, // 5
+        { {  0.0f, 0.0f,-1.0f }, { 1.0f, 0.0f } }, // 6
+        { {  0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f } }, // 7
+
+        // side
+        { { -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 4
+        { { -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 0
+        { { -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f } }, // 3
+        { { -1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f } }, // 7
+
+        { {  1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 1
+        { {  1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 5
+        { {  1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f } }, // 6
+        { {  1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f } }, // 2
+
+        // top
+        { {  0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } }, // 3
+        { {  0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 2
+        { {  0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 6
+        { {  0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } }, // 7
+
+        { {  0.0f,-1.0f, 0.0f }, { 0.0f, 1.0f } }, // 4
+        { {  0.0f,-1.0f, 0.0f }, { 1.0f, 1.0f } }, // 5
+        { {  0.0f,-1.0f, 0.0f }, { 1.0f, 0.0f } }, // 1
+        { {  0.0f,-1.0f, 0.0f }, { 0.0f, 0.0f } }, // 0
+    };
+
+    std::vector<int> indices
+    {
+        0, 1, 2, 0, 2, 3, // front
+        7, 6, 5, 7, 5, 4, // back
+        8, 9,10, 8,10,11, // left
+       12,13,14,12,14,15, // right
+       16,17,18,16,18,19, // top
+       20,21,22,20,22,23, // bottom
+    };
+
+    return InitBuffers(vertices, vertexParams, indices.data(), static_cast<int>(indices.size()));
+}
+
+bool Mesh::Init()
+{
+    return InitDefault();
+}
+
+} // namespace Scene
+} // namespace Krayo
+
+/*
+OLD IMPLEMENTATION OF INIT FROM FBX
+
+bool Mesh::HasNormalMap(FbxMesh* mesh, int materialIndex)
+{
+    FbxNode* node = mesh->GetNode();
+    FbxSurfaceMaterial* material = node->GetSrcObject<FbxSurfaceMaterial>(materialIndex);
+    FbxProperty prop = material->FindProperty(material->sNormalMap);
+    if (!prop.IsValid())
+        return false;
+
+    return (prop.GetSrcObjectCount<FbxTexture>() > 0);
 }
 
 bool Mesh::InitFromFBX(FbxMesh* mesh, int materialIndex)
@@ -176,101 +274,4 @@ bool Mesh::InitFromFBX(FbxMesh* mesh, int materialIndex)
 
     return InitBuffers(vertices, vertexParams, nullptr, 0);
 }
-
-bool Mesh::InitDefault()
-{
-    std::vector<Vertex> vertices
-    {
-        // front
-        { { -0.5f,-0.5f, 0.5f } }, // 0        7----6
-        { {  0.5f,-0.5f, 0.5f } }, // 1      3----2 |
-        { {  0.5f, 0.5f, 0.5f } }, // 2      | 4--|-5
-        { { -0.5f, 0.5f, 0.5f } }, // 3      0----1
-
-        { { -0.5f,-0.5f,-0.5f } }, // 4
-        { {  0.5f,-0.5f,-0.5f } }, // 5
-        { {  0.5f, 0.5f,-0.5f } }, // 6
-        { { -0.5f, 0.5f,-0.5f } }, // 7
-
-        // side
-        { { -0.5f,-0.5f,-0.5f } }, // 4
-        { { -0.5f,-0.5f, 0.5f } }, // 0
-        { { -0.5f, 0.5f, 0.5f } }, // 3
-        { { -0.5f, 0.5f,-0.5f } }, // 7
-
-        { {  0.5f,-0.5f, 0.5f } }, // 1
-        { {  0.5f,-0.5f,-0.5f } }, // 5
-        { {  0.5f, 0.5f,-0.5f } }, // 6
-        { {  0.5f, 0.5f, 0.5f } }, // 2
-
-        // top
-        { { -0.5f, 0.5f, 0.5f } }, // 3
-        { {  0.5f, 0.5f, 0.5f } }, // 2
-        { {  0.5f, 0.5f,-0.5f } }, // 6
-        { { -0.5f, 0.5f,-0.5f } }, // 7
-
-        { { -0.5f,-0.5f,-0.5f } }, // 4
-        { {  0.5f,-0.5f,-0.5f } }, // 5
-        { {  0.5f,-0.5f, 0.5f } }, // 1
-        { { -0.5f,-0.5f, 0.5f } }, // 0
-    };
-
-    std::vector<VertexParams> vertexParams
-    {
-        // front
-        { {  0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }, // 0        7----6
-        { {  0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } }, // 1      3----2 |
-        { {  0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }, // 2      | 4--|-5
-        { {  0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } }, // 3      0----1
-
-        { {  0.0f, 0.0f,-1.0f }, { 0.0f, 1.0f } }, // 4
-        { {  0.0f, 0.0f,-1.0f }, { 1.0f, 1.0f } }, // 5
-        { {  0.0f, 0.0f,-1.0f }, { 1.0f, 0.0f } }, // 6
-        { {  0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f } }, // 7
-
-        // side
-        { { -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 4
-        { { -1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 0
-        { { -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f } }, // 3
-        { { -1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f } }, // 7
-
-        { {  1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }, // 1
-        { {  1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } }, // 5
-        { {  1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f } }, // 6
-        { {  1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f } }, // 2
-
-        // top
-        { {  0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f } }, // 3
-        { {  0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f } }, // 2
-        { {  0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f } }, // 6
-        { {  0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } }, // 7
-
-        { {  0.0f,-1.0f, 0.0f }, { 0.0f, 1.0f } }, // 4
-        { {  0.0f,-1.0f, 0.0f }, { 1.0f, 1.0f } }, // 5
-        { {  0.0f,-1.0f, 0.0f }, { 1.0f, 0.0f } }, // 1
-        { {  0.0f,-1.0f, 0.0f }, { 0.0f, 0.0f } }, // 0
-    };
-
-    std::vector<int> indices
-    {
-        0, 1, 2, 0, 2, 3, // front
-        7, 6, 5, 7, 5, 4, // back
-        8, 9,10, 8,10,11, // left
-       12,13,14,12,14,15, // right
-       16,17,18,16,18,19, // top
-       20,21,22,20,22,23, // bottom
-    };
-
-    return InitBuffers(vertices, vertexParams, indices.data(), static_cast<int>(indices.size()));
-}
-
-bool Mesh::Init(FbxMesh* mesh, uint32_t materialIndex)
-{
-    if (mesh)
-        return InitFromFBX(mesh, materialIndex);
-    else
-        return InitDefault();
-}
-
-} // namespace Scene
-} // namespace Krayo
+*/

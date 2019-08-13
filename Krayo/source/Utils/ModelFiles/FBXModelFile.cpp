@@ -1,4 +1,4 @@
-#include "Utils/FBXFile.hpp"
+#include "FBXModelFile.hpp"
 
 #include <lkCommon/Utils/Logger.hpp>
 
@@ -6,7 +6,7 @@
 namespace Krayo {
 namespace Utils {
 
-FBXFile::FBXFile()
+FBXModelFile::FBXModelFile()
     : mFbxManager(nullptr)
     , mFbxIOSettings(nullptr)
     , mFbxConverter(nullptr)
@@ -21,14 +21,14 @@ FBXFile::FBXFile()
     mFbxConverter.reset(new FbxGeometryConverter(mFbxManager));
 }
 
-FBXFile::~FBXFile()
+FBXModelFile::~FBXModelFile()
 {
     Close();
     mFbxConverter.reset();
     mFbxManager->Destroy();
 }
 
-std::string FBXFile::GetAttributeTypeName(FbxNodeAttribute::EType type)
+std::string FBXModelFile::GetAttributeTypeName(FbxNodeAttribute::EType type)
 {
     // function copied from FBX manual/introduction
     switch (type)
@@ -57,7 +57,7 @@ std::string FBXFile::GetAttributeTypeName(FbxNodeAttribute::EType type)
     }
 }
 
-std::string FBXFile::GetLightTypeName(FbxLight::EType type)
+std::string FBXModelFile::GetLightTypeName(FbxLight::EType type)
 {
     switch (type)
     {
@@ -70,7 +70,7 @@ std::string FBXFile::GetLightTypeName(FbxLight::EType type)
     }
 }
 
-void FBXFile::InitialTraverseNode(FbxNode* node, int printTabs)
+void FBXModelFile::InitialTraverseNode(FbxNode* node, int printTabs)
 {
     std::string start;
     for (int i = 0; i < printTabs; ++i)
@@ -101,7 +101,7 @@ void FBXFile::InitialTraverseNode(FbxNode* node, int printTabs)
         InitialTraverseNode(node->GetChild(i), printTabs + 1);
 }
 
-void FBXFile::TraverseNode(TraverseCallback func, FbxNode* node)
+void FBXModelFile::TraverseNode(TraverseCallback func, FbxNode* node)
 {
     func(node);
     mCurrentNode++;
@@ -124,7 +124,7 @@ void FBXFile::TraverseNode(TraverseCallback func, FbxNode* node)
     }
 }
 
-bool FBXFile::Open(const std::string& path)
+bool FBXModelFile::Open(const std::string& path)
 {
     if (mIsOpened)
         Close();
@@ -201,7 +201,7 @@ bool FBXFile::Open(const std::string& path)
     return true;
 }
 
-void FBXFile::Traverse(TraverseCallback func)
+void FBXModelFile::Traverse(TraverseCallback func)
 {
     FbxNode* root = mFbxScene->GetRootNode();
     LOGI("Traversing " << mFbxScene->GetName() << " scene (" << mNodeCount << " nodes)...");
@@ -215,7 +215,7 @@ void FBXFile::Traverse(TraverseCallback func)
     LOGI(mFbxScene->GetName() << " scene traversed.");
 }
 
-void FBXFile::Close()
+void FBXModelFile::Close()
 {
     if (!mIsOpened)
         return;

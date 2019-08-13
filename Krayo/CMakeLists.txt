@@ -47,7 +47,8 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Scene/Material.cpp
                source/Scene/Mesh.cpp
                source/Scene/Model.cpp
-               source/Utils/FBXFile.cpp
+               source/Utils/ModelLoader.cpp
+               source/Utils/ModelFiles/FBXModelFile.cpp
                )
 
 SET(KRAYO_HDRS source/Prerequisites.hpp
@@ -95,8 +96,10 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
                source/Scene/Material.hpp
                source/Scene/Mesh.hpp
                source/Scene/Model.hpp
-               source/Utils/FBXFile.hpp
+               source/Utils/IModelFile.hpp
+               source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
+               source/Utils/ModelFiles/FBXModelFile.hpp
                )
 
 SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp

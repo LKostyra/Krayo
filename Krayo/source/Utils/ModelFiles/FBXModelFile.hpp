@@ -11,7 +11,7 @@
 namespace Krayo {
 namespace Utils {
 
-class FBXFile
+class FBXModelFile
 {
     using TraverseCallback = std::function<void(FbxNode*)>;
 
@@ -32,8 +32,8 @@ class FBXFile
     void TraverseNode(TraverseCallback func, FbxNode* node);
 
 public:
-    FBXFile();
-    ~FBXFile();
+    FBXModelFile();
+    ~FBXModelFile();
 
     bool Open(const std::string& path);
     void Traverse(TraverseCallback func);

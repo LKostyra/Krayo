@@ -6,6 +6,8 @@
 
 #include <lkCommon/lkCommon.hpp>
 
+#include <cfloat>
+
 
 namespace Krayo {
 namespace Renderer {

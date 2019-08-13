@@ -21,12 +21,10 @@ using MeshTraverseCallback = std::function<void(Mesh*)>;
 
 struct ModelDesc
 {
-    FbxMesh* mesh;
     std::vector<Krayo::Scene::Material*> materials;
 
     ModelDesc()
-        : mesh(nullptr)
-        , materials()
+        : materials()
     {
     }
 };

@@ -39,7 +39,7 @@ bool Model::Init(const ModelDesc& modelDesc)
     {
         mMeshes.emplace_back();
         Mesh& m = mMeshes.back();
-        if (!m.Init(modelDesc.mesh, static_cast<uint32_t>(i)))
+        if (!m.Init())
         {
             LOGE("Failed to create mesh " << i << " for model " << mName);
             return false;
@@ -47,7 +47,7 @@ bool Model::Init(const ModelDesc& modelDesc)
         m.SetMaterial(modelDesc.materials[i]);
     }
 
-    if (modelDesc.mesh)
+    /*if (modelDesc.mesh)
     {
         // TODO simplify AABB by adding extra utils like "contains"
         modelDesc.mesh->ComputeBBox();
@@ -61,7 +61,7 @@ bool Model::Init(const ModelDesc& modelDesc)
                                         1.0f);
         mAABB = Math::AABB(minVert, maxVert);
     }
-    else
+    else*/
     {
         mAABB = Math::AABB(
             lkCommon::Math::Vector4(-0.5f, -0.5f, -0.5f, 1.0f),

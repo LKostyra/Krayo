@@ -5,8 +5,6 @@
 
 #include "Math/AABB.hpp"
 
-#include <fbxsdk.h>
-
 
 namespace Krayo {
 namespace Scene {
@@ -32,18 +30,16 @@ class Mesh final
     Material* mMaterial;
     bool mByIndices;
 
-    bool HasNormalMap(FbxMesh* mesh, int materialIndex);
     bool InitBuffers(const std::vector<Vertex>& vertices,
                      const std::vector<VertexParams>& vertexParams,
                      int* indices, int indexCount);
-    bool InitFromFBX(FbxMesh* mesh, int materialIndex);
     bool InitDefault();
 
 public:
     Mesh();
     ~Mesh();
 
-    bool Init(FbxMesh* mesh, uint32_t materialIndex);
+    bool Init();
 
     LKCOMMON_INLINE void SetMaterial(Material* mat)
     {
