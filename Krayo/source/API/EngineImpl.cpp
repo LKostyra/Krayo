@@ -14,7 +14,7 @@ namespace Krayo {
 
 class Window: public lkCommon::System::Window
 {
-    Events::EventManager& mEventManager;
+    Events::Manager& mEventManager;
     Scene::Camera& mCamera;
     Scene::CameraDesc mCameraDesc;
     float mAngleX, mAngleY;
@@ -81,7 +81,7 @@ protected:
     }
 
 public:
-    Window(Events::EventManager& manager, Scene::Camera& camera)
+    Window(Events::Manager& manager, Scene::Camera& camera)
         : mEventManager(manager)
         , mCamera(camera)
         , mCameraDesc()
@@ -156,23 +156,15 @@ Krayo::Map* Engine::Impl::CreateDefaultMap()
 {
     Krayo::Map* defaultMap = CreateMap("DEFAULT");
 
-    //Krayo::Material* mat = CreateMaterial("mat0");
-    // HACK
-    Scene::Material* mat = new Scene::Material("mat0");
-    mat->SetColor(0.2f, 0.5f, 0.8f);
-
-    Scene::ModelDesc modelDesc;
-    modelDesc.materials.emplace_back(mat);
-
     Scene::Model* m = dynamic_cast<Scene::Model*>(defaultMap->CreateComponent(ComponentType::Model, "obj0"));
-    if (!m->Init(modelDesc))
+    if (!m->Init())
     {
         LOGE("Failed to init cube");
         return nullptr;
     }
     m->SetPosition(0.0f, 0.0f, 0.0f);
 
-    Krayo::Object* o = defaultMap->CreateObject("o0");
+    Krayo::Object* o = defaultMap->CreateObject("object0");
     o->SetComponent(m);
 
     Krayo::Component* lightResult = defaultMap->CreateComponent(ComponentType::Light, "light0");
@@ -180,7 +172,7 @@ Krayo::Map* Engine::Impl::CreateDefaultMap()
     light->SetDiffuseIntensity(1.0f, 1.0f, 1.0f);
     light->SetPosition(3.0f, 5.0f, 0.0f);
 
-    Krayo::Object* lightObj = defaultMap->CreateObject("l0");
+    Krayo::Object* lightObj = defaultMap->CreateObject("light0");
     lightObj->SetComponent(light);
 
     return defaultMap;
@@ -294,14 +286,14 @@ Krayo::Map* Engine::Impl::CreateMap(const std::string& name)
 
 Krayo::Material* Engine::Impl::CreateMaterial(const std::string& name)
 {
-    mMaterials.emplace_back(name);
-    return &mMaterials.back();
+    mResourceManager.CreateResource(Resources::ResourceType::Material, name);
+    return nullptr;
 }
 
 void Engine::Impl::SetCurrentMap(Krayo::Map* map)
 {
     if (map == nullptr)
-        mCurrentMap = &mMaps[0];
+        mCurrentMap = &(*mMaps.begin());
     else
         mCurrentMap = map;
 }

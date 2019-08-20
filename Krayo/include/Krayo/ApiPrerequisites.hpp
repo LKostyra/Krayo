@@ -10,8 +10,15 @@ namespace Scene {
 
 class Light;
 class Map;
-class Material;
 
 } // namespace Scene
+
+namespace Resources {
+
+class Model;
+class Material;
+class Texture;
+
+} // namespace Resources
 
 } // namespace Krayo

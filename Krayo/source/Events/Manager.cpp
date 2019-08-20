@@ -1,4 +1,4 @@
-#include "EventManager.hpp"
+#include "Manager.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 
@@ -16,12 +16,12 @@ LKCOMMON_INLINE bool IsCustomEvent(ID id)
     return !IsBuiltInEvent(id);
 }
 
-void EventManager::Init()
+void Manager::Init()
 {
     mBuiltInEvents.resize(static_cast<uint32_t>(ID::BuiltInCount));
 }
 
-bool EventManager::RegisterToEvent(const ID id, ISubscriber* subscriber)
+bool Manager::RegisterToEvent(const ID id, ISubscriber* subscriber)
 {
     if (id == ID::Unknown)
     {
@@ -56,7 +56,7 @@ bool EventManager::RegisterToEvent(const ID id, ISubscriber* subscriber)
     return true;
 }
 
-void EventManager::EmitEvent(const ID id, const IMessage* message)
+void Manager::EmitEvent(const ID id, const IMessage* message)
 {
     LKCOMMON_ASSERT(id != ID::Unknown, "Invalid built-in Event ID");
 

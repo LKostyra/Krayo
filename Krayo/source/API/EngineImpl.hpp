@@ -4,10 +4,13 @@
 
 #include "Renderer/HighLevel/Renderer.hpp"
 
-#include "Events/EventManager.hpp"
+#include "Events/Manager.hpp"
+#include "Resources/Manager.hpp"
 #include "Scene/Map.hpp"
 
 #include <lkCommon/Math/RingAverage.hpp>
+
+#include <list>
 
 
 namespace Krayo {
@@ -17,10 +20,10 @@ class Engine::Impl
     lkCommon::Math::RingAverage<float, 300> mAvgTime;
 
     Renderer::Renderer mRenderer;
-    Events::EventManager mEventManager;
+    Events::Manager mEventManager;
+    Resources::Manager mResourceManager;
 
-    std::vector<Krayo::Material> mMaterials;
-    std::vector<Krayo::Map> mMaps;
+    std::list<Krayo::Map> mMaps;
     Krayo::Map* mCurrentMap;
     Scene::Camera mCamera;
 

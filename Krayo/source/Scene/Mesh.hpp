@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Krayo/Object.hpp"
-#include "Scene/Material.hpp"
-
+#include "Resources/Material.hpp"
 #include "Math/AABB.hpp"
 
 
@@ -27,7 +26,7 @@ class Mesh final
     Krayo::Renderer::BufferPtr mVertexParamsBuffer;
     Krayo::Renderer::BufferPtr mIndexBuffer;
     uint32_t mPointCount;
-    Material* mMaterial;
+    Resources::Material* mMaterial;
     bool mByIndices;
 
     bool InitBuffers(const std::vector<Vertex>& vertices,
@@ -41,7 +40,7 @@ public:
 
     bool Init();
 
-    LKCOMMON_INLINE void SetMaterial(Material* mat)
+    LKCOMMON_INLINE void SetMaterial(Resources::Material* mat)
     {
         mMaterial = mat;
     }
@@ -66,7 +65,7 @@ public:
         return mPointCount;
     }
 
-    LKCOMMON_INLINE const Material* GetMaterial() const
+    LKCOMMON_INLINE const Resources::Material* GetMaterial() const
     {
         return mMaterial;
     }

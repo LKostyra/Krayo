@@ -1,26 +1,18 @@
-#include "Scene/Material.hpp"
+#include "Texture.hpp"
 
-#include <lkCommon/Utils/Logger.hpp>
+#include <lkCommon/Utils/Pixel.hpp>
 #include <lkCommon/Utils/Image.hpp>
 
 
 namespace Krayo {
-namespace Scene {
+namespace Resources {
 
-Material::Material(const std::string& name)
-    : mMaterialName(name)
-    , mColor(1.0f)
-    , mDiffuseTexture(nullptr)
-    , mNormalTexture(nullptr)
-    , mMaskTexture(nullptr)
+Texture::Texture(const std::string& name)
+    : Resource(name)
 {
 }
 
-Material::~Material()
-{
-}
-
-bool Material::CreateRendererTexture(const std::string& imagePath, VkImageUsageFlags usage, Renderer::TexturePtr& texture)
+bool Texture::CreateRendererTexture(const std::string& imagePath, VkImageUsageFlags usage, Renderer::TexturePtr& texture)
 {
     lkCommon::Utils::Image<lkCommon::Utils::PixelUint4> image;
     if (!image.Load(imagePath))
@@ -47,5 +39,10 @@ bool Material::CreateRendererTexture(const std::string& imagePath, VkImageUsageF
     return (texture != nullptr);
 }
 
-} // namespace Scene
+bool Texture::Load(const std::string& path)
+{
+    return false;
+}
+
+} // namespace Resources
 } // namespace Krayo

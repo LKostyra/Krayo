@@ -12,7 +12,7 @@ namespace Krayo {
 namespace Events {
 
 
-class EventManager
+class Manager
 {
     using EventSubscribers = std::vector<std::unique_ptr<ISubscriber>>;
     using BuiltInEvents = std::vector<EventSubscribers>;
@@ -22,8 +22,8 @@ class EventManager
     CustomEvents mCustomEvents;
 
 public:
-    EventManager() = default;
-    ~EventManager() = default;
+    Manager() = default;
+    ~Manager() = default;
 
     void Init();
 

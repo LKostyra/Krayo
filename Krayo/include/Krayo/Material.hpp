@@ -10,10 +10,10 @@ namespace Krayo {
 
 class Material final
 {
-    Scene::Material* mImpl;
+    Resources::Material* mImpl;
 
 public:
-    Material(const std::string& name);
+    Material(Resources::Material* matImpl);
     ~Material();
 
     KRAYO_API void SetColor(float R, float G, float B);

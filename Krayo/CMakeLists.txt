@@ -7,7 +7,7 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/API/Material.cpp
                source/API/Object.cpp
                source/API/Component/Light.cpp
-               source/Events/EventManager.cpp
+               source/Events/Manager.cpp
                source/Math/AABB.cpp
                source/Math/Frustum.cpp
                source/Math/Plane.cpp
@@ -40,11 +40,15 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Renderer/HighLevel/Renderer.cpp
                source/Renderer/HighLevel/ResourceFactory.cpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.cpp
+               source/Resources/Manager.cpp
+               source/Resources/Material.cpp
+               source/Resources/Model.cpp
+               source/Resources/Resource.cpp
+               source/Resources/Texture.cpp
                source/Scene/Camera.cpp
                source/Scene/Emitter.cpp
                source/Scene/Light.cpp
                source/Scene/Map.cpp
-               source/Scene/Material.cpp
                source/Scene/Mesh.cpp
                source/Scene/Model.cpp
                source/Utils/ModelLoader.cpp
@@ -54,7 +58,7 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
 SET(KRAYO_HDRS source/Prerequisites.hpp
                source/ResourceDir.hpp
                source/API/EngineImpl.hpp
-               source/Events/EventManager.hpp
+               source/Events/Manager.hpp
                source/Math/AABB.hpp
                source/Math/Frustum.hpp
                source/Math/Plane.hpp
@@ -89,14 +93,18 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
                source/Renderer/HighLevel/Renderer.hpp
                source/Renderer/HighLevel/ResourceFactory.hpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.hpp
+               source/Resources/Manager.hpp
+               source/Resources/Material.hpp
+               source/Resources/Model.hpp
+               source/Resources/Resource.hpp
+               source/Resources/Texture.hpp
                source/Scene/Camera.hpp
                source/Scene/Emitter.hpp
                source/Scene/Light.hpp
                source/Scene/Map.hpp
-               source/Scene/Material.hpp
                source/Scene/Mesh.hpp
                source/Scene/Model.hpp
-               source/Utils/IModelFile.hpp
+               source/Utils/ModelFile.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/ModelFiles/FBXModelFile.hpp

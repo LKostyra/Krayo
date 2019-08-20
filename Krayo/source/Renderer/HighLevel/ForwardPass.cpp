@@ -294,7 +294,8 @@ void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
                     macros.fragmentShader[1].value = 0;
                     macros.fragmentShader[2].value = 0;
 
-                    const Scene::Material* material = mesh->GetMaterial();
+                    // FIXME temporarily turned off Material support for simplicity
+                    /*const Scene::Material* material = mesh->GetMaterial();
                     if (material != nullptr)
                     {
                         // material data update
@@ -320,7 +321,10 @@ void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
                             macros.fragmentShader[2].value = 1;
                             mCommandBuffer.BindDescriptorSet(AcquireDescriptorSetFromTexture(material->GetMask()), bindPoint, 4, mPipelineLayout);
                         }
-                    }
+                    }*/
+                    materialBuf.color = lkCommon::Utils::PixelFloat4(0.0f, 0.0f, 0.0f, 1.0f);
+                    offset = desc.ringBufferPtr->Write(&materialBuf, sizeof(materialBuf));
+                    mCommandBuffer.BindDescriptorSet(mFragmentShaderSet, bindPoint, 1, mPipelineLayout, offset);
 
                     mCommandBuffer.BindPipeline(mPipeline.GetGraphicsPipeline(macros), bindPoint);
                     mCommandBuffer.BindVertexBuffer(mesh->GetVertexBuffer(), 0, 0);

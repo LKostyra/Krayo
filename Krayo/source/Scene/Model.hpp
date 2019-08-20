@@ -4,7 +4,6 @@
 #include "Krayo/Component.hpp"
 #include "Scene/Mesh.hpp"
 #include "Krayo/Material.hpp"
-#include "Scene/Material.hpp"
 
 #include "Math/AABB.hpp"
 
@@ -18,16 +17,6 @@ namespace Krayo {
 namespace Scene {
 
 using MeshTraverseCallback = std::function<void(Mesh*)>;
-
-struct ModelDesc
-{
-    std::vector<Krayo::Scene::Material*> materials;
-
-    ModelDesc()
-        : materials()
-    {
-    }
-};
 
 class Model final: public Krayo::Component
 {
@@ -47,7 +36,7 @@ public:
     Model(const std::string& name);
     ~Model();
 
-    bool Init(const ModelDesc& modelDesc);
+    bool Init();
     void ForEachMesh(MeshTraverseCallback callback);
 
     LKCOMMON_INLINE void SetPosition(float x, float y, float z)

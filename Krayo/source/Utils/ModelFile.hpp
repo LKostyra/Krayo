@@ -13,7 +13,7 @@ enum class ModelFileType: unsigned char
     OBJ
 };
 
-class IModelFile
+class ModelFile
 {
 public:
     virtual LKCOMMON_INLINE ModelFileType GetType() = 0;

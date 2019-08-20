@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IModelFile.hpp"
+#include "ModelFile.hpp"
 
 #include <string>
 
@@ -10,11 +10,11 @@ namespace Utils {
 
 class ModelLoader
 {
-    IModelFile* OpenFBX(const std::string& path);
-    IModelFile* OpenOBJ(const std::string& path);
+    ModelFile* OpenFBX(const std::string& path);
+    ModelFile* OpenOBJ(const std::string& path);
 
 public:
-    IModelFile* Open(const std::string& path);
+    ModelFile* Open(const std::string& path);
 };
 
 } // namespace Utils
