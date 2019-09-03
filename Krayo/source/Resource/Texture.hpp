@@ -2,14 +2,16 @@
 
 #include <lkCommon/lkCommon.hpp>
 
-#include "Resource.hpp"
+#include "IResource.hpp"
+
 #include "Renderer/HighLevel/ResourceFactory.hpp"
 
 
 namespace Krayo {
-namespace Resources {
+namespace Resource {
+namespace Internal {
 
-class Texture: public Resource
+class Texture: public IResource
 {
     Renderer::TexturePtr mRendererTexture;
 
@@ -20,11 +22,12 @@ public:
 
     bool Load(const std::string& path) override;
 
-    LKCOMMON_INLINE ResourceType GetType() const
+    LKCOMMON_INLINE Krayo::Resource::Type GetType() const
     {
-        return ResourceType::Texture;
+        return Krayo::Resource::Type::Texture;
     }
 };
 
+} // namespace Internal
 } // namespace Resources
 } // namespace Krayo

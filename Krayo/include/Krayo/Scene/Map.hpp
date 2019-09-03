@@ -3,30 +3,31 @@
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/ApiPrerequisites.hpp"
 
-#include "Krayo/Object.hpp"
-#include "Krayo/Component.hpp"
-#include "Krayo/Material.hpp"
+#include "Krayo/Scene/Object.hpp"
+
+#include <memory>
 
 
 namespace Krayo {
+namespace Scene {
 
 class Map final
 {
     friend class Krayo::Engine;
 
-    Scene::Map* mImpl;
+    std::shared_ptr<Internal::Map> mImpl;
 
+    Map(const std::shared_ptr<Internal::Map>& mapImpl);
 
 public:
-    Map(const std::string& name);
-    ~Map();
+    KRAYO_API ~Map() = default;
 
     /**
      * Create a new Object on the scene.
      *
      * @return Pointer for an object, nullptr on error.
      */
-    KRAYO_API Krayo::Object* CreateObject(const std::string& name);
+    KRAYO_API Krayo::Scene::Object CreateObject(const std::string& name);
 
     /**
      * Create a new Component.
@@ -35,7 +36,8 @@ public:
      * @p[in] name Name of created component.
      * @return Pointer for an object, nullptr on error.
      */
-    KRAYO_API Krayo::Component* CreateComponent(const Krayo::ComponentType type, const std::string& name);
+    //KRAYO_API Krayo::Scene::Component CreateComponent(const Krayo::Scene::ComponentType type, const std::string& name);
 };
 
+} // namespace Map
 } // namespace Krayo

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Krayo/Component.hpp"
+#include "Scene/Component.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Math/Vector4.hpp>
@@ -9,6 +9,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 // workaround to allow easy storage of Light data
 // this way we will be able to easily pass all the params to shaders
@@ -26,7 +27,7 @@ struct alignas(16) LightData
     }
 };
 
-class Light: public Krayo::Component
+class Light: public Component
 {
     friend class Scene;
 
@@ -84,5 +85,6 @@ public:
     }
 };
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

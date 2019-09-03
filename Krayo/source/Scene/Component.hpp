@@ -6,6 +6,8 @@
 
 
 namespace Krayo {
+namespace Scene {
+namespace Internal {
 
 enum class ComponentType: unsigned char
 {
@@ -31,4 +33,6 @@ public:
     }
 };
 
+} // namespace Internal
+} // namespace Scene
 } // namespace Krayo

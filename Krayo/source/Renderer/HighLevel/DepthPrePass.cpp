@@ -112,7 +112,7 @@ bool DepthPrePass::Init(const DevicePtr& device, const DepthPrePassDesc& desc)
     return true;
 }
 
-void DepthPrePass::Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc)
+void DepthPrePass::Draw(const Scene::Internal::Map& map, const DepthPrePassDrawDesc& desc)
 {
     // recording Command Buffer
     {
@@ -125,10 +125,10 @@ void DepthPrePass::Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc)
         mCommandBuffer.BeginRenderPass(mRenderPass, &mFramebuffer, ClearType::DEPTH, nullptr, 1.0f);
 
         MultiGraphicsPipelineShaderMacros emptyMacros;
-        map.ForEachObject([&](const Krayo::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::ComponentType::Model)
+        map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
+            if (o->GetComponent()->GetType() == Krayo::Scene::Internal::ComponentType::Model)
             {
-                Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
+                Scene::Internal::Model* model = dynamic_cast<Scene::Internal::Model*>(o->GetComponent());
 
                 if (!model->ToRender())
                     return true;
@@ -137,7 +137,7 @@ void DepthPrePass::Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc)
                 uint32_t offset = desc.ringBufferPtr->Write(&model->GetTransform(), sizeof(lkCommon::Math::Matrix4));
                 mCommandBuffer.BindDescriptorSet(desc.vertexShaderSet, bindPoint, 0, mPipelineLayout, offset);
 
-                model->ForEachMesh([&](Scene::Mesh* mesh) {
+                model->ForEachMesh([&](Scene::Internal::Mesh* mesh) {
                     mCommandBuffer.BindPipeline(mPipeline.GetGraphicsPipeline(emptyMacros), bindPoint);
                     mCommandBuffer.BindVertexBuffer(mesh->GetVertexBuffer(), 0, 0);
 

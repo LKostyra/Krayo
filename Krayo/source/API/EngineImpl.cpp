@@ -1,5 +1,6 @@
 #include "API/EngineImpl.hpp"
 
+#include "Resource/Manager.hpp"
 #include "ResourceDir.hpp"
 
 #include <lkCommon/System/FS.hpp>
@@ -15,8 +16,8 @@ namespace Krayo {
 class Window: public lkCommon::System::Window
 {
     Events::Manager& mEventManager;
-    Scene::Camera& mCamera;
-    Scene::CameraDesc mCameraDesc;
+    Scene::Internal::Camera& mCamera;
+    Scene::Internal::CameraDesc mCameraDesc;
     float mAngleX, mAngleY;
 
 protected:
@@ -81,7 +82,7 @@ protected:
     }
 
 public:
-    Window(Events::Manager& manager, Scene::Camera& camera)
+    Window(Events::Manager& manager, Scene::Internal::Camera& camera)
         : mEventManager(manager)
         , mCamera(camera)
         , mCameraDesc()
@@ -109,6 +110,8 @@ const uint32_t MAX_FRAMESKIP = 5;
 Engine::Impl::Impl()
     : mRenderer()
     , mEventManager()
+    , mResourceManager()
+    , mResourceManagerAPI(mResourceManager)
     , mMaps()
     , mCurrentMap(nullptr)
     , mCamera()
@@ -151,7 +154,7 @@ void Engine::Impl::Update()
 {
     gWindow->Update(static_cast<float>(TICK_TIME));
 }
-
+/*
 Krayo::Map* Engine::Impl::CreateDefaultMap()
 {
     Krayo::Map* defaultMap = CreateMap("DEFAULT");
@@ -176,7 +179,7 @@ Krayo::Map* Engine::Impl::CreateDefaultMap()
     lightObj->SetComponent(light);
 
     return defaultMap;
-}
+}*/
 
 bool Engine::Impl::Init(const EngineDesc& desc)
 {
@@ -220,14 +223,7 @@ bool Engine::Impl::Init(const EngineDesc& desc)
         return false;
     }
 
-    mCurrentMap = CreateDefaultMap();
-    if (!mCurrentMap)
-    {
-        LOGE("Failed to initialize Engine's default map");
-        return false;
-    }
-
-    Scene::CameraDesc camDesc;
+    Scene::Internal::CameraDesc camDesc;
     camDesc.pos = lkCommon::Math::Vector4(2.0f, 1.0f,-5.0f, 1.0f);
     camDesc.at = lkCommon::Math::Vector4(2.0f, 1.0f, 0.0f, 1.0f);
     camDesc.up = lkCommon::Math::Vector4(0.0f,-1.0f, 0.0f, 0.0f);
@@ -274,33 +270,50 @@ void Engine::Impl::MainLoop()
         if (interpolation > 1.0f)
             interpolation = 1.0f;
 
-        mRenderer.Draw(*mCurrentMap->mImpl, mCamera, frameTime, interpolation);
+        if (mCurrentMap)
+            mRenderer.Draw(*mCurrentMap, mCamera, frameTime, interpolation);
     }
 }
 
-Krayo::Map* Engine::Impl::CreateMap(const std::string& name)
+std::shared_ptr<Scene::Internal::Map> Engine::Impl::CreateMap(const std::string& name)
 {
-    mMaps.emplace_back(name);
-    return &mMaps.back();
+    auto result = mMaps.emplace(
+        std::make_pair(name, std::make_shared<Scene::Internal::Map>(name))
+    );
+
+    if (!result.second)
+    {
+        LOGE("Map with name " << name << " already exists!");
+        return nullptr;
+    }
+
+    return result.first->second;
 }
 
-Krayo::Material* Engine::Impl::CreateMaterial(const std::string& name)
+std::shared_ptr<Scene::Internal::Map> Engine::Impl::GetMap(const std::string& name)
 {
-    mResourceManager.CreateResource(Resources::ResourceType::Material, name);
-    return nullptr;
+    auto result = mMaps.find(name);
+    if (result == mMaps.end())
+    {
+        LOGE("Map " << name << " not found.");
+        return nullptr;
+    }
+
+    return result->second;
 }
 
-void Engine::Impl::SetCurrentMap(Krayo::Map* map)
+void Engine::Impl::SetCurrentMap(const std::shared_ptr<Scene::Internal::Map>& map)
 {
-    if (map == nullptr)
-        mCurrentMap = &(*mMaps.begin());
-    else
-        mCurrentMap = map;
+    // TODO LOAD/UNLOAD EVENTS
+    if (map == mCurrentMap)
+        return;
+
+    mCurrentMap = map;
 }
 
-Krayo::Map* Engine::Impl::GetCurrentMap()
+Krayo::Resource::Manager& Engine::Impl::GetResourceManager()
 {
-    return mCurrentMap;
+    return mResourceManagerAPI;
 }
 
 bool Engine::Impl::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)

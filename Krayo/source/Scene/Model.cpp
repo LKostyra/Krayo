@@ -8,6 +8,7 @@ using namespace Krayo::Renderer;
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 Model::Model(const std::string& name)
     : Component(name)
@@ -82,5 +83,6 @@ void Model::ForEachMesh(MeshTraverseCallback callback)
         callback(&m);
 }
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

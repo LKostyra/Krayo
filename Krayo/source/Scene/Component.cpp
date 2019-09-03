@@ -1,16 +1,12 @@
-#include "Scene/Light.hpp"
+#include "Scene/Component.hpp"
 
 
 namespace Krayo {
 namespace Scene {
 namespace Internal {
 
-Light::Light(const std::string& name)
-    : Component(name)
-{
-}
-
-Light::~Light()
+Component::Component(const std::string& name)
+    : mName(name)
 {
 }
 

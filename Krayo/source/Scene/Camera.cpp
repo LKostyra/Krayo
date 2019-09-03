@@ -3,6 +3,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 Camera::Camera()
     : mCurrentDesc(0)
@@ -17,5 +18,6 @@ void Camera::Update(const CameraDesc& desc)
     std::swap(mCurrentDesc, mNewDesc);
 }
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
-#include "Krayo/Component.hpp"
+#include "Scene/Component.hpp"
 
 #include <lkCommon/Math/Vector4.hpp>
 #include <lkCommon/System/Memory.hpp>
@@ -11,6 +11,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 struct alignas(16) EmitterData
 {
@@ -65,7 +66,7 @@ struct EmitterDesc
     }
 };
 
-class Emitter: public Krayo::Component
+class Emitter: public Component
 {
     friend class Renderer::ParticleEngine;
 
@@ -134,5 +135,6 @@ public:
 
 using EmitterCollection = std::vector<const Emitter*>;
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

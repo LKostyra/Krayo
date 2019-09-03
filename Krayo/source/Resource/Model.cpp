@@ -2,17 +2,20 @@
 
 
 namespace Krayo {
-namespace Resources {
+namespace Resource {
+namespace Internal {
 
 Model::Model(const std::string& name)
-    : Resource(name)
+    : IResource(name)
 {
 }
 
 bool Model::Load(const std::string& path)
 {
+    
     return false;
 }
 
-} // namespace Resources
+} // namespace Internal
+} // namespace Resource
 } // namespace Krayo

@@ -3,28 +3,29 @@
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Utils/Pixel.hpp>
 
-#include "Resource.hpp"
+#include "IResource.hpp"
 #include "Texture.hpp"
 
 
 namespace Krayo {
-namespace Resources {
+namespace Resource {
+namespace Internal {
 
-class Material: public Resource
+class Material: public IResource
 {
     lkCommon::Utils::PixelFloat4 mColor;
-    Resources::Texture* mDiffuse;
-    Resources::Texture* mNormal;
-    Resources::Texture* mMask;
+    Texture* mDiffuse;
+    Texture* mNormal;
+    Texture* mMask;
 
 public:
     Material(const std::string& name);
 
     bool Load(const std::string& path) override;
 
-    LKCOMMON_INLINE ResourceType GetType() const
+    LKCOMMON_INLINE Krayo::Resource::Type GetType() const
     {
-        return ResourceType::Material;
+        return Krayo::Resource::Type::Material;
     }
 
     LKCOMMON_INLINE void SetColor(float R, float G, float B)
@@ -39,36 +40,37 @@ public:
         return mColor;
     }
 
-    LKCOMMON_INLINE void SetDiffuse(Resources::Texture* diffuse)
+    LKCOMMON_INLINE void SetDiffuse(Texture* diffuse)
     {
         mDiffuse = diffuse;
     }
 
-    LKCOMMON_INLINE void SetNormal(Resources::Texture* normal)
+    LKCOMMON_INLINE void SetNormal(Texture* normal)
     {
         mNormal = normal;
     }
 
-    LKCOMMON_INLINE void SetMask(Resources::Texture* mask)
+    LKCOMMON_INLINE void SetMask(Texture* mask)
     {
         mMask = mMask;
     }
 
-    LKCOMMON_INLINE const Resources::Texture* GetDiffuse() const
+    LKCOMMON_INLINE const Texture* GetDiffuse() const
     {
         return mDiffuse;
     }
 
-    LKCOMMON_INLINE const Resources::Texture* GetNormal() const
+    LKCOMMON_INLINE const Texture* GetNormal() const
     {
         return mNormal;
     }
 
-    LKCOMMON_INLINE const Resources::Texture* GetMask() const
+    LKCOMMON_INLINE const Texture* GetMask() const
     {
         return mMask;
     }
 };
 
-} // namespace Resources
+} // namespace Internal
+} // namespace Resource
 } // namespace Krayo

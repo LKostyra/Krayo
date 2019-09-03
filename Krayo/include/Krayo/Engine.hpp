@@ -1,8 +1,13 @@
 #pragma once
 
 #include "Krayo/ApiDef.hpp"
+#include "Krayo/ApiPrerequisites.hpp"
+
 #include "Krayo/Events.hpp"
-#include "Krayo/Map.hpp"
+#include "Krayo/Scene/Map.hpp"
+#include "Krayo/Resource/Manager.hpp"
+
+#include <memory>
 
 
 namespace Krayo {
@@ -50,7 +55,7 @@ struct EngineDesc
 class Engine final
 {
     class Impl;
-    Engine::Impl* mImpl;
+    std::unique_ptr<Impl> mImpl;
 
 public:
     KRAYO_API Engine();
@@ -72,31 +77,30 @@ public:
     KRAYO_API void MainLoop();
 
     /**
-     * Create an empty Map.
+     * Create a new Map
      *
-     * @p[in] name Name to be given to a map.
-     * @return Pointer to a Map object, nullptr on error.
+     * @p[in] name Name of map to create.
+     * @return Map object
      */
-    KRAYO_API Krayo::Map* CreateMap(const std::string& name);
+    KRAYO_API Krayo::Scene::Map CreateMap(const std::string& name);
 
     /**
-     * Set current Map for Engine to work on.
-     *
-     * @p[in] map Engine's Map to be made current.
+     * Get map
      */
-    KRAYO_API void SetCurrentMap(Krayo::Map* map);
+    KRAYO_API Krayo::Scene::Map GetMap(const std::string& name);
 
     /**
-     * Acquire current map.
+     * Set map to draw (or unset)
      *
-     * @return Map currently being processed by Engine.
+     * @p[in] name Name of map to be set to draw
+     * @return True on success, false when map is not found.
      */
-    KRAYO_API Krayo::Map* GetCurrentMap();
+    KRAYO_API void SetCurrentMap(const Krayo::Scene::Map& map);
 
     /**
-     * Create new Material;
+     * Acquire Engine's resource manager
      */
-    KRAYO_API Krayo::Material* CreateMaterial(const std::string& name);
+    KRAYO_API Krayo::Resource::Manager& GetResourceManager();
 
     /**
      * @defgroup EventAPI Event API

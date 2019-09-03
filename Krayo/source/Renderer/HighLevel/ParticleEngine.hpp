@@ -32,7 +32,7 @@ class ParticleEngine final
     Buffer mEngineParams;
     Buffer mEmitterData;
     Buffer mParticleData;
-    Scene::EmitterCollection mEmitters;
+    Scene::Internal::EmitterCollection mEmitters;
     VkDescriptorSet mParticleEngineSet;
     VkRAII<VkDescriptorSetLayout> mParticleEngineSetLayout;
     VkRAII<VkPipelineLayout> mParticlePipelineLayout;
@@ -55,7 +55,7 @@ public:
     ParticleEngine();
 
     bool Init(const DevicePtr& device);
-    bool UpdateEmitters(const Scene::Map& map);
+    bool UpdateEmitters(const Scene::Internal::Map& map);
     void Dispatch(const ParticleEngineDispatchDesc& desc);
 
     LKCOMMON_INLINE Buffer* GetParticleDataBuffer()

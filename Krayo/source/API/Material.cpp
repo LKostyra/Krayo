@@ -1,10 +1,11 @@
 #include "Krayo/Material.hpp"
-#include "Resources/Material.hpp"
+
+#include "Resource/Material.hpp"
 
 
 namespace Krayo {
 
-Material::Material(Resources::Material* matImpl)
+Material::Material(Resource::Internal::Material* matImpl)
     : mImpl(matImpl)
 {
 }

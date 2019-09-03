@@ -40,7 +40,28 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Krayo::Map* defaultMap = engine.GetCurrentMap();
+    // BELOW IS AN EXAMPLE OF API USE //
+    // GOAL - TO MAKE IT COMPILE & WORK AS PROMISED //
+
+    // load resources
+    Krayo::Resource::Manager& mgr = engine.GetResourceManager();
+    Krayo::Resource::Model model = mgr.CreateModel("cube");
+
+    //Krayo::Resource::Material* material = rf.CreateMaterial();
+    //if (!material->Load("Data/Materials/cube.json"))
+    //{
+    //    return 1;
+    //}
+    //
+    //model.AssignMaterial(material);
+
+    Krayo::Scene::Map map = engine.CreateMap("TEST");
+    //Krayo::Component::Model mc = map.CreateModelComponent("cubeComponent", model);
+
+    Krayo::Scene::Object o = map.CreateObject("cubeObject");
+    /*o->AttachComponent(c);
+
+    engine.SetCurrentMap(map);*/
 
     engine.MainLoop();
 

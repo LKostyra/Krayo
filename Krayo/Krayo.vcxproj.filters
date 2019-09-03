@@ -43,6 +43,18 @@
     <Filter Include="source\API\Component">
       <UniqueIdentifier>{0edafe2e-c390-445a-bdb9-b0221aa8b0f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Krayo\Resource">
+      <UniqueIdentifier>{04688bda-ecf1-464b-9a78-8706477a8fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\API\Resource">
+      <UniqueIdentifier>{5f163aae-128f-49ae-a95b-7f66ef7119eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils\ModelFiles">
+      <UniqueIdentifier>{b1a1ab9c-2b69-4816-9334-7c04caf29c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Resources">
+      <UniqueIdentifier>{9de1dabe-6f5e-43c9-801f-375cb2a77655}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -55,9 +67,6 @@
       <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\Scene\Light.cpp">
-      <Filter>source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scene\Material.cpp">
       <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\Scene\Mesh.cpp">
@@ -162,9 +171,6 @@
     <ClCompile Include="source\Math\AABB.cpp">
       <Filter>source\Math</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\FBXFile.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\API\Engine.cpp">
       <Filter>source\API</Filter>
     </ClCompile>
@@ -173,9 +179,6 @@
     </ClCompile>
     <ClCompile Include="source\Renderer\HighLevel\ResourceFactory.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Events\EventManager.cpp">
-      <Filter>source\Events</Filter>
     </ClCompile>
     <ClCompile Include="source\API\Events.cpp">
       <Filter>source\API</Filter>
@@ -194,6 +197,42 @@
     </ClCompile>
     <ClCompile Include="source\API\Component\Light.cpp">
       <Filter>source\API\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Material.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\ResourceFactory.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\ResourceFactoryImpl.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Resource\Model.cpp">
+      <Filter>source\API\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Events\Manager.cpp">
+      <Filter>source\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelLoader.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resources\Manager.cpp">
+      <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resources\Material.cpp">
+      <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resources\Model.cpp">
+      <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resources\Resource.cpp">
+      <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resources\Texture.cpp">
+      <Filter>source\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,9 +344,6 @@
     <ClInclude Include="source\Math\Plane.hpp">
       <Filter>source\Math</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\FBXFile.hpp">
-      <Filter>source\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="source\Utils\Traits.hpp">
       <Filter>source\Utils</Filter>
     </ClInclude>
@@ -318,9 +354,6 @@
       <Filter>source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Scene\Light.hpp">
-      <Filter>source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\Material.hpp">
       <Filter>source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="source\Scene\Mesh.hpp">
@@ -337,9 +370,6 @@
     </ClInclude>
     <ClInclude Include="source\Renderer\HighLevel\ResourceFactory.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Events\EventManager.hpp">
-      <Filter>source\Events</Filter>
     </ClInclude>
     <ClInclude Include="include\Krayo\Events.hpp">
       <Filter>include\Krayo</Filter>
@@ -361,6 +391,45 @@
     </ClInclude>
     <ClInclude Include="source\Scene\Map.hpp">
       <Filter>source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Material.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\ResourceFactory.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Resource\Model.hpp">
+      <Filter>include\Krayo\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="source\API\ResourceFactoryImpl.hpp">
+      <Filter>source\API</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Events\Manager.hpp">
+      <Filter>source\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile.hpp">
+      <Filter>source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelLoader.hpp">
+      <Filter>source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resources\Manager.hpp">
+      <Filter>source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resources\Material.hpp">
+      <Filter>source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resources\Model.hpp">
+      <Filter>source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resources\Resource.hpp">
+      <Filter>source\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resources\Texture.hpp">
+      <Filter>source\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

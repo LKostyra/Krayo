@@ -94,7 +94,7 @@ public:
     ForwardPass();
 
     bool Init(const DevicePtr& device, const ForwardPassDesc& desc);
-    void Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc);
+    void Draw(const Scene::Internal::Map& map, const ForwardPassDrawDesc& desc);
 
     LKCOMMON_INLINE Texture& GetTargetTexture()
     {

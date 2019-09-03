@@ -239,7 +239,7 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     return true;
 }
 
-void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
+void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDesc& desc)
 {
     LKCOMMON_ASSERT(desc.waitFlags.size() == desc.waitSems.size(), "Wait semaphores count does not match wait flags count");
 
@@ -276,10 +276,10 @@ void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
             { ShaderMacro::HAS_COLOR_MASK, 0 },
         };
 
-        map.ForEachObject([&](const Krayo::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::ComponentType::Model)
+        map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
+            if (o->GetComponent()->GetType() == Krayo::Scene::Internal::ComponentType::Model)
             {
-                Scene::Model* model = dynamic_cast<Scene::Model*>(o->GetComponent());
+                Scene::Internal::Model* model = dynamic_cast<Scene::Internal::Model*>(o->GetComponent());
 
                 if (!model->ToRender())
                     return true;
@@ -288,7 +288,7 @@ void ForwardPass::Draw(const Scene::Map& map, const ForwardPassDrawDesc& desc)
                 uint32_t offset = desc.ringBufferPtr->Write(&model->GetTransform(), sizeof(lkCommon::Math::Matrix4));
                 mCommandBuffer.BindDescriptorSet(desc.vertexShaderSet, bindPoint, 0, mPipelineLayout, offset);
 
-                model->ForEachMesh([&](Scene::Mesh* mesh) {
+                model->ForEachMesh([&](Scene::Internal::Mesh* mesh) {
                     macros.vertexShader[0].value = 0;
                     macros.fragmentShader[0].value = 0;
                     macros.fragmentShader[1].value = 0;

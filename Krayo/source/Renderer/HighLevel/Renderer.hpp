@@ -82,7 +82,7 @@ public:
     ~Renderer();
 
     bool Init(const RendererDesc& desc);
-    void Draw(const Scene::Map& map, const Scene::Camera& camera, float deltaTime, float interpolation);
+    void Draw(const Scene::Internal::Map& map, const Scene::Internal::Camera& camera, float deltaTime, float interpolation);
 
     // this function should be used only when application finishes
     void WaitForAll() const;

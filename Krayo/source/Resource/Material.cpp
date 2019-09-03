@@ -2,10 +2,11 @@
 
 
 namespace Krayo {
-namespace Resources {
+namespace Resource {
+namespace Internal {
 
 Material::Material(const std::string& name)
-    : Resource(name)
+    : IResource(name)
 {
 }
 
@@ -16,5 +17,6 @@ bool Material::Load(const std::string& path)
     return false;
 }
 
-} // namespace Resources
+} // namespace Internal
+} // namespace Resource
 } // namespace Krayo

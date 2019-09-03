@@ -5,10 +5,11 @@
 
 
 namespace Krayo {
-namespace Resources {
+namespace Resource {
+namespace Internal {
 
 Texture::Texture(const std::string& name)
-    : Resource(name)
+    : IResource(name)
 {
 }
 
@@ -44,5 +45,6 @@ bool Texture::Load(const std::string& path)
     return false;
 }
 
+} // namespace Internal
 } // namespace Resources
 } // namespace Krayo

@@ -60,7 +60,7 @@ class DepthPrePass final
 
 public:
     bool Init(const DevicePtr& device, const DepthPrePassDesc& desc);
-    void Draw(const Scene::Map& map, const DepthPrePassDrawDesc& desc);
+    void Draw(const Scene::Internal::Map& map, const DepthPrePassDrawDesc& desc);
 
     LKCOMMON_INLINE Texture* GetDepthTexture()
     {

@@ -8,6 +8,7 @@ using namespace Krayo::Renderer;
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 Mesh::Mesh()
     : mPointCount(0)
@@ -152,6 +153,7 @@ bool Mesh::Init()
     return InitDefault();
 }
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo
 

@@ -5,6 +5,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 Map::Map(const std::string& name)
     : mName(name)
@@ -18,33 +19,35 @@ Map::~Map()
 template <typename ItemType>
 CreateResult<ItemType> Map::CreateItem(ResourceCollection<ItemType>& m, const std::string& name)
 {
-    // TODO do we need to cross-check if name is not duplicated?
-    m.emplace_back(name);
-    return &m.back();
+    auto res = m.emplace(std::make_pair(name, std::make_shared<ItemType>(name)));
+    if (!res.second)
+        return nullptr;
+
+    return res.first->second;
 }
 
 template <typename ItemType>
 void Map::ForEachItem(const ResourceCollection<ItemType>& m, Callback<ItemType>& func) const
 {
     for (auto& it: m)
-        if (!func(&it))
+        if (!func(it.second.get()))
             return;
 }
 
-CreateResult<Krayo::Object> Map::CreateObject(const std::string& name)
+CreateResult<Internal::Object> Map::CreateObject(const std::string& name)
 {
-    return CreateItem<Krayo::Object>(mObjects, name);
+    return CreateItem<Internal::Object>(mObjects, name);
 }
 
-CreateResult<Krayo::Component> Map::CreateComponent(Krayo::ComponentType type, const std::string& name)
+CreateResult<Internal::Component> Map::CreateComponent(Internal::ComponentType type, const std::string& name)
 {
     switch (type)
     {
-    case Krayo::ComponentType::Model:
+    case Internal::ComponentType::Model:
         return CreateItem<Model>(mModelComponents, name);
-    case Krayo::ComponentType::Light:
+    case Internal::ComponentType::Light:
         return CreateItem<Light>(mLightComponents, name);
-    case Krayo::ComponentType::Emitter:
+    case Internal::ComponentType::Emitter:
         return CreateItem<Emitter>(mEmitterComponents, name);
     default:
         LOGE("Unknown component type provided to create");
@@ -62,11 +65,12 @@ void Map::ForEachEmitter(Callback<Emitter> func) const
     ForEachItem<Emitter>(mEmitterComponents, func);
 }
 
-void Map::ForEachObject(Callback<Krayo::Object> func) const
+void Map::ForEachObject(Callback<Object> func) const
 {
-    ForEachItem<Krayo::Object>(mObjects, func);
+    ForEachItem<Object>(mObjects, func);
 }
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo
 

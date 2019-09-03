@@ -10,6 +10,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 enum class CameraMode: unsigned char
 {
@@ -58,5 +59,6 @@ public:
     }
 };
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Krayo/Object.hpp"
-#include "Krayo/Component.hpp"
+#include "Krayo/Scene/Object.hpp"
+#include "Scene/Component.hpp"
 #include "Scene/Mesh.hpp"
 #include "Krayo/Material.hpp"
 
@@ -15,10 +15,11 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 using MeshTraverseCallback = std::function<void(Mesh*)>;
 
-class Model final: public Krayo::Component
+class Model final: public Component
 {
     lkCommon::Math::Matrix4 mTransform;
     lkCommon::Math::Vector4 mPosition;
@@ -97,5 +98,6 @@ public:
     }
 };
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

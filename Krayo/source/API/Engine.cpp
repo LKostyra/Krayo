@@ -5,14 +5,12 @@
 namespace Krayo {
 
 Engine::Engine()
-    : mImpl(new Engine::Impl())
+    : mImpl(std::make_unique<Impl>())
 {
 }
 
 Engine::~Engine()
 {
-    delete mImpl;
-    mImpl = nullptr;
 }
 
 bool Engine::Init(const EngineDesc& desc)
@@ -25,24 +23,24 @@ void Engine::MainLoop()
     return mImpl->MainLoop();
 }
 
-Krayo::Map* Engine::CreateMap(const std::string& name)
+Krayo::Scene::Map Engine::CreateMap(const std::string& name)
 {
-    return mImpl->CreateMap(name);
+    return Krayo::Scene::Map(mImpl->CreateMap(name));
 }
 
-void Engine::SetCurrentMap(Krayo::Map* map)
+Krayo::Scene::Map Engine::GetMap(const std::string& name)
 {
-    mImpl->SetCurrentMap(map);
+    return Krayo::Scene::Map(mImpl->GetMap(name));
 }
 
-Krayo::Map* Engine::GetCurrentMap()
+void Engine::SetCurrentMap(const Krayo::Scene::Map& map)
 {
-    return mImpl->GetCurrentMap();
+    return mImpl->SetCurrentMap(map.mImpl);
 }
 
-Krayo::Material* Engine::CreateMaterial(const std::string& name)
+Krayo::Resource::Manager& Engine::GetResourceManager()
 {
-    return mImpl->CreateMaterial(name);
+    return mImpl->GetResourceManager();
 }
 
 bool Engine::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)

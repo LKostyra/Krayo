@@ -5,12 +5,14 @@
 #include "Renderer/HighLevel/Renderer.hpp"
 
 #include "Events/Manager.hpp"
-#include "Resources/Manager.hpp"
+#include "Resource/Manager.hpp"
 #include "Scene/Map.hpp"
 
 #include <lkCommon/Math/RingAverage.hpp>
 
-#include <list>
+#include <string>
+#include <memory>
+#include <unordered_map>
 
 
 namespace Krayo {
@@ -21,16 +23,18 @@ class Engine::Impl
 
     Renderer::Renderer mRenderer;
     Events::Manager mEventManager;
-    Resources::Manager mResourceManager;
+    Resource::Internal::Manager mResourceManager;
 
-    std::list<Krayo::Map> mMaps;
-    Krayo::Map* mCurrentMap;
-    Scene::Camera mCamera;
+    Resource::Manager mResourceManagerAPI;
+
+    // TODO REPLACE STRING WITH UUID
+    std::map<std::string, std::shared_ptr<Scene::Internal::Map>> mMaps;
+    std::shared_ptr<Scene::Internal::Map> mCurrentMap;
+    Scene::Internal::Camera mCamera;
 
     // captures CWD, navigates to app root dir and verifies if it's correct
     bool SetDirTree() const;
     void Update();
-    Krayo::Map* CreateDefaultMap();
 
 public:
     Impl();
@@ -39,11 +43,11 @@ public:
     bool Init(const EngineDesc& desc);
     void MainLoop();
 
-    Krayo::Map* CreateMap(const std::string& name);
-    Krayo::Material* CreateMaterial(const std::string& name);
+    std::shared_ptr<Scene::Internal::Map> CreateMap(const std::string& name);
+    std::shared_ptr<Scene::Internal::Map> GetMap(const std::string& name);
+    void SetCurrentMap(const std::shared_ptr<Scene::Internal::Map>& name);
 
-    void SetCurrentMap(Krayo::Map* map);
-    Krayo::Map* GetCurrentMap();
+    Resource::Manager& GetResourceManager();
 
     bool RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber);
     void EmitEvent(const Events::ID id, const Events::IMessage* message);

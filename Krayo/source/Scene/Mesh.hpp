@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Krayo/Object.hpp"
-#include "Resources/Material.hpp"
+#include "Scene/Object.hpp"
+#include "Resource/Material.hpp"
 #include "Math/AABB.hpp"
 
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 struct Vertex
 {
@@ -26,7 +27,7 @@ class Mesh final
     Krayo::Renderer::BufferPtr mVertexParamsBuffer;
     Krayo::Renderer::BufferPtr mIndexBuffer;
     uint32_t mPointCount;
-    Resources::Material* mMaterial;
+    Resource::Internal::Material* mMaterial;
     bool mByIndices;
 
     bool InitBuffers(const std::vector<Vertex>& vertices,
@@ -40,7 +41,7 @@ public:
 
     bool Init();
 
-    LKCOMMON_INLINE void SetMaterial(Resources::Material* mat)
+    LKCOMMON_INLINE void SetMaterial(Krayo::Resource::Internal::Material* mat)
     {
         mMaterial = mat;
     }
@@ -65,7 +66,7 @@ public:
         return mPointCount;
     }
 
-    LKCOMMON_INLINE const Resources::Material* GetMaterial() const
+    LKCOMMON_INLINE const Krayo::Resource::Internal::Material* GetMaterial() const
     {
         return mMaterial;
     }
@@ -76,5 +77,6 @@ public:
     }
 };
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo

@@ -3,6 +3,7 @@
 
 namespace Krayo {
 namespace Scene {
+namespace Internal {
 
 Emitter::Emitter(const std::string& name)
     : Component(name)
@@ -23,5 +24,6 @@ void Emitter::Init(const EmitterDesc& desc)
     mData.particleDataOffset = 0;
 }
 
+} // namespace Internal
 } // namespace Scene
 } // namespace Krayo
