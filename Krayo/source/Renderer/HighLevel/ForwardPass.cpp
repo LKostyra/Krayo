@@ -277,9 +277,9 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
         };
 
         map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::Scene::Internal::ComponentType::Model)
+            if (o->GetComponent()->GetType() == Krayo::Component::Internal::Type::Model)
             {
-                Scene::Internal::Model* model = dynamic_cast<Scene::Internal::Model*>(o->GetComponent());
+                Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
 
                 if (!model->ToRender())
                     return true;
@@ -288,7 +288,7 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
                 uint32_t offset = desc.ringBufferPtr->Write(&model->GetTransform(), sizeof(lkCommon::Math::Matrix4));
                 mCommandBuffer.BindDescriptorSet(desc.vertexShaderSet, bindPoint, 0, mPipelineLayout, offset);
 
-                model->ForEachMesh([&](Scene::Internal::Mesh* mesh) {
+                model->ForEachMesh([&](Component::Internal::Mesh* mesh) {
                     macros.vertexShader[0].value = 0;
                     macros.fragmentShader[0].value = 0;
                     macros.fragmentShader[1].value = 0;

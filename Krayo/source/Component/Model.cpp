@@ -1,4 +1,4 @@
-#include "Scene/Model.hpp"
+#include "Model.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Utils/Logger.hpp>
@@ -7,21 +7,17 @@ using namespace Krayo::Renderer;
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 Model::Model(const std::string& name)
-    : Component(name)
+    : IComponent(name)
     , mTransform()
     , mPosition(0.0f)
     , mScale(1.0f)
     , mMeshes()
     , mAABB()
     , mToRender(false)
-{
-}
-
-Model::~Model()
 {
 }
 
@@ -84,5 +80,5 @@ void Model::ForEachMesh(MeshTraverseCallback callback)
 }
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

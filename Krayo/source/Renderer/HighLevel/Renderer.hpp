@@ -8,7 +8,6 @@
 #include "Math/Frustum.hpp"
 
 #include "Scene/Camera.hpp"
-#include "Scene/Mesh.hpp"
 #include "Scene/Map.hpp"
 
 #include "Renderer/HighLevel/GridFrustumsGenerator.hpp"

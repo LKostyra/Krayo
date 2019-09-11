@@ -6,10 +6,10 @@
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
-enum class ComponentType: unsigned char
+enum class Type: unsigned char
 {
     Invalid = 0,
     Model,
@@ -17,15 +17,15 @@ enum class ComponentType: unsigned char
     Emitter,
 };
 
-class Component
+class IComponent
 {
 protected:
     std::string mName;
 
 public:
-    KRAYO_API Component(const std::string& name);
+    IComponent(const std::string& name);
 
-    KRAYO_API virtual ComponentType GetType() const = 0;
+    virtual Type GetType() const = 0;
 
     KRAYO_INLINE std::string GetName() const
     {
@@ -34,5 +34,5 @@ public:
 };
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

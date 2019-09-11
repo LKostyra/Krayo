@@ -2,11 +2,15 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/API/Engine.cpp
                source/API/EngineImpl.cpp
                source/API/Events.cpp
-               source/API/Material.cpp
                source/API/Resource/Manager.cpp
                source/API/Resource/Model.cpp
                source/API/Scene/Map.cpp
                source/API/Scene/Object.cpp
+               source/Component/Emitter.cpp
+               source/Component/Light.cpp
+               source/Component/IComponent.cpp
+               source/Component/Mesh.cpp
+               source/Component/Model.cpp
                source/Events/Manager.cpp
                source/Math/AABB.cpp
                source/Math/Frustum.cpp
@@ -46,12 +50,7 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Resource/Model.cpp
                source/Resource/Texture.cpp
                source/Scene/Camera.cpp
-               source/Scene/Component.cpp
-               source/Scene/Emitter.cpp
-               source/Scene/Light.cpp
                source/Scene/Map.cpp
-               source/Scene/Mesh.cpp
-               source/Scene/Model.cpp
                source/Scene/Object.cpp
                source/Utils/ModelLoader.cpp
                source/Utils/ModelFiles/FBXModelFile.cpp
@@ -60,6 +59,11 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
 SET(KRAYO_HDRS source/Prerequisites.hpp
                source/ResourceDir.hpp
                source/API/EngineImpl.hpp
+               source/Component/Emitter.hpp
+               source/Component/IComponent.hpp
+               source/Component/Light.hpp
+               source/Component/Mesh.hpp
+               source/Component/Model.hpp
                source/Events/Manager.hpp
                source/Math/AABB.hpp
                source/Math/Frustum.hpp
@@ -101,12 +105,7 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
                source/Resource/Model.hpp
                source/Resource/Texture.hpp
                source/Scene/Camera.hpp
-               source/Scene/Component.hpp
-               source/Scene/Emitter.hpp
-               source/Scene/Light.hpp
                source/Scene/Map.hpp
-               source/Scene/Mesh.hpp
-               source/Scene/Model.hpp
                source/Scene/Object.hpp
                source/Utils/ModelFile.hpp
                source/Utils/ModelLoader.hpp
@@ -118,7 +117,6 @@ SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp
                    include/Krayo/ApiPrerequisites.hpp
                    include/Krayo/Engine.hpp
                    include/Krayo/Events.hpp
-                   include/Krayo/Material.hpp
                    include/Krayo/Resource/Model.hpp
                    include/Krayo/Resource/Manager.hpp
                    include/Krayo/Scene/Map.hpp

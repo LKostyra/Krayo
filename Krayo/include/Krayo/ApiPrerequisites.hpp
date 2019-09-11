@@ -4,7 +4,6 @@ namespace Krayo {
 
     class Engine;
     class Object;
-    class Component;
 
     namespace Resource {
 

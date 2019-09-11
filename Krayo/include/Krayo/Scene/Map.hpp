@@ -15,13 +15,11 @@ class Map final
 {
     friend class Krayo::Engine;
 
-    std::shared_ptr<Internal::Map> mImpl;
+    std::shared_ptr<Scene::Internal::Map> mImpl;
 
-    Map(const std::shared_ptr<Internal::Map>& mapImpl);
+    Map(const std::shared_ptr<Scene::Internal::Map>& mapImpl);
 
 public:
-    KRAYO_API ~Map() = default;
-
     /**
      * Create a new Object on the scene.
      *
@@ -39,5 +37,5 @@ public:
     //KRAYO_API Krayo::Scene::Component CreateComponent(const Krayo::Scene::ComponentType type, const std::string& name);
 };
 
-} // namespace Map
+} // namespace Scene
 } // namespace Krayo

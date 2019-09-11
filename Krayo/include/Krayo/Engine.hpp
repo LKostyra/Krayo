@@ -58,6 +58,9 @@ class Engine final
     std::unique_ptr<Impl> mImpl;
 
 public:
+    /**
+     * Construct Engine instance.
+     */
     KRAYO_API Engine();
     KRAYO_API ~Engine();
 

@@ -1,17 +1,13 @@
-#include "Scene/Emitter.hpp"
+#include "Emitter.hpp"
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 Emitter::Emitter(const std::string& name)
-    : Component(name)
+    : IComponent(name)
     , mData()
-{
-}
-
-Emitter::~Emitter()
 {
 }
 
@@ -25,5 +21,5 @@ void Emitter::Init(const EmitterDesc& desc)
 }
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

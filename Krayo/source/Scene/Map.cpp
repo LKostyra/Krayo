@@ -39,30 +39,30 @@ CreateResult<Internal::Object> Map::CreateObject(const std::string& name)
     return CreateItem<Internal::Object>(mObjects, name);
 }
 
-CreateResult<Internal::Component> Map::CreateComponent(Internal::ComponentType type, const std::string& name)
+CreateResult<Component::Internal::IComponent> Map::CreateComponent(Component::Internal::Type type, const std::string& name)
 {
     switch (type)
     {
-    case Internal::ComponentType::Model:
-        return CreateItem<Model>(mModelComponents, name);
-    case Internal::ComponentType::Light:
-        return CreateItem<Light>(mLightComponents, name);
-    case Internal::ComponentType::Emitter:
-        return CreateItem<Emitter>(mEmitterComponents, name);
+    case Component::Internal::Type::Model:
+        return CreateItem<Component::Internal::Model>(mModelComponents, name);
+    case Component::Internal::Type::Light:
+        return CreateItem<Component::Internal::Light>(mLightComponents, name);
+    case Component::Internal::Type::Emitter:
+        return CreateItem<Component::Internal::Emitter>(mEmitterComponents, name);
     default:
         LOGE("Unknown component type provided to create");
         return nullptr;
     }
 }
 
-void Map::ForEachLight(Callback<Light> func) const
+void Map::ForEachLight(Callback<Component::Internal::Light> func) const
 {
-    ForEachItem<Light>(mLightComponents, func);
+    ForEachItem<Component::Internal::Light>(mLightComponents, func);
 }
 
-void Map::ForEachEmitter(Callback<Emitter> func) const
+void Map::ForEachEmitter(Callback<Component::Internal::Emitter> func) const
 {
-    ForEachItem<Emitter>(mEmitterComponents, func);
+    ForEachItem<Component::Internal::Emitter>(mEmitterComponents, func);
 }
 
 void Map::ForEachObject(Callback<Object> func) const

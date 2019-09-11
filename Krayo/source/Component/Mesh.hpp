@@ -6,7 +6,7 @@
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 struct Vertex
@@ -37,7 +37,6 @@ class Mesh final
 
 public:
     Mesh();
-    ~Mesh();
 
     bool Init();
 
@@ -78,5 +77,5 @@ public:
 };
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

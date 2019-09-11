@@ -1,4 +1,4 @@
-#include "Scene/Mesh.hpp"
+#include "Mesh.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Utils/Logger.hpp>
@@ -7,17 +7,13 @@ using namespace Krayo::Renderer;
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 Mesh::Mesh()
     : mPointCount(0)
     , mMaterial(nullptr)
     , mByIndices(false)
-{
-}
-
-Mesh::~Mesh()
 {
 }
 
@@ -154,7 +150,7 @@ bool Mesh::Init()
 }
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo
 
 /*

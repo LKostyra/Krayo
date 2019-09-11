@@ -32,7 +32,7 @@ class ParticleEngine final
     Buffer mEngineParams;
     Buffer mEmitterData;
     Buffer mParticleData;
-    Scene::Internal::EmitterCollection mEmitters;
+    Component::Internal::EmitterCollection mEmitters;
     VkDescriptorSet mParticleEngineSet;
     VkRAII<VkDescriptorSetLayout> mParticleEngineSetLayout;
     VkRAII<VkPipelineLayout> mParticlePipelineLayout;

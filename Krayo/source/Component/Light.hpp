@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Component.hpp"
+#include "IComponent.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 #include <lkCommon/Math/Vector4.hpp>
@@ -8,7 +8,7 @@
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 // workaround to allow easy storage of Light data
@@ -27,15 +27,12 @@ struct alignas(16) LightData
     }
 };
 
-class Light: public Component
+class Light: public IComponent
 {
-    friend class Scene;
-
     LightData mLightData;
 
 public:
     Light(const std::string& name);
-    ~Light();
 
     LKCOMMON_INLINE void SetPosition(const float x, const float y, const float z)
     {
@@ -79,12 +76,12 @@ public:
         return &mLightData;
     }
 
-    LKCOMMON_INLINE ComponentType GetType() const override
+    LKCOMMON_INLINE Type GetType() const override
     {
-        return ComponentType::Light;
+        return Type::Light;
     }
 };
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

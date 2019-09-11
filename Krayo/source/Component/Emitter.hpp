@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
-#include "Scene/Component.hpp"
+#include "IComponent.hpp"
 
 #include <lkCommon/Math/Vector4.hpp>
 #include <lkCommon/System/Memory.hpp>
@@ -10,7 +10,7 @@
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 struct alignas(16) EmitterData
@@ -66,7 +66,7 @@ struct EmitterDesc
     }
 };
 
-class Emitter: public Component
+class Emitter: public IComponent
 {
     friend class Renderer::ParticleEngine;
 
@@ -79,7 +79,6 @@ class Emitter: public Component
 
 public:
     Emitter(const std::string& name);
-    ~Emitter();
 
     void Init(const EmitterDesc& desc);
     LKCOMMON_INLINE void* operator new (std::size_t size)
@@ -127,14 +126,14 @@ public:
         return mData.particleDataOffset;
     }
 
-    LKCOMMON_INLINE ComponentType GetType() const
+    LKCOMMON_INLINE Type GetType() const
     {
-        return ComponentType::Emitter;
+        return Type::Emitter;
     }
 };
 
 using EmitterCollection = std::vector<const Emitter*>;
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

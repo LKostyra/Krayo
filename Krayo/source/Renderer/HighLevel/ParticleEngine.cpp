@@ -154,8 +154,8 @@ bool ParticleEngine::UpdateEmitters(const Scene::Internal::Map& map)
 {
     bool bufferNeedsUpdate = false;
 
-    map.ForEachEmitter([&](const Scene::Internal::Emitter* e) -> bool {
-        auto it = std::find_if(mEmitters.begin(), mEmitters.end(), [e](const Scene::Internal::Emitter* em) {
+    map.ForEachEmitter([&](const Component::Internal::Emitter* e) -> bool {
+        auto it = std::find_if(mEmitters.begin(), mEmitters.end(), [e](const Component::Internal::Emitter* em) {
             return (e == em);
         });
 
@@ -172,7 +172,7 @@ bool ParticleEngine::UpdateEmitters(const Scene::Internal::Map& map)
     if (bufferNeedsUpdate)
     {
         // collect how much space we need
-        VkDeviceSize emitterBufSize = mEmitters.size() * sizeof(Scene::Internal::EmitterData);
+        VkDeviceSize emitterBufSize = mEmitters.size() * sizeof(Component::Internal::EmitterData);
         VkDeviceSize particleBufSize = 0;
         for (auto& e: mEmitters)
             particleBufSize += sizeof(ParticleData) * e->GetParticleLimit();
@@ -207,11 +207,11 @@ bool ParticleEngine::UpdateEmitters(const Scene::Internal::Map& map)
         {
             // update Emitter Data buffer
             e->SetParticleDataOffset(particleDataOffset);
-            const Scene::Internal::EmitterData& emData = e->GetData();
-            mEmitterData.Write(&emData, sizeof(Scene::Internal::EmitterData), emitterDataOffset);
+            const Component::Internal::EmitterData& emData = e->GetData();
+            mEmitterData.Write(&emData, sizeof(Component::Internal::EmitterData), emitterDataOffset);
 
             // update offset in Buffer
-            emitterDataOffset += sizeof(Scene::Internal::EmitterData);
+            emitterDataOffset += sizeof(Component::Internal::EmitterData);
             particleDataOffset += sizeof(ParticleData) * e->GetParticleLimit();
         }
 

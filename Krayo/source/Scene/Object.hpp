@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.hpp"
+#include "Component/IComponent.hpp"
 
 #include <string>
 
@@ -12,18 +12,18 @@ namespace Internal {
 class Object
 {
     std::string mName;
-    Component* mComponent;
+    Component::Internal::IComponent* mComponent;
 
 public:
     Object(const std::string& name);
     ~Object();
 
-    void SetComponent(Component* component)
+    void SetComponent(Component::Internal::IComponent* component)
     {
         mComponent = component;
     }
 
-    Component* GetComponent() const
+    Component::Internal::IComponent* GetComponent() const
     {
         return mComponent;
     }

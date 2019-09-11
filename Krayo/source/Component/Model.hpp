@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Krayo/Scene/Object.hpp"
-#include "Scene/Component.hpp"
-#include "Scene/Mesh.hpp"
-#include "Krayo/Material.hpp"
+#include "IComponent.hpp"
+#include "Mesh.hpp"
 
 #include "Math/AABB.hpp"
 
@@ -14,12 +13,12 @@
 
 
 namespace Krayo {
-namespace Scene {
+namespace Component {
 namespace Internal {
 
 using MeshTraverseCallback = std::function<void(Mesh*)>;
 
-class Model final: public Component
+class Model final: public IComponent
 {
     lkCommon::Math::Matrix4 mTransform;
     lkCommon::Math::Vector4 mPosition;
@@ -35,7 +34,6 @@ class Model final: public Component
 
 public:
     Model(const std::string& name);
-    ~Model();
 
     bool Init();
     void ForEachMesh(MeshTraverseCallback callback);
@@ -92,12 +90,12 @@ public:
         return mAABB;
     }
 
-    ComponentType GetType() const override
+    Type GetType() const override
     {
-        return ComponentType::Model;
+        return Type::Model;
     }
 };
 
 } // namespace Internal
-} // namespace Scene
+} // namespace Component
 } // namespace Krayo

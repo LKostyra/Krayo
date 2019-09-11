@@ -18,7 +18,6 @@ class Object final
     Object(const std::shared_ptr<Internal::Object>& impl);
 
 public:
-    KRAYO_API ~Object() = default;
 };
 
 } // namespace Scene

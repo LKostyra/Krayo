@@ -265,9 +265,9 @@ void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Came
     // Perform view frustum culling for next map
     // TODO readd
     map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-        if (o->GetComponent()->GetType() == Krayo::Scene::Internal::ComponentType::Model)
+        if (o->GetComponent()->GetType() == Krayo::Component::Internal::Type::Model)
         {
-            Scene::Internal::Model* model = dynamic_cast<Scene::Internal::Model*>(o->GetComponent());
+            Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
             //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
             model->SetToRender(true);
         }
@@ -308,8 +308,8 @@ void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Came
         LOGW("Failed to update Vertex Shader Uniform Buffer");
 
     uint32_t lightCount = 0;
-    map.ForEachLight([&](const Krayo::Scene::Internal::Light* l) -> bool {
-        if (!mLightContainer.Write(l->GetData(), sizeof(Scene::Internal::LightData), lightCount * sizeof(Scene::Internal::LightData)))
+    map.ForEachLight([&](const Krayo::Component::Internal::Light* l) -> bool {
+        if (!mLightContainer.Write(l->GetData(), sizeof(Component::Internal::LightData), lightCount * sizeof(Component::Internal::LightData)))
             LOGW("Failed to update Light Container Storage Buffer");
         lightCount++;
         return true;

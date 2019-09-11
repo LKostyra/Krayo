@@ -9,6 +9,8 @@ Engine::Engine()
 {
 }
 
+// this destructor has to be here so std::unique_ptr knows how Engine::Impl
+// is defined and compiles properly
 Engine::~Engine()
 {
 }

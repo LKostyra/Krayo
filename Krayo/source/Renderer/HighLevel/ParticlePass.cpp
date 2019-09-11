@@ -184,7 +184,7 @@ bool ParticlePass::Init(const DevicePtr& device, const ParticlePassDesc& desc)
 
 void ParticlePass::Draw(const ParticlePassDrawDesc& desc)
 {
-    std::vector<Scene::Internal::EmitterData> emitterData(desc.emitterCount);
+    std::vector<Component::Internal::EmitterData> emitterData(desc.emitterCount);
 
     {
         // begin recording basic stuff
