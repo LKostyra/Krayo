@@ -6,6 +6,7 @@
 #include "Krayo/Scene/Object.hpp"
 
 #include <memory>
+#include <string>
 
 
 namespace Krayo {

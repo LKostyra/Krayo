@@ -11,17 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\API\Component.cpp" />
-    <ClCompile Include="source\API\Component\Light.cpp" />
     <ClCompile Include="source\API\Engine.cpp" />
     <ClCompile Include="source\API\EngineImpl.cpp" />
     <ClCompile Include="source\API\Events.cpp" />
-    <ClCompile Include="source\API\Map.cpp" />
-    <ClCompile Include="source\API\Material.cpp" />
-    <ClCompile Include="source\API\Object.cpp" />
-    <ClCompile Include="source\API\ResourceFactory.cpp" />
-    <ClCompile Include="source\API\ResourceFactoryImpl.cpp" />
+    <ClCompile Include="source\API\Resource\Manager.cpp" />
     <ClCompile Include="source\API\Resource\Model.cpp" />
+    <ClCompile Include="source\API\Scene\Map.cpp" />
+    <ClCompile Include="source\API\Scene\Object.cpp" />
+    <ClCompile Include="source\Component\Emitter.cpp" />
+    <ClCompile Include="source\Component\IComponent.cpp" />
+    <ClCompile Include="source\Component\Light.cpp" />
+    <ClCompile Include="source\Component\Mesh.cpp" />
+    <ClCompile Include="source\Component\Model.cpp" />
     <ClCompile Include="source\Events\Manager.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Math\AABB.cpp" />
@@ -57,34 +58,35 @@
     <ClCompile Include="source\Renderer\LowLevel\VertexLayout.cpp" />
     <ClCompile Include="source\Renderer\LowLevel\Win\WinBackbuffer.cpp" />
     <ClCompile Include="source\ResourceDir.cpp" />
-    <ClCompile Include="source\Resources\Manager.cpp" />
-    <ClCompile Include="source\Resources\Material.cpp" />
-    <ClCompile Include="source\Resources\Model.cpp" />
-    <ClCompile Include="source\Resources\Resource.cpp" />
-    <ClCompile Include="source\Resources\Texture.cpp" />
+    <ClCompile Include="source\Resource\IResource.cpp" />
+    <ClCompile Include="source\Resource\Manager.cpp" />
+    <ClCompile Include="source\Resource\Material.cpp" />
+    <ClCompile Include="source\Resource\Model.cpp" />
+    <ClCompile Include="source\Resource\Texture.cpp" />
     <ClCompile Include="source\Scene\Camera.cpp" />
-    <ClCompile Include="source\Scene\Emitter.cpp" />
-    <ClCompile Include="source\Scene\Light.cpp" />
     <ClCompile Include="source\Scene\Map.cpp" />
-    <ClCompile Include="source\Scene\Mesh.cpp" />
-    <ClCompile Include="source\Scene\Model.cpp" />
+    <ClCompile Include="source\Scene\Object.cpp" />
     <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp" />
     <ClInclude Include="include\Krayo\ApiPrerequisites.hpp" />
-    <ClInclude Include="include\Krayo\Component.hpp" />
-    <ClInclude Include="include\Krayo\Component\Light.hpp" />
+    <ClInclude Include="include\Krayo\Component\IComponent.hpp" />
+    <ClInclude Include="include\Krayo\Component\Type.hpp" />
     <ClInclude Include="include\Krayo\Engine.hpp" />
     <ClInclude Include="include\Krayo\Events.hpp" />
-    <ClInclude Include="include\Krayo\Map.hpp" />
-    <ClInclude Include="include\Krayo\Material.hpp" />
-    <ClInclude Include="include\Krayo\Object.hpp" />
-    <ClInclude Include="include\Krayo\ResourceFactory.hpp" />
+    <ClInclude Include="include\Krayo\Resource\Manager.hpp" />
     <ClInclude Include="include\Krayo\Resource\Model.hpp" />
+    <ClInclude Include="include\Krayo\Resource\Type.hpp" />
+    <ClInclude Include="include\Krayo\Scene\Map.hpp" />
+    <ClInclude Include="include\Krayo\Scene\Object.hpp" />
     <ClInclude Include="source\API\EngineImpl.hpp" />
-    <ClInclude Include="source\API\ResourceFactoryImpl.hpp" />
+    <ClInclude Include="source\Component\Emitter.hpp" />
+    <ClInclude Include="source\Component\IComponent.hpp" />
+    <ClInclude Include="source\Component\Light.hpp" />
+    <ClInclude Include="source\Component\Mesh.hpp" />
+    <ClInclude Include="source\Component\Model.hpp" />
     <ClInclude Include="source\Events\Manager.hpp" />
     <ClInclude Include="source\Math\AABB.hpp" />
     <ClInclude Include="source\Math\Frustum.hpp" />
@@ -122,17 +124,14 @@
     <ClInclude Include="source\Renderer\LowLevel\VkRAII.hpp" />
     <ClInclude Include="source\Renderer\LowLevel\Win\WinBackbuffer.hpp" />
     <ClInclude Include="source\ResourceDir.hpp" />
-    <ClInclude Include="source\Resources\Manager.hpp" />
-    <ClInclude Include="source\Resources\Material.hpp" />
-    <ClInclude Include="source\Resources\Model.hpp" />
-    <ClInclude Include="source\Resources\Resource.hpp" />
-    <ClInclude Include="source\Resources\Texture.hpp" />
+    <ClInclude Include="source\Resource\IResource.hpp" />
+    <ClInclude Include="source\Resource\Manager.hpp" />
+    <ClInclude Include="source\Resource\Material.hpp" />
+    <ClInclude Include="source\Resource\Model.hpp" />
+    <ClInclude Include="source\Resource\Texture.hpp" />
     <ClInclude Include="source\Scene\Camera.hpp" />
-    <ClInclude Include="source\Scene\Emitter.hpp" />
-    <ClInclude Include="source\Scene\Light.hpp" />
     <ClInclude Include="source\Scene\Map.hpp" />
-    <ClInclude Include="source\Scene\Mesh.hpp" />
-    <ClInclude Include="source\Scene\Model.hpp" />
+    <ClInclude Include="source\Scene\Object.hpp" />
     <ClInclude Include="source\Utils\ModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelLoader.hpp" />
@@ -185,7 +184,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;_ENABLE_EXTENDED_ALIGNED_STORAGE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
@@ -207,7 +206,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;_ENABLE_EXTENDED_ALIGNED_STORAGE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>

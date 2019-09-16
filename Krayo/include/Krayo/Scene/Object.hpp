@@ -2,6 +2,7 @@
 
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/ApiPrerequisites.hpp"
+#include "Krayo/Component/IComponent.hpp"
 
 #include <memory>
 
@@ -18,6 +19,7 @@ class Object final
     Object(const std::shared_ptr<Internal::Object>& impl);
 
 public:
+    void AttachComponent(const Component::IComponent* component);
 };
 
 } // namespace Scene

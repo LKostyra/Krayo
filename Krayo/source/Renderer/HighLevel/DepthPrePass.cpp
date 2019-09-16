@@ -126,7 +126,7 @@ void DepthPrePass::Draw(const Scene::Internal::Map& map, const DepthPrePassDrawD
 
         MultiGraphicsPipelineShaderMacros emptyMacros;
         map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::Component::Internal::Type::Model)
+            if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
             {
                 Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
 

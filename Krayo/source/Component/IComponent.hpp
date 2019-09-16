@@ -2,20 +2,14 @@
 
 #include "Krayo/ApiDef.hpp"
 
+#include "Krayo/Component/Type.hpp"
+
 #include <string>
 
 
 namespace Krayo {
 namespace Component {
 namespace Internal {
-
-enum class Type: unsigned char
-{
-    Invalid = 0,
-    Model,
-    Light,
-    Emitter,
-};
 
 class IComponent
 {
@@ -25,7 +19,7 @@ protected:
 public:
     IComponent(const std::string& name);
 
-    virtual Type GetType() const = 0;
+    virtual Krayo::Component::Type GetType() const = 0;
 
     KRAYO_INLINE std::string GetName() const
     {

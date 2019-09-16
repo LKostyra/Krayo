@@ -44,7 +44,7 @@ public:
     ~Map();
 
     CreateResult<Object> CreateObject(const std::string& name);
-    CreateResult<Component::Internal::IComponent> CreateComponent(Component::Internal::Type type, const std::string& name);
+    CreateResult<Component::Internal::IComponent> CreateComponent(Component::Type type, const std::string& name);
     void ForEachLight(Callback<Component::Internal::Light> func) const;
     void ForEachEmitter(Callback<Component::Internal::Emitter> func) const;
     void ForEachObject(Callback<Object> func) const;

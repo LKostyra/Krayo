@@ -10,7 +10,7 @@
 namespace Krayo {
 namespace Resource {
 
-class Model
+class Model final
 {
     friend class Manager;
 

@@ -75,7 +75,7 @@ public:
  *
  * @p mKeyID Contains pressed key ID.
  */
-class KeyDownMessage: public IMessage
+class KeyDownMessage final: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -92,7 +92,7 @@ public:
  *
  * @p mKeyID Contains ID of key that was let go.
  */
-class KeyUpMessage: public IMessage
+class KeyUpMessage final: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -109,7 +109,7 @@ public:
  *
  * @p mKeyID Contains pressed key ID.
  */
-class MouseDownMessage: public IMessage
+class MouseDownMessage final: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -126,7 +126,7 @@ public:
  *
  * @p mKeyID Contains ID of key that was let go.
  */
-class MouseUpMessage: public IMessage
+class MouseUpMessage final: public IMessage
 {
     int mKeyID; // FIXME replace with Krayo::KeyCode type
 
@@ -146,7 +146,7 @@ public:
  * @p mDeltaX Difference between previous and current X position of mouse cursor.
  * @p mDeltaY Difference between previous and current Y position of mouse cursor.
  */
-class MouseMoveMessage: public IMessage
+class MouseMoveMessage final: public IMessage
 {
     uint32_t mPosX;
     uint32_t mPosY;

@@ -39,15 +39,15 @@ CreateResult<Internal::Object> Map::CreateObject(const std::string& name)
     return CreateItem<Internal::Object>(mObjects, name);
 }
 
-CreateResult<Component::Internal::IComponent> Map::CreateComponent(Component::Internal::Type type, const std::string& name)
+CreateResult<Component::Internal::IComponent> Map::CreateComponent(Component::Type type, const std::string& name)
 {
     switch (type)
     {
-    case Component::Internal::Type::Model:
+    case Component::Type::Model:
         return CreateItem<Component::Internal::Model>(mModelComponents, name);
-    case Component::Internal::Type::Light:
+    case Component::Type::Light:
         return CreateItem<Component::Internal::Light>(mLightComponents, name);
-    case Component::Internal::Type::Emitter:
+    case Component::Type::Emitter:
         return CreateItem<Component::Internal::Emitter>(mEmitterComponents, name);
     default:
         LOGE("Unknown component type provided to create");

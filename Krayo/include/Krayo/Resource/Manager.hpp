@@ -11,7 +11,7 @@
 namespace Krayo {
 namespace Resource {
 
-class Manager
+class Manager final
 {
     friend class Krayo::Engine;
 

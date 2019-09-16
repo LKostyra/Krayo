@@ -265,7 +265,7 @@ void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Came
     // Perform view frustum culling for next map
     // TODO readd
     map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-        if (o->GetComponent()->GetType() == Krayo::Component::Internal::Type::Model)
+        if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
         {
             Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
             //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
