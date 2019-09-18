@@ -25,21 +25,6 @@ void Engine::MainLoop()
     return mImpl->MainLoop();
 }
 
-Krayo::Scene::Map Engine::CreateMap(const std::string& name)
-{
-    return Krayo::Scene::Map(mImpl->CreateMap(name));
-}
-
-Krayo::Scene::Map Engine::GetMap(const std::string& name)
-{
-    return Krayo::Scene::Map(mImpl->GetMap(name));
-}
-
-void Engine::SetCurrentMap(const Krayo::Scene::Map& map)
-{
-    return mImpl->SetCurrentMap(map.mImpl);
-}
-
 Krayo::Resource::Manager& Engine::GetResourceManager()
 {
     return mImpl->GetResourceManager();

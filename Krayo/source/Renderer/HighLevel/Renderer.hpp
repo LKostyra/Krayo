@@ -7,16 +7,6 @@
 
 #include "Math/Frustum.hpp"
 
-#include "Scene/Camera.hpp"
-#include "Scene/Map.hpp"
-
-#include "Renderer/HighLevel/GridFrustumsGenerator.hpp"
-#include "Renderer/HighLevel/ParticleEngine.hpp"
-#include "Renderer/HighLevel/DepthPrePass.hpp"
-#include "Renderer/HighLevel/LightCuller.hpp"
-#include "Renderer/HighLevel/ForwardPass.hpp"
-#include "Renderer/HighLevel/ParticlePass.hpp"
-
 #include <lkCommon/System/Window.hpp>
 #include <lkCommon/Math/Matrix4.hpp>
 

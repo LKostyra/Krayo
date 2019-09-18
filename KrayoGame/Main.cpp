@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 
     // BELOW IS AN EXAMPLE OF API USE //
     // GOAL - TO MAKE IT COMPILE & WORK AS PROMISED //
-
+    /*
     // load resources
     Krayo::Resource::Manager& mgr = engine.GetResourceManager();
     Krayo::Resource::Model model = mgr.CreateModel("cube");
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     //Krayo::Component::Model mc = map.CreateModelComponent("cubeComponent", model);
 
     Krayo::Scene::Object o = map.CreateObject("cubeObject");
-    /*o->AttachComponent(c);
+    o->AttachComponent(c);
 
     engine.SetCurrentMap(map);*/
 

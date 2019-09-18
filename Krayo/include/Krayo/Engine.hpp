@@ -4,7 +4,6 @@
 #include "Krayo/ApiPrerequisites.hpp"
 
 #include "Krayo/Events.hpp"
-#include "Krayo/Scene/Map.hpp"
 #include "Krayo/Resource/Manager.hpp"
 
 #include <memory>
@@ -78,27 +77,6 @@ public:
      * This function exits automatically when Engine's window is closed.
      */
     KRAYO_API void MainLoop();
-
-    /**
-     * Create a new Map
-     *
-     * @p[in] name Name of map to create.
-     * @return Map object
-     */
-    KRAYO_API Krayo::Scene::Map CreateMap(const std::string& name);
-
-    /**
-     * Get map
-     */
-    KRAYO_API Krayo::Scene::Map GetMap(const std::string& name);
-
-    /**
-     * Set map to draw (or unset)
-     *
-     * @p[in] name Name of map to be set to draw
-     * @return True on success, false when map is not found.
-     */
-    KRAYO_API void SetCurrentMap(const Krayo::Scene::Map& map);
 
     /**
      * Acquire Engine's resource manager

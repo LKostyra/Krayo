@@ -1,8 +1,6 @@
 #include "Manager.hpp"
 
-#include "Model.hpp"
-#include "Material.hpp"
-#include "Texture.hpp"
+#include <lkCommon/Utils/Logger.hpp>
 
 
 namespace Krayo {
@@ -16,21 +14,6 @@ std::shared_ptr<IResource> Manager::CreateResource(const Krayo::Resource::Type t
 
     switch (type)
     {
-    case Krayo::Resource::Type::Model:
-        result = mResources.emplace(
-            std::make_pair(name, std::make_shared<Krayo::Resource::Internal::Model>(name))
-        );
-        break;
-    case Krayo::Resource::Type::Material:
-        result = mResources.emplace(
-            std::make_pair(name, std::make_shared<Krayo::Resource::Internal::Material>(name))
-        );
-        break;
-    case Krayo::Resource::Type::Texture:
-        result = mResources.emplace(
-            std::make_pair(name, std::make_shared<Krayo::Resource::Internal::Texture>(name))
-        );
-        break;
     default:
         LOGE("Unknown resource type");
         return nullptr;

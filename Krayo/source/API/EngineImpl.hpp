@@ -2,11 +2,8 @@
 
 #include "Krayo/Engine.hpp"
 
-#include "Renderer/HighLevel/Renderer.hpp"
-
 #include "Events/Manager.hpp"
 #include "Resource/Manager.hpp"
-#include "Scene/Map.hpp"
 
 #include <lkCommon/Math/RingAverage.hpp>
 
@@ -21,16 +18,9 @@ class Engine::Impl
 {
     lkCommon::Math::RingAverage<float, 300> mAvgTime;
 
-    Renderer::Renderer mRenderer;
     Events::Manager mEventManager;
     Resource::Internal::Manager mResourceManager;
-
     Resource::Manager mResourceManagerAPI;
-
-    // TODO REPLACE STRING WITH UUID
-    std::map<std::string, std::shared_ptr<Scene::Internal::Map>> mMaps;
-    std::shared_ptr<Scene::Internal::Map> mCurrentMap;
-    Scene::Internal::Camera mCamera;
 
     // captures CWD, navigates to app root dir and verifies if it's correct
     bool SetDirTree() const;
