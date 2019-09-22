@@ -9,6 +9,7 @@ enum class Type: unsigned char
     Model,
     Texture,
     Material,
+    Count,
 };
 
 } // namespace Krayo

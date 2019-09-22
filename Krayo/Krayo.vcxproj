@@ -11,43 +11,70 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\API\Component\IComponent.cpp" />
+    <ClCompile Include="source\API\Component\Model.cpp" />
+    <ClCompile Include="source\API\Component\Transform.cpp" />
     <ClCompile Include="source\API\Engine.cpp" />
-    <ClCompile Include="source\API\EngineImpl.cpp" />
     <ClCompile Include="source\API\Events.cpp" />
+    <ClCompile Include="source\API\Map.cpp" />
+    <ClCompile Include="source\API\Object.cpp" />
+    <ClCompile Include="source\API\Resource\IResource.cpp" />
     <ClCompile Include="source\API\Resource\Manager.cpp" />
+    <ClCompile Include="source\API\Resource\Model.cpp" />
+    <ClCompile Include="source\Component\IComponent.cpp" />
+    <ClCompile Include="source\Component\Model.cpp" />
+    <ClCompile Include="source\Component\Transform.cpp" />
+    <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\Events\Manager.cpp" />
     <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Map.cpp" />
     <ClCompile Include="source\Math\AABB.cpp" />
     <ClCompile Include="source\Math\Frustum.cpp" />
     <ClCompile Include="source\Math\Plane.cpp" />
+    <ClCompile Include="source\Object.cpp" />
     <ClCompile Include="source\ResourceDir.cpp" />
     <ClCompile Include="source\Resource\IResource.cpp" />
     <ClCompile Include="source\Resource\Manager.cpp" />
+    <ClCompile Include="source\Resource\Model.cpp" />
     <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelLoader.cpp" />
+    <ClCompile Include="source\Utils\TypeID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp" />
     <ClInclude Include="include\Krayo\ApiPrerequisites.hpp" />
     <ClInclude Include="include\Krayo\Component\IComponent.hpp" />
+    <ClInclude Include="include\Krayo\Component\Model.hpp" />
+    <ClInclude Include="include\Krayo\Component\Transform.hpp" />
     <ClInclude Include="include\Krayo\Component\Type.hpp" />
     <ClInclude Include="include\Krayo\Engine.hpp" />
     <ClInclude Include="include\Krayo\Events.hpp" />
+    <ClInclude Include="include\Krayo\Map.hpp" />
+    <ClInclude Include="include\Krayo\Object.hpp" />
+    <ClInclude Include="include\Krayo\Resource\IResource.hpp" />
     <ClInclude Include="include\Krayo\Resource\Manager.hpp" />
+    <ClInclude Include="include\Krayo\Resource\Model.hpp" />
     <ClInclude Include="include\Krayo\Resource\Type.hpp" />
-    <ClInclude Include="source\API\EngineImpl.hpp" />
+    <ClInclude Include="source\Component\IComponent.hpp" />
+    <ClInclude Include="source\Component\Model.hpp" />
+    <ClInclude Include="source\Component\Transform.hpp" />
+    <ClInclude Include="source\Engine.hpp" />
     <ClInclude Include="source\Events\Manager.hpp" />
+    <ClInclude Include="source\Map.hpp" />
     <ClInclude Include="source\Math\AABB.hpp" />
     <ClInclude Include="source\Math\Frustum.hpp" />
     <ClInclude Include="source\Math\Plane.hpp" />
+    <ClInclude Include="source\Object.hpp" />
     <ClInclude Include="source\Prerequisites.hpp" />
     <ClInclude Include="source\ResourceDir.hpp" />
     <ClInclude Include="source\Resource\IResource.hpp" />
     <ClInclude Include="source\Resource\Manager.hpp" />
+    <ClInclude Include="source\Resource\Model.hpp" />
     <ClInclude Include="source\Utils\ModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelLoader.hpp" />
     <ClInclude Include="source\Utils\Traits.hpp" />
+    <ClInclude Include="source\Utils\TypeID.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

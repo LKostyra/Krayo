@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #ifdef WIN32
     #define KRAYO_INLINE __forceinline
 

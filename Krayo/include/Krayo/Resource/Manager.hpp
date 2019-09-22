@@ -3,6 +3,9 @@
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/ApiPrerequisites.hpp"
 
+#include "Krayo/Resource/IResource.hpp"
+#include "Krayo/Resource/Type.hpp"
+
 #include <string>
 
 
@@ -11,7 +14,7 @@ namespace Resource {
 
 class Manager final
 {
-    friend class Krayo::Engine;
+    friend class Krayo::Internal::Engine;
 
     Internal::Manager& mImpl;
 
@@ -19,7 +22,7 @@ class Manager final
     ~Manager() = default;
 
 public:
-
+    KRAYO_API Model* CreateModel(const std::string& name);
 };
 
 } // namespace Resource

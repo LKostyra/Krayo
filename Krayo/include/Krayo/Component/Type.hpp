@@ -6,10 +6,11 @@ namespace Component {
 
 enum class Type: unsigned char
 {
-    Invalid = 0,
-    Model,
+    Model = 0,
+    Transform,
     Light,
     Emitter,
+    Count
 };
 
 } // namespace Component

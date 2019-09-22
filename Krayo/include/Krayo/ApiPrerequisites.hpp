@@ -3,15 +3,42 @@
 namespace Krayo {
 
     class Engine;
+    class Map;
     class Object;
+
+    namespace Internal {
+
+        class Engine;
+        class Map;
+        class Object;
+
+    } // namespace Internal
+
+    namespace Component {
+
+        class IComponent;
+        class Model;
+        class Transform;
+
+        namespace Internal {
+
+            class IComponent;
+            class Model;
+            class Transform;
+
+        } // namespace Internal;
+
+    } // namespace Component
 
     namespace Resource {
 
+        class IResource;
         class Manager;
         class Model;
 
         namespace Internal {
 
+            class IResource;
             class Manager;
             class Material;
             class Model;
@@ -19,19 +46,5 @@ namespace Krayo {
         } // namespace Internal
 
     } // namespace Resource
-
-    namespace Scene {
-
-        class Map;
-        class Object;
-
-        namespace Internal {
-
-            class Map;
-            class Object;
-
-        } // namespace Internal
-
-    } // namespace Scene
 
 } // namespace Krayo

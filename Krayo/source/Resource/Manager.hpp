@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IResource.hpp"
+#include "Resource/IResource.hpp"
 
 #include "Krayo/Resource/Type.hpp"
 
-#include <map>
+#include <vector>
 #include <memory>
 
 
@@ -15,13 +15,17 @@ namespace Internal {
 class Manager
 {
     using ResourcePtr = std::shared_ptr<IResource>;
-    using ResourceContainer = std::map<std::string, ResourcePtr>;
+    using ResourceContainer = std::vector<ResourcePtr>;
 
-    ResourceContainer mResources;
+    std::vector<ResourceContainer> mResourceContainers;
+
+    template <typename T>
+    Internal::IResource* CreateResourceGeneric(ResourceContainer& c, const std::string& name);
 
 public:
-    std::shared_ptr<IResource> CreateResource(const Krayo::Resource::Type type, const std::string& name);
-    std::shared_ptr<IResource> GetResource(const std::string& name);
+    Manager();
+
+    Internal::IResource* CreateResource(const Krayo::Resource::Type type, const std::string& name);
 };
 
 } // namespace Internal

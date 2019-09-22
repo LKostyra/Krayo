@@ -10,11 +10,20 @@ namespace Utils {
 
 class ModelLoader
 {
-    ModelFile* OpenFBX(const std::string& path);
-    ModelFile* OpenOBJ(const std::string& path);
+    enum class ModelType
+    {
+        Unknown = 0,
+        FBX,
+        OBJ,
+    };
+
+    static ModelType DetermineModelType(const std::string& path);
+
+    static ModelFile* OpenFBX(const std::string& path);
+    static ModelFile* OpenOBJ(const std::string& path);
 
 public:
-    ModelFile* Open(const std::string& path);
+    static ModelFile* Open(const std::string& path);
 };
 
 } // namespace Utils

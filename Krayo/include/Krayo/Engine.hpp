@@ -5,6 +5,7 @@
 
 #include "Krayo/Events.hpp"
 #include "Krayo/Resource/Manager.hpp"
+#include "Krayo/Component/IComponent.hpp"
 
 #include <memory>
 
@@ -53,8 +54,7 @@ struct EngineDesc
 
 class Engine final
 {
-    class Impl;
-    std::unique_ptr<Impl> mImpl;
+    std::unique_ptr<Internal::Engine> mImpl;
 
 public:
     /**
@@ -82,6 +82,16 @@ public:
      * Acquire Engine's resource manager
      */
     KRAYO_API Krayo::Resource::Manager& GetResourceManager();
+
+    /**
+     * Create a new Map in engine
+     */
+    KRAYO_API Krayo::Map* CreateMap(const std::string& name);
+
+    /**
+     * Set Map to be used as a current one for Renderer
+     */
+    KRAYO_API void SetCurrentMap(Krayo::Map* map);
 
     /**
      * @defgroup EventAPI Event API

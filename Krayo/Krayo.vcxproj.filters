@@ -37,6 +37,15 @@
     <Filter Include="include\Krayo\Component">
       <UniqueIdentifier>{629f86d6-4439-4fda-94ad-7bb8250db371}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Component">
+      <UniqueIdentifier>{2d0249fb-6b69-45a3-a344-a6e8dc3011a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\API\Component">
+      <UniqueIdentifier>{b8bab865-9f42-49e7-8b14-a3e4b882aedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Renderer">
+      <UniqueIdentifier>{77f9ca2f-74b3-4c6f-b319-b04da79cb0fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -55,9 +64,6 @@
       <Filter>source\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\API\Engine.cpp">
-      <Filter>source\API</Filter>
-    </ClCompile>
-    <ClCompile Include="source\API\EngineImpl.cpp">
       <Filter>source\API</Filter>
     </ClCompile>
     <ClCompile Include="source\API\Events.cpp">
@@ -80,6 +86,51 @@
     </ClCompile>
     <ClCompile Include="source\Resource\Manager.cpp">
       <Filter>source\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resource\Model.cpp">
+      <Filter>source\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Resource\Model.cpp">
+      <Filter>source\API\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Resource\IResource.cpp">
+      <Filter>source\API\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component\IComponent.cpp">
+      <Filter>source\API\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component\Model.cpp">
+      <Filter>source\API\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component\Transform.cpp">
+      <Filter>source\API\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Map.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Object.cpp">
+      <Filter>source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Engine.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Map.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Object.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\IComponent.cpp">
+      <Filter>source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\Model.cpp">
+      <Filter>source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Component\Transform.cpp">
+      <Filter>source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\TypeID.cpp">
+      <Filter>source\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,9 +157,6 @@
     </ClInclude>
     <ClInclude Include="include\Krayo\Engine.hpp">
       <Filter>include\Krayo</Filter>
-    </ClInclude>
-    <ClInclude Include="source\API\EngineImpl.hpp">
-      <Filter>source\API</Filter>
     </ClInclude>
     <ClInclude Include="include\Krayo\Events.hpp">
       <Filter>include\Krayo</Filter>
@@ -143,8 +191,50 @@
     <ClInclude Include="include\Krayo\Component\Type.hpp">
       <Filter>include\Krayo\Component</Filter>
     </ClInclude>
+    <ClInclude Include="source\Component\Model.hpp">
+      <Filter>source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Object.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Resource\Model.hpp">
+      <Filter>include\Krayo\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource\Model.hpp">
+      <Filter>source\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Resource\IResource.hpp">
+      <Filter>include\Krayo\Resource</Filter>
+    </ClInclude>
     <ClInclude Include="include\Krayo\Component\IComponent.hpp">
       <Filter>include\Krayo\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Component\Model.hpp">
+      <Filter>include\Krayo\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Component\Transform.hpp">
+      <Filter>include\Krayo\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Map.hpp">
+      <Filter>include\Krayo</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Engine.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Map.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Object.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\IComponent.hpp">
+      <Filter>source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\Transform.hpp">
+      <Filter>source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\TypeID.hpp">
+      <Filter>source\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

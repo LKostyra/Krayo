@@ -1,4 +1,4 @@
-#include "API/EngineImpl.hpp"
+#include "Engine.hpp"
 
 #include "Resource/Manager.hpp"
 #include "ResourceDir.hpp"
@@ -12,6 +12,7 @@
 
 
 namespace Krayo {
+namespace Internal {
 
 
 class Window: public lkCommon::System::Window
@@ -106,19 +107,21 @@ const uint32_t MAX_FRAMESKIP = 5;
 } // namespace
 
 
-Engine::Impl::Impl()
+Engine::Engine()
     : mEventManager()
     , mResourceManager()
     , mResourceManagerAPI(mResourceManager)
+    , mMaps()
+    , mCurrentMap(nullptr)
 {
 }
 
-Engine::Impl::~Impl()
+Engine::~Engine()
 {
     LOGI("Engine destroyed");
 }
 
-bool Engine::Impl::SetDirTree() const
+bool Engine::SetDirTree() const
 {
     std::string cwd = lkCommon::System::FS::GetParentDir(lkCommon::System::FS::GetExecutablePath());
 
@@ -144,12 +147,12 @@ bool Engine::Impl::SetDirTree() const
     return true;
 }
 
-void Engine::Impl::Update()
+void Engine::Update()
 {
     gWindow->Update(static_cast<float>(TICK_TIME));
 }
 
-bool Engine::Impl::Init(const EngineDesc& desc)
+bool Engine::Init(const EngineDesc& desc)
 {
     #ifdef KRAYO_ROOT_DIR
     lkCommon::Utils::Logger::SetRootPathToStrip(std::string(KRAYO_ROOT_DIR));
@@ -176,10 +179,11 @@ bool Engine::Impl::Init(const EngineDesc& desc)
         return false;
     }
 
+    LOGI("Engine initialized successfully");
     return true;
 }
 
-void Engine::Impl::MainLoop()
+void Engine::MainLoop()
 {
     lkCommon::Utils::Timer timer;
     lkCommon::Utils::Timer updateTimer;
@@ -216,38 +220,35 @@ void Engine::Impl::MainLoop()
         float interpolation = updateTime * TICK_TIME_INV;
         if (interpolation > 1.0f)
             interpolation = 1.0f;
-
-        // Call systems here
     }
 }
 
-std::shared_ptr<Scene::Internal::Map> Engine::Impl::CreateMap(const std::string& name)
+Internal::Map* Engine::CreateMap(const std::string& name)
 {
-    return nullptr;
+    mMaps.emplace_back(name);
+    return &mMaps.back();
 }
 
-std::shared_ptr<Scene::Internal::Map> Engine::Impl::GetMap(const std::string& name)
+void Engine::SetCurrentMap(Internal::Map* map)
 {
-    return nullptr;
+    mCurrentMap = map;
+    LOGD("Set map " << reinterpret_cast<void*>(mCurrentMap));
 }
 
-void Engine::Impl::SetCurrentMap(const std::shared_ptr<Scene::Internal::Map>& map)
-{
-}
-
-Krayo::Resource::Manager& Engine::Impl::GetResourceManager()
+Krayo::Resource::Manager& Engine::GetResourceManager()
 {
     return mResourceManagerAPI;
 }
 
-bool Engine::Impl::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)
+bool Engine::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)
 {
     return mEventManager.RegisterToEvent(id, subscriber);
 }
 
-void Engine::Impl::EmitEvent(const Events::ID id, const Events::IMessage* message)
+void Engine::EmitEvent(const Events::ID id, const Events::IMessage* message)
 {
     mEventManager.EmitEvent(id, message);
 }
 
+} // namespace Internal
 } // namespace Krayo

@@ -1,4 +1,9 @@
 #include <Krayo/Engine.hpp>
+#include <Krayo/Map.hpp>
+#include <Krayo/Object.hpp>
+#include <Krayo/Component/Model.hpp>
+#include <Krayo/Component/Transform.hpp>
+#include <Krayo/Resource/Model.hpp>
 
 #include <iostream>
 
@@ -29,6 +34,7 @@ int main(int argc, char* argv[])
     engineDesc.vsync = false;
     engineDesc.windowWidth = 1280;
     engineDesc.windowHeight = 720;
+
     Krayo::Engine engine;
     if (!engine.Init(engineDesc))
     {
@@ -40,12 +46,21 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // BELOW IS AN EXAMPLE OF API USE //
-    // GOAL - TO MAKE IT COMPILE & WORK AS PROMISED //
-    /*
-    // load resources
     Krayo::Resource::Manager& mgr = engine.GetResourceManager();
-    Krayo::Resource::Model model = mgr.CreateModel("cube");
+    Krayo::Resource::Model* modelRes = mgr.CreateModel("sphere");
+    if (!modelRes)
+    {
+        return 1;
+    }
+
+    if (!modelRes->Load("sphere.fbx"))
+    {
+        std::vector<float> vertices;
+        if (!modelRes->LoadMesh(vertices))
+        {
+            return 1;
+        }
+    }
 
     //Krayo::Resource::Material* material = rf.CreateMaterial();
     //if (!material->Load("Data/Materials/cube.json"))
@@ -55,13 +70,17 @@ int main(int argc, char* argv[])
     //
     //model.AssignMaterial(material);
 
-    Krayo::Scene::Map map = engine.CreateMap("TEST");
-    //Krayo::Component::Model mc = map.CreateModelComponent("cubeComponent", model);
+    Krayo::Map* map = engine.CreateMap("TEST");
+    engine.SetCurrentMap(map);
 
-    Krayo::Scene::Object o = map.CreateObject("cubeObject");
-    o->AttachComponent(c);
+    Krayo::Component::Model* mc = map->CreateModelComponent("cubeComponent");
+    mc->AttachResource(modelRes);
 
-    engine.SetCurrentMap(map);*/
+    Krayo::Component::Transform* tc = map->CreateTransformComponent("cubeTransform");
+
+    Krayo::Object* o = map->CreateObject("cubeObject");
+    o->AttachComponent(mc);
+    o->AttachComponent(tc);
 
     engine.MainLoop();
 

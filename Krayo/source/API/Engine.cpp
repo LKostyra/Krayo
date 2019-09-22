@@ -1,11 +1,14 @@
 #include "Krayo/Engine.hpp"
-#include "API/EngineImpl.hpp"
+
+#include "Engine.hpp"
+
+#include "Krayo/Map.hpp"
 
 
 namespace Krayo {
 
 Engine::Engine()
-    : mImpl(std::make_unique<Impl>())
+    : mImpl(std::make_unique<Internal::Engine>())
 {
 }
 
@@ -28,6 +31,16 @@ void Engine::MainLoop()
 Krayo::Resource::Manager& Engine::GetResourceManager()
 {
     return mImpl->GetResourceManager();
+}
+
+Krayo::Map* Engine::CreateMap(const std::string& name)
+{
+    return new Krayo::Map(mImpl->CreateMap(name));
+}
+
+void Engine::SetCurrentMap(Krayo::Map* map)
+{
+    mImpl->SetCurrentMap(map->mImpl);
 }
 
 bool Engine::RegisterToEvent(const Events::ID id, Events::ISubscriber* subscriber)

@@ -1,8 +1,10 @@
 SET(KRAYO_SRCS source/ResourceDir.cpp
-               source/API/Engine.cpp
-               source/API/EngineImpl.cpp
-               source/API/Events.cpp
-               source/API/Resource/Manager.cpp
+               source/Engine.cpp
+               source/Map.cpp
+               source/Object.cpp
+               source/Component/IComponent.cpp
+               source/Component/Model.cpp
+               source/Component/Transform.cpp
                source/Events/Manager.cpp
                source/Math/AABB.cpp
                source/Math/Frustum.cpp
@@ -38,13 +40,20 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                #source/Renderer/HighLevel/ShaderMacroDefinitions.cpp
                source/Resource/IResource.cpp
                source/Resource/Manager.cpp
+               source/Resource/Model.cpp
                source/Utils/ModelLoader.cpp
+               source/Utils/TypeID.cpp
                source/Utils/ModelFiles/FBXModelFile.cpp
                )
 
-SET(KRAYO_HDRS source/Prerequisites.hpp
+SET(KRAYO_HDRS source/Engine.hpp
+               source/Map.hpp
+               source/Object.hpp
+               source/Prerequisites.hpp
                source/ResourceDir.hpp
-               source/API/EngineImpl.hpp
+               source/Component/IComponent.hpp
+               source/Component/Model.hpp
+               source/Component/Transform.hpp
                source/Events/Manager.hpp
                source/Math/AABB.hpp
                source/Math/Frustum.hpp
@@ -82,21 +91,45 @@ SET(KRAYO_HDRS source/Prerequisites.hpp
                #source/Renderer/HighLevel/ShaderMacroDefinitions.hpp
                source/Resource/IResource.hpp
                source/Resource/Manager.hpp
+               source/Resource/Model.hpp
                source/Utils/ModelFile.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
+               source/Utils/TypeID.hpp
                source/Utils/ModelFiles/FBXModelFile.hpp
                )
+
+SET(KRAYO_API_SRCS source/API/Engine.cpp
+                   source/API/Events.cpp
+                   source/API/Map.cpp
+                   source/API/Object.cpp
+                   source/API/Component/IComponent.cpp
+                   source/API/Component/Model.cpp
+                   source/API/Component/Transform.cpp
+                   source/API/Resource/IResource.cpp
+                   source/API/Resource/Manager.cpp
+                   source/API/Resource/Model.cpp
+                   )
 
 SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp
                    include/Krayo/ApiPrerequisites.hpp
                    include/Krayo/Engine.hpp
                    include/Krayo/Events.hpp
+                   include/Krayo/Map.hpp
+                   include/Krayo/Object.hpp
+                   include/Krayo/Component/IComponent.hpp
+                   include/Krayo/Component/Model.hpp
+                   include/Krayo/Component/Transform.hpp
+                   include/Krayo/Component/Type.hpp
+                   include/Krayo/Resource/IResource.hpp
                    include/Krayo/Resource/Manager.hpp
+                   include/Krayo/Resource/Model.hpp
+                   include/Krayo/Resource/Type.hpp
                    )
 
 ADD_LIBRARY(${KRAYO_TARGET} SHARED
-            ${KRAYO_SRCS} ${KRAYO_HDRS} ${KRAYO_API_HDRS}
+            ${KRAYO_API_SRCS} ${KRAYO_API_HDRS}
+            ${KRAYO_SRCS} ${KRAYO_HDRS}
             )
 
 ADD_DEPENDENCIES(${KRAYO_TARGET} lkCommon shaderc)

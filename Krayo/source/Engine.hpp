@@ -2,6 +2,7 @@
 
 #include "Krayo/Engine.hpp"
 
+#include "Map.hpp"
 #include "Events/Manager.hpp"
 #include "Resource/Manager.hpp"
 
@@ -9,33 +10,38 @@
 
 #include <string>
 #include <memory>
-#include <unordered_map>
+#include <list>
 
 
 namespace Krayo {
+namespace Internal {
 
-class Engine::Impl
+class Engine
 {
+    using MapContainer = std::list<Internal::Map>;
+
     lkCommon::Math::RingAverage<float, 300> mAvgTime;
 
     Events::Manager mEventManager;
     Resource::Internal::Manager mResourceManager;
     Resource::Manager mResourceManagerAPI;
 
+    MapContainer mMaps;
+    Internal::Map* mCurrentMap;
+
     // captures CWD, navigates to app root dir and verifies if it's correct
     bool SetDirTree() const;
     void Update();
 
 public:
-    Impl();
-    ~Impl();
+    Engine();
+    ~Engine();
 
     bool Init(const EngineDesc& desc);
     void MainLoop();
 
-    std::shared_ptr<Scene::Internal::Map> CreateMap(const std::string& name);
-    std::shared_ptr<Scene::Internal::Map> GetMap(const std::string& name);
-    void SetCurrentMap(const std::shared_ptr<Scene::Internal::Map>& name);
+    Internal::Map* CreateMap(const std::string& name);
+    void SetCurrentMap(Internal::Map* map);
 
     Resource::Manager& GetResourceManager();
 
@@ -43,4 +49,5 @@ public:
     void EmitEvent(const Events::ID id, const Events::IMessage* message);
 };
 
+} // namespace Internal
 } // namespace Krayo

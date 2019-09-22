@@ -1,7 +1,7 @@
 struct IUnknown; // workaround
 #include <Windows.h>
 
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved) 
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
     switch (fdwReason)
     {
