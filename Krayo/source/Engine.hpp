@@ -5,6 +5,7 @@
 #include "Map.hpp"
 #include "Events/Manager.hpp"
 #include "Resource/Manager.hpp"
+#include "Renderer/HighLevel/Renderer.hpp"
 
 #include <lkCommon/Math/RingAverage.hpp>
 
@@ -25,6 +26,7 @@ class Engine
     Events::Manager mEventManager;
     Resource::Internal::Manager mResourceManager;
     Resource::Manager mResourceManagerAPI;
+    Renderer::Renderer mRenderer;
 
     MapContainer mMaps;
     Internal::Map* mCurrentMap;

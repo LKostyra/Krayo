@@ -6,6 +6,10 @@
 #include <lkCommon/Math/Matrix4.hpp>
 #include <lkCommon/Utils/Pixel.hpp>
 
+#include "Object.hpp"
+#include "Component/Model.hpp"
+#include "Component/Transform.hpp"
+
 
 namespace {
 
@@ -81,7 +85,8 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     targetTexDesc.height = desc.height;
     targetTexDesc.format = desc.outputFormat;
     targetTexDesc.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    targetTexDesc.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    targetTexDesc.layout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    targetTexDesc.ownerQueueFamily = DeviceQueueType::TRANSFER;
     if (!mTargetTexture.Init(mDevice, targetTexDesc))
         return false;
 
@@ -108,12 +113,12 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     ));
     attachments.push_back(Tools::CreateAttachmentDescription(
         VK_FORMAT_D32_SFLOAT, VK_ATTACHMENT_LOAD_OP_LOAD, VK_ATTACHMENT_STORE_OP_DONT_CARE,
-        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+        VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
     ));
 
     std::vector<VkAttachmentReference> colorAttRefs;
     colorAttRefs.push_back(Tools::CreateAttachmentReference(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL));
-    VkAttachmentReference depthAttRef = Tools::CreateAttachmentReference(1, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    VkAttachmentReference depthAttRef = Tools::CreateAttachmentReference(1, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
     std::vector<VkSubpassDescription> subpasses;
     subpasses.push_back(Tools::CreateSubpass(colorAttRefs, &depthAttRef));
@@ -126,7 +131,7 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     ));
     subpassDeps.push_back(Tools::CreateSubpassDependency(
         0, VK_SUBPASS_EXTERNAL,
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
         VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT
     ));
 
@@ -236,10 +241,29 @@ bool ForwardPass::Init(const DevicePtr& device, const ForwardPassDesc& desc)
     mCulledLights = desc.culledLightsPtr;
     mGridLightData = desc.gridLightDataPtr;
 
+    // Release ownership of our target texture from Image Barrier
+    CommandBuffer releaseCommandBuffer;
+    if(!releaseCommandBuffer.Init(mDevice, DeviceQueueType::TRANSFER))
+        return false;
+
+    releaseCommandBuffer.Begin();
+    releaseCommandBuffer.ImageBarrier(&mTargetTexture,
+                                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    0, 0,
+                                    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::TRANSFER), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+    releaseCommandBuffer.End();
+
+    if (!mDevice->Execute(DeviceQueueType::TRANSFER, &releaseCommandBuffer))
+        return false;
+
+    mDevice->Wait(DeviceQueueType::TRANSFER);
+
+    LOGI("Forward Pass initialized");
     return true;
 }
 
-void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDesc& desc)
+void ForwardPass::Draw(const Internal::Map& map, const ForwardPassDrawDesc& desc)
 {
     LKCOMMON_ASSERT(desc.waitFlags.size() == desc.waitSems.size(), "Wait semaphores count does not match wait flags count");
 
@@ -252,17 +276,27 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
         mCommandBuffer.SetViewport(0, 0, mTargetTexture.GetWidth(), mTargetTexture.GetHeight(), 0.0f, 1.0f);
         mCommandBuffer.SetScissor(0, 0, mTargetTexture.GetWidth(), mTargetTexture.GetHeight());
 
-        mDepthTexture->Transition(&mCommandBuffer,
-                                  VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
-                                  VK_ACCESS_MEMORY_READ_BIT, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
-                                  mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS),
-                                  VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-        mTargetTexture.Transition(&mCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                  0, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
-                                  VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                                  VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        mCommandBuffer.BufferBarrier(mCulledLights,
+                                     VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                                     0, VK_ACCESS_SHADER_READ_BIT,
+                                     mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+        mCommandBuffer.BufferBarrier(mGridLightData,
+                                     VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                                     0, VK_ACCESS_SHADER_READ_BIT,
+                                     mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
 
-        float clearValue[] = {0.1f, 0.1f, 0.1f, 1.0f};
+        mCommandBuffer.ImageBarrier(mDepthTexture,
+                                    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                                    0, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT,
+                                    VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+        mCommandBuffer.ImageBarrier(&mTargetTexture,
+                                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                    0, VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                                    VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::TRANSFER), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+
+        float clearValue[] = {0.1f, 0.2f, 0.5f, 1.0f};
         VkPipelineBindPoint bindPoint =  VK_PIPELINE_BIND_POINT_GRAPHICS;
         mCommandBuffer.BeginRenderPass(mRenderPass, &mFramebuffer, ClearType::COLOR, clearValue, 0.0f);
 
@@ -276,19 +310,31 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
             { ShaderMacro::HAS_COLOR_MASK, 0 },
         };
 
-        map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
-            {
-                Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
+        map.ForEachObject([&](const Internal::Object* o) -> bool {
+            const Component::Internal::Model* model = o->GetComponent<Component::Internal::Model>();
 
-                if (!model->ToRender())
-                    return true;
+            if (model)
+            {
+                const Component::Internal::Transform* transform = o->GetComponent<Component::Internal::Transform>();
+
+                //if (!model->ToRender())
+                //    return true;
 
                 // world matrix update
-                uint32_t offset = desc.ringBufferPtr->Write(&model->GetTransform(), sizeof(lkCommon::Math::Matrix4));
+                uint32_t offset = 0;
+                if (transform)
+                {
+                    // TODO unlock when transform works
+                    //offset = desc.ringBufferPtr->Write(&transform->Get(), sizeof(lkCommon::Math::Matrix4));
+                    offset = desc.ringBufferPtr->Write(&lkCommon::Math::Matrix4::IDENTITY, sizeof(lkCommon::Math::Matrix4));
+                }
+                else
+                {
+                    offset = desc.ringBufferPtr->Write(&lkCommon::Math::Matrix4::IDENTITY, sizeof(lkCommon::Math::Matrix4));
+                }
                 mCommandBuffer.BindDescriptorSet(desc.vertexShaderSet, bindPoint, 0, mPipelineLayout, offset);
 
-                model->ForEachMesh([&](Component::Internal::Mesh* mesh) {
+                model->ForEachMesh([&](const Resource::Internal::Mesh* mesh) -> bool {
                     macros.vertexShader[0].value = 0;
                     macros.fragmentShader[0].value = 0;
                     macros.fragmentShader[1].value = 0;
@@ -327,18 +373,20 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
                     mCommandBuffer.BindDescriptorSet(mFragmentShaderSet, bindPoint, 1, mPipelineLayout, offset);
 
                     mCommandBuffer.BindPipeline(mPipeline.GetGraphicsPipeline(macros), bindPoint);
-                    mCommandBuffer.BindVertexBuffer(mesh->GetVertexBuffer(), 0, 0);
-                    mCommandBuffer.BindVertexBuffer(mesh->GetVertexParamsBuffer(), 1, 0);
+                    mCommandBuffer.BindVertexBuffer(mesh->vertexBuffer.get(), 0, 0);
+                    mCommandBuffer.BindVertexBuffer(mesh->vertexParamsBuffer.get(), 1, 0);
 
-                    if (mesh->ByIndices())
+                    if (mesh->byIndices)
                     {
-                        mCommandBuffer.BindIndexBuffer(mesh->GetIndexBuffer());
-                        mCommandBuffer.DrawIndexed(mesh->GetPointCount());
+                        mCommandBuffer.BindIndexBuffer(mesh->indexBuffer.get());
+                        mCommandBuffer.DrawIndexed(mesh->pointCount);
                     }
                     else
                     {
-                        mCommandBuffer.Draw(mesh->GetPointCount(), 1);
+                        mCommandBuffer.Draw(mesh->pointCount, 1);
                     }
+
+                    return true;
                 });
             }
 
@@ -346,6 +394,21 @@ void ForwardPass::Draw(const Scene::Internal::Map& map, const ForwardPassDrawDes
         });
 
         mCommandBuffer.EndRenderPass();
+
+        mCommandBuffer.BufferBarrier(mCulledLights,
+                                     VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                     VK_ACCESS_SHADER_READ_BIT, 0,
+                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+        mCommandBuffer.BufferBarrier(mGridLightData,
+                                     VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                     VK_ACCESS_SHADER_READ_BIT, 0,
+                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+
+        mCommandBuffer.ImageBarrier(&mTargetTexture,
+                                    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT, 0,
+                                    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::TRANSFER));
 
         if (!mCommandBuffer.End())
         {

@@ -36,8 +36,6 @@ bool DescriptorAllocator::AllocateNewPool()
     VkResult result = vkCreateDescriptorPool(mDevice->GetDevice(), &info, nullptr, &mDescriptorPools.back().pool);
     RETURN_NULL_HANDLE_IF_FAILED(result, "Failed to create Descriptor Pool");
 
-    LOGD("Created Descriptor Pool 0x" << std::hex << reinterpret_cast<size_t*>(mDescriptorPools.back().pool));
-
     for (uint32_t i = 0; i < VK_DESCRIPTOR_TYPE_RANGE_SIZE; ++i)
     {
         mDescriptorPools.back().limits[i] = mLimits.limits[i];

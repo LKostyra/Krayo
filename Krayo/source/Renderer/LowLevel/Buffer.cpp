@@ -103,20 +103,47 @@ bool Buffer::Init(const DevicePtr& device, const BufferDesc& desc)
         // copy data from staging buffer to device
         // TODO OPTIMIZE this uses graphics queue and waits; after implementing queue manager, switch to Transfer queue
         CommandBuffer copyCmdBuffer;
-        if (!copyCmdBuffer.Init(mDevice, DeviceQueueType::GRAPHICS))
+        if (!copyCmdBuffer.Init(mDevice, desc.ownerQueueFamily))
             return false;
 
         copyCmdBuffer.Begin();
+        copyCmdBuffer.BufferBarrier(this,
+                                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                    0, VK_ACCESS_TRANSFER_WRITE_BIT,
+                                    VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
         copyCmdBuffer.CopyBuffer(staging, mBuffer, deviceMemReqs.size);
+        copyCmdBuffer.BufferBarrier(this,
+                                    VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_TRANSFER_WRITE_BIT, 0,
+                                    VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
         copyCmdBuffer.End();
 
         // TODO call on Transfer queue
-        mDevice->Execute(DeviceQueueType::GRAPHICS, &copyCmdBuffer);
-        mDevice->Wait(DeviceQueueType::GRAPHICS); // TODO this should be removed
+        mDevice->Execute(desc.ownerQueueFamily, &copyCmdBuffer);
+        mDevice->Wait(desc.ownerQueueFamily); // TODO this should be removed
 
         // cleanup
         vkFreeMemory(mDevice->GetDevice(), stagingMemory, nullptr);
         vkDestroyBuffer(mDevice->GetDevice(), staging, nullptr);
+    }
+    else
+    {
+        // perform a simple touch on our buffer with a barrier
+        // that way it's gonna be owned by whatever queue family we asked
+        CommandBuffer touchCmdBuffer;
+        if (!touchCmdBuffer.Init(mDevice, desc.ownerQueueFamily))
+            return false;
+
+        touchCmdBuffer.Begin();
+        touchCmdBuffer.BufferBarrier(this,
+                                     VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                     0, 0,
+                                     VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
+        touchCmdBuffer.End();
+
+        // TODO call on Transfer queue
+        mDevice->Execute(desc.ownerQueueFamily, &touchCmdBuffer);
+        mDevice->Wait(desc.ownerQueueFamily); // TODO this should be removed
     }
 
     mType = desc.type;

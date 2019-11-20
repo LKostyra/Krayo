@@ -22,6 +22,16 @@ Resource::Internal::Model* Model::GetResource() const
     return mModelResource;
 }
 
+void Model::ForEachMesh(const Callback<Resource::Internal::Mesh>& callback) const
+{
+    if (!mModelResource)
+        return;
+
+    for (const auto& m: mModelResource->mMeshes)
+        if (!callback(&m))
+            return;
+}
+
 } // namespace Internal
 } // namespace Component
 } // namespace Krayo

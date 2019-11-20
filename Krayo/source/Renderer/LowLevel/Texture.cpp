@@ -18,7 +18,6 @@ Texture::Texture()
     , mImage(VK_NULL_HANDLE)
     , mImageView(VK_NULL_HANDLE)
     , mImageMemory(VK_NULL_HANDLE)
-    , mImageLayout(VK_IMAGE_LAYOUT_UNDEFINED)
     , mImageDescriptorSet(VK_NULL_HANDLE)
 {
 }
@@ -103,6 +102,7 @@ bool Texture::Init(const DevicePtr& device, const TextureDesc& desc)
         tempBufferDesc.type = BufferType::Dynamic;
         tempBufferDesc.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         tempBufferDesc.dataSize = dataSize;
+        tempBufferDesc.ownerQueueFamily = desc.ownerQueueFamily;
         if (!tempBuffer.Init(mDevice, tempBufferDesc))
             return false;
 
@@ -117,35 +117,38 @@ bool Texture::Init(const DevicePtr& device, const TextureDesc& desc)
     // transition Image to desired layout and eventually copy data to buffer
     // TODO OPTIMIZE this uses graphics queue and waits; after implementing queue manager, switch to Transfer queue
     CommandBuffer transitionCmdBuffer;
-    if (!transitionCmdBuffer.Init(mDevice, DeviceQueueType::GRAPHICS))
+    if (!transitionCmdBuffer.Init(mDevice, desc.ownerQueueFamily))
         return false;
 
     transitionCmdBuffer.Begin();
 
     if (desc.data != nullptr)
     {
-        Transition(&transitionCmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                   0, VK_ACCESS_TRANSFER_WRITE_BIT,
-                   VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        transitionCmdBuffer.ImageBarrier(this,
+                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                         0, VK_ACCESS_TRANSFER_WRITE_BIT,
+                                         VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                         VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
         transitionCmdBuffer.CopyBufferToTexture(&tempBuffer, this);
-        Transition(&transitionCmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                   VK_ACCESS_TRANSFER_WRITE_BIT, 0,
-                   VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                   desc.layout);
+        transitionCmdBuffer.ImageBarrier(this,
+                                         VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                         VK_ACCESS_TRANSFER_WRITE_BIT, 0,
+                                         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, desc.layout,
+                                         VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
     }
     else
     {
-        Transition(&transitionCmdBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                   0, 0,
-                   VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                   desc.layout);
+        transitionCmdBuffer.ImageBarrier(this,
+                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                         0, 0,
+                                         VK_IMAGE_LAYOUT_PREINITIALIZED, desc.layout,
+                                         VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
     }
     transitionCmdBuffer.End();
 
     // TODO this should happen on Transfer Queue (might involve copying which takes time)
-    mDevice->Execute(DeviceQueueType::GRAPHICS, &transitionCmdBuffer);
-    mDevice->Wait(DeviceQueueType::GRAPHICS); // TODO this should be removed
+    mDevice->Execute(desc.ownerQueueFamily, &transitionCmdBuffer);
+    mDevice->Wait(desc.ownerQueueFamily); // TODO this should be removed
 
 
     VkImageViewCreateInfo ivInfo;
@@ -168,38 +171,14 @@ bool Texture::Init(const DevicePtr& device, const TextureDesc& desc)
     return true;
 }
 
-void Texture::Transition(CommandBuffer* cmdBuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
-                         VkAccessFlags fromAccess, VkAccessFlags toAccess,
-                         uint32_t fromQueueFamily, uint32_t toQueueFamily,
-                         VkImageLayout targetLayout)
-{
-    if (targetLayout == mImageLayout)
-        return; // no need to transition if we already have requested layout
-
-    VkImageMemoryBarrier barrier;
-    LKCOMMON_ZERO_MEMORY(barrier);
-    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barrier.image = mImage;
-    barrier.subresourceRange = mSubresourceRange;
-    barrier.oldLayout = mImageLayout;
-    barrier.newLayout = targetLayout;
-    barrier.srcAccessMask = fromAccess;
-    barrier.dstAccessMask = toAccess;
-    barrier.srcQueueFamilyIndex = fromQueueFamily;
-    barrier.dstQueueFamilyIndex = toQueueFamily;
-
-    vkCmdPipelineBarrier(cmdBuffer->mCommandBuffer, fromStage, toStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-
-    mImageLayout = targetLayout;
-}
-
 bool Texture::AllocateDescriptorSet(VkDescriptorSetLayout layout, VkSampler sampler)
 {
     mImageDescriptorSet = DescriptorAllocator::Instance().AllocateDescriptorSet(layout);
     if (mImageDescriptorSet == VK_NULL_HANDLE)
         return false;
 
-    Tools::UpdateTextureDescriptorSet(mDevice, mImageDescriptorSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 0, this, sampler);
+    // TODO assumes image layout
+    Tools::UpdateTextureDescriptorSet(mDevice, mImageDescriptorSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 0, this, sampler, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
     return true;
 }
 

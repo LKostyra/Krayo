@@ -7,6 +7,8 @@
 
 #include <cstring>
 
+#include <lkCommon/Utils/Logger.hpp>
+
 
 namespace Krayo {
 namespace Renderer {
@@ -44,6 +46,9 @@ bool CommandBuffer::Init(const DevicePtr& device, DeviceQueueType queueType)
 void CommandBuffer::Barrier(VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
                             VkAccessFlags accessFrom, VkAccessFlags accessTo)
 {
+    LOGC("stages: " << fromStage << " -> " << toStage <<
+         "; accesses: " << accessFrom << " -> " << accessTo);
+
     VkMemoryBarrier barrier;
     LKCOMMON_ZERO_MEMORY(barrier);
     barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
@@ -57,6 +62,12 @@ void CommandBuffer::BufferBarrier(const Buffer* buffer, VkPipelineStageFlags fro
                                   VkAccessFlags accessFrom, VkAccessFlags accessTo,
                                   uint32_t fromQueueFamily, uint32_t toQueueFamily)
 {
+    LOGC("buffer: " << reinterpret_cast<const void*>(buffer) <<
+         "; stages: " << fromStage << " -> " << toStage <<
+         "; accesses: " << accessFrom << " -> " << accessTo <<
+         "; queue families: " << TranslateDeviceQueueTypeToString(fromQueueFamily) <<
+         " -> " << TranslateDeviceQueueTypeToString(toQueueFamily));
+
     VkBufferMemoryBarrier barrier;
     LKCOMMON_ZERO_MEMORY(barrier);
     barrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -75,6 +86,14 @@ void CommandBuffer::ImageBarrier(const Texture* texture, VkPipelineStageFlags fr
                                  VkImageLayout fromLayout, VkImageLayout toLayout,
                                  uint32_t fromQueueFamily, uint32_t toQueueFamily)
 {
+    LOGC("texture: " << reinterpret_cast<const void*>(texture) <<
+         "; stages: " << fromStage << " -> " << toStage <<
+         "; accesses: " << accessFrom << " -> " << accessTo <<
+         "; layouts: " << TranslateVkImageLayoutToString(fromLayout) <<
+         " -> " << TranslateVkImageLayoutToString(toLayout) <<
+         "; queue families: " << TranslateDeviceQueueTypeToString(fromQueueFamily) <<
+         " -> " << TranslateDeviceQueueTypeToString(toQueueFamily));
+
     VkImageMemoryBarrier barrier;
     LKCOMMON_ZERO_MEMORY(barrier);
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -90,8 +109,38 @@ void CommandBuffer::ImageBarrier(const Texture* texture, VkPipelineStageFlags fr
     vkCmdPipelineBarrier(mCommandBuffer, fromStage, toStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
+void CommandBuffer::ImageBarrier(const Backbuffer* backbuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
+                                 VkAccessFlags accessFrom, VkAccessFlags accessTo,
+                                 VkImageLayout fromLayout, VkImageLayout toLayout,
+                                 uint32_t fromQueueFamily, uint32_t toQueueFamily)
+{
+    LOGC("backbuffer: " << reinterpret_cast<const void*>(backbuffer) <<
+         "; stages: " << fromStage << " -> " << toStage <<
+         "; accesses: " << accessFrom << " -> " << accessTo <<
+         "; layouts: " << TranslateVkImageLayoutToString(fromLayout) <<
+         " -> " << TranslateVkImageLayoutToString(toLayout) <<
+         "; queue families: " << TranslateDeviceQueueTypeToString(fromQueueFamily) <<
+         " -> " << TranslateDeviceQueueTypeToString(toQueueFamily));
+
+    VkImageMemoryBarrier barrier;
+    LKCOMMON_ZERO_MEMORY(barrier);
+    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    barrier.image = backbuffer->mImages[backbuffer->mCurrentBuffer].image;
+    barrier.subresourceRange = backbuffer->mSubresourceRange;
+    barrier.oldLayout = fromLayout;
+    barrier.newLayout = toLayout;
+    barrier.srcAccessMask = accessFrom;
+    barrier.dstAccessMask = accessTo;
+    barrier.srcQueueFamilyIndex = fromQueueFamily;
+    barrier.dstQueueFamilyIndex = toQueueFamily;
+
+    vkCmdPipelineBarrier(mCommandBuffer, fromStage, toStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+}
+
 void CommandBuffer::Begin()
 {
+    LOGC('-');
+
     VkCommandBufferBeginInfo beginInfo;
     LKCOMMON_ZERO_MEMORY(beginInfo);
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -101,6 +150,10 @@ void CommandBuffer::Begin()
 
 void CommandBuffer::BeginRenderPass(VkRenderPass rp, Framebuffer* fb, ClearType types, float clearValues[4], float depthValue)
 {
+    LOGC("render pass " << reinterpret_cast<void*>(rp) <<
+         "; framebuffer " << reinterpret_cast<void*>(fb) <<
+         "; clear types " << static_cast<uint32_t>(types));
+
     VkClearValue clear[2];
     uint32_t clearCount = 0;
 
@@ -270,8 +323,10 @@ void CommandBuffer::CopyTexture(Texture* src, Texture* dst)
     region.dstSubresource.baseArrayLayer = dst->mSubresourceRange.baseArrayLayer;
     region.dstSubresource.layerCount = dst->mSubresourceRange.layerCount;
     region.dstSubresource.mipLevel = 0;
-    vkCmdCopyImage(mCommandBuffer, src->GetImage(), src->GetImageLayout(),
-                   dst->GetImage(), dst->GetImageLayout(), 1, &region);
+    vkCmdCopyImage(mCommandBuffer,
+                   src->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                   dst->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                   1, &region);
 }
 
 void CommandBuffer::CopyTextureToBackbuffer(Texture* src, Backbuffer* dst)
@@ -295,33 +350,42 @@ void CommandBuffer::CopyTextureToBackbuffer(Texture* src, Backbuffer* dst)
     region.dstSubresource.baseArrayLayer = dst->mSubresourceRange.baseArrayLayer;
     region.dstSubresource.layerCount = dst->mSubresourceRange.layerCount;
     region.dstSubresource.mipLevel = 0;
-    vkCmdCopyImage(mCommandBuffer, src->GetImage(), src->GetImageLayout(),
-                   dst->mImages[dst->mCurrentBuffer].image, dst->mImages[dst->mCurrentBuffer].layout, 1, &region);
+    vkCmdCopyImage(mCommandBuffer,
+                   src->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                   dst->mImages[dst->mCurrentBuffer].image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                   1, &region);
 }
 
 void CommandBuffer::Dispatch(uint32_t x, uint32_t y, uint32_t z)
 {
+    LOGC(x << 'x' << y << 'x' << z);
     vkCmdDispatch(mCommandBuffer, x, y, z);
 }
 
 void CommandBuffer::Draw(uint32_t vertCount, uint32_t instanceCount)
 {
+    LOGC(vertCount << " verts; " << instanceCount << " instances");
     vkCmdDraw(mCommandBuffer, vertCount, instanceCount, 0, 0);
 }
 
 void CommandBuffer::DrawIndexed(uint32_t indexCount)
 {
+    LOGC(indexCount << " indices");
     vkCmdDrawIndexed(mCommandBuffer, indexCount, 1, 0, 0, 0);
 }
 
 void CommandBuffer::EndRenderPass()
 {
+    LOGC('-');
+
     vkCmdEndRenderPass(mCommandBuffer);
     mCurrentFramebuffer = nullptr;
 }
 
 bool CommandBuffer::End()
 {
+    LOGC('-');
+
     VkResult result = vkEndCommandBuffer(mCommandBuffer);
     RETURN_FALSE_IF_FAILED(result, "Failure during Command Buffer recording");
     return true;

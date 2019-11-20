@@ -71,6 +71,7 @@ bool GridFrustumsGenerator::Init(const DevicePtr& device)
     if (!mDispatchCommandBuffer.Init(mDevice, DeviceQueueType::COMPUTE))
         return false;
 
+    LOGI("Grid Frustums Generator initialized");
     return true;
 }
 
@@ -121,15 +122,15 @@ bool GridFrustumsGenerator::Generate(const GridFrustumsGenerationDesc& desc)
 
         mDispatchCommandBuffer.Begin();
         // TODO Buffer::Transition might be a better choice here, like in Texture
-        mDispatchCommandBuffer.BufferBarrier(&mGridFrustumsData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        mDispatchCommandBuffer.BufferBarrier(&mGridFrustumsData, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
                                              0, VK_ACCESS_SHADER_WRITE_BIT,
-                                             mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+                                             VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
         mDispatchCommandBuffer.BindPipeline(mPipeline.GetComputePipeline(emptyMacros), VK_PIPELINE_BIND_POINT_COMPUTE);
         mDispatchCommandBuffer.BindDescriptorSet(mGridFrustumsDataSet, VK_PIPELINE_BIND_POINT_COMPUTE, 0, mPipelineLayout);
         mDispatchCommandBuffer.Dispatch(dispatchThreadsX, dispatchThreadsY, 1);
         mDispatchCommandBuffer.BufferBarrier(&mGridFrustumsData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
                                              VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
-                                             mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+                                             VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
         if (!mDispatchCommandBuffer.End())
             return false;
 
@@ -137,6 +138,7 @@ bool GridFrustumsGenerator::Generate(const GridFrustumsGenerationDesc& desc)
         mDevice->Wait(DeviceQueueType::COMPUTE);
     }
 
+    LOGI("Grid Frustums generated");
     return true;
 }
 

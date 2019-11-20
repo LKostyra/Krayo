@@ -235,34 +235,7 @@ bool Backbuffer::AllocateImageViews()
     mSubresourceRange.baseArrayLayer = 0;
     mSubresourceRange.layerCount = 1;
 
-    mDefaultLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
     return true;
-}
-
-void Backbuffer::Transition(CommandBuffer* cmdBuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
-                            VkAccessFlags fromAccess, VkAccessFlags toAccess,
-                            uint32_t fromQueueFamily, uint32_t toQueueFamily,
-                            VkImageLayout targetLayout)
-{
-    if (targetLayout == mImages[mCurrentBuffer].layout)
-        return; // no need to transition if we already have requested layout
-
-    VkImageMemoryBarrier barrier;
-    LKCOMMON_ZERO_MEMORY(barrier);
-    barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barrier.image = mImages[mCurrentBuffer].image;
-    barrier.subresourceRange = mSubresourceRange;
-    barrier.oldLayout = mImages[mCurrentBuffer].layout;
-    barrier.newLayout = targetLayout;
-    barrier.srcAccessMask = fromAccess;
-    barrier.dstAccessMask = toAccess;
-    barrier.srcQueueFamilyIndex = fromQueueFamily;
-    barrier.dstQueueFamilyIndex = toQueueFamily;
-
-    vkCmdPipelineBarrier(cmdBuffer->mCommandBuffer, fromStage, toStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-
-    mImages[mCurrentBuffer].layout = targetLayout;
 }
 
 bool Backbuffer::Init(const DevicePtr& device, const BackbufferDesc& desc)
@@ -321,25 +294,29 @@ bool Backbuffer::Present(Texture& texture, VkSemaphore waitSemaphore)
     // copy provided texture to backbuffer
     mCopyCommandBuffer.Begin();
 
-    texture.Transition(&mCopyCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                       0, VK_ACCESS_TRANSFER_READ_BIT,
-                       VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    Transition(&mCopyCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                       0, VK_ACCESS_TRANSFER_WRITE_BIT,
-                       VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    mCopyCommandBuffer.ImageBarrier(&texture,
+                                    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                    0, VK_ACCESS_TRANSFER_READ_BIT,
+                                    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::TRANSFER));
+    mCopyCommandBuffer.ImageBarrier(this,
+                                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                    0, VK_ACCESS_TRANSFER_WRITE_BIT,
+                                    VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                    VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
 
     mCopyCommandBuffer.CopyTextureToBackbuffer(&texture, this);
 
-    texture.Transition(&mCopyCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                       0, VK_ACCESS_TRANSFER_READ_BIT,
-                       VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    Transition(&mCopyCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                       0, VK_ACCESS_TRANSFER_WRITE_BIT,
-                       VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED,
-                       VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+    mCopyCommandBuffer.ImageBarrier(&texture,
+                                    VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_TRANSFER_READ_BIT, 0,
+                                    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::TRANSFER), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+    mCopyCommandBuffer.ImageBarrier(this,
+                                    VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_TRANSFER_WRITE_BIT, 0,
+                                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                                    VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_IGNORED);
     if (!mCopyCommandBuffer.End())
         return false;
 

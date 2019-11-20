@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "Renderer/LowLevel/Device.hpp"
+#include "Renderer/LowLevel/Types.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 
@@ -22,6 +23,7 @@ struct BufferDesc
     VkBufferUsageFlags usage;
     BufferType type;
     bool concurrent;
+    DeviceQueueType ownerQueueFamily;
 
     BufferDesc()
         : data(nullptr)
@@ -29,6 +31,7 @@ struct BufferDesc
         , usage(0)
         , type(BufferType::Static)
         , concurrent(false)
+        , ownerQueueFamily(DeviceQueueType::GRAPHICS)
     {
     }
 };

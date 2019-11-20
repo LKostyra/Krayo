@@ -8,22 +8,34 @@
 #include "Renderer/HighLevel/ResourceFactory.hpp"
 
 #include <vector>
+#include <functional>
 
 
 namespace Krayo {
 namespace Resource {
 namespace Internal {
 
+struct Mesh
+{
+    Renderer::BufferPtr vertexBuffer;
+    Renderer::BufferPtr vertexParamsBuffer;
+    Renderer::BufferPtr indexBuffer;
+    uint32_t pointCount;
+    bool byIndices;
+};
+
 class Model: public ResourceBase<Model>
 {
-    Renderer::BufferPtr mVertexBuffer;
-    Renderer::BufferPtr mIndexBuffer;
+    friend class Component::Internal::Model;
+
+    using MeshContainer = std::vector<Mesh>;
+
+    MeshContainer mMeshes;
 
 public:
     Model(const std::string& name);
 
     bool Load(const std::string& path);
-    bool LoadMesh(const std::vector<float>& vertices);
 };
 
 } // namespace Internal

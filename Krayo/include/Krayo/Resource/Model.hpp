@@ -21,7 +21,6 @@ public:
     KRAYO_API ~Model();
 
     KRAYO_API bool Load(const std::string& path);
-    KRAYO_API bool LoadMesh(const std::vector<float>& vertices);
 };
 
 } // namespace Resource

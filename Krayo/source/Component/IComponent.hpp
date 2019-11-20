@@ -35,6 +35,7 @@ public:
     }
 
     virtual const uint32_t GetTypeID() const override { return mComponentTypeID; }
+    static const uint32_t GetTypeIDStatic() { return mComponentTypeID; }
 };
 
 template <typename T>

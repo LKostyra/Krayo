@@ -1,8 +1,11 @@
 #include "Renderer/HighLevel/DepthPrePass.hpp"
 
 #include "Renderer/LowLevel/DescriptorAllocator.hpp"
-
 #include "Renderer/HighLevel/ShaderMacroDefinitions.hpp"
+
+#include "Component/Model.hpp"
+#include "Component/Transform.hpp"
+#include "Resource/Model.hpp"
 
 #include <lkCommon/Math/Matrix4.hpp>
 
@@ -20,6 +23,7 @@ bool DepthPrePass::Init(const DevicePtr& device, const DepthPrePassDesc& desc)
     depthTexDesc.format = VK_FORMAT_D32_SFLOAT;
     depthTexDesc.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
     depthTexDesc.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    depthTexDesc.ownerQueueFamily = DeviceQueueType::GRAPHICS;
     if (!mDepthTexture.Init(mDevice, depthTexDesc))
         return false;
 
@@ -93,26 +97,11 @@ bool DepthPrePass::Init(const DevicePtr& device, const DepthPrePassDesc& desc)
     if (!mCommandBuffer.Init(mDevice, DeviceQueueType::GRAPHICS))
         return false;
 
-    mCommandBuffer.Begin();
-    mDepthTexture.Transition(&mCommandBuffer,
-                             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                             0, 0,
-                             mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE),
-                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-    mCommandBuffer.End();
-
-    if (!mDevice->Execute(DeviceQueueType::GRAPHICS, &mCommandBuffer))
-    {
-        LOGE("Failed to transition depth texture to shader read only layout on init");
-        return false;
-    }
-
-    mDevice->Wait(DeviceQueueType::GRAPHICS);
-
+    LOGI("Depth Pre Pass initialized");
     return true;
 }
 
-void DepthPrePass::Draw(const Scene::Internal::Map& map, const DepthPrePassDrawDesc& desc)
+void DepthPrePass::Draw(const Internal::Map& map, const DepthPrePassDrawDesc& desc)
 {
     // recording Command Buffer
     {
@@ -125,31 +114,44 @@ void DepthPrePass::Draw(const Scene::Internal::Map& map, const DepthPrePassDrawD
         mCommandBuffer.BeginRenderPass(mRenderPass, &mFramebuffer, ClearType::DEPTH, nullptr, 1.0f);
 
         MultiGraphicsPipelineShaderMacros emptyMacros;
-        map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-            if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
+        map.ForEachObject([&](const Krayo::Internal::Object* o) -> bool {
+            const Component::Internal::Model* model = o->GetComponent<Component::Internal::Model>();
+            if (model)
             {
-                Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
+                const Component::Internal::Transform* transform = o->GetComponent<Component::Internal::Transform>();
 
-                if (!model->ToRender())
-                    return true;
+                //if (!model->ToRender())
+                //    return true;
 
                 // world matrix update
-                uint32_t offset = desc.ringBufferPtr->Write(&model->GetTransform(), sizeof(lkCommon::Math::Matrix4));
+                uint32_t offset = 0;
+                if (transform)
+                {
+                    // TODO unlock when transform works
+                    //offset = desc.ringBufferPtr->Write(&transform->Get(), sizeof(lkCommon::Math::Matrix4));
+                    offset = desc.ringBufferPtr->Write(&lkCommon::Math::Matrix4::IDENTITY, sizeof(lkCommon::Math::Matrix4));
+                }
+                else
+                {
+                    offset = desc.ringBufferPtr->Write(&lkCommon::Math::Matrix4::IDENTITY, sizeof(lkCommon::Math::Matrix4));
+                }
                 mCommandBuffer.BindDescriptorSet(desc.vertexShaderSet, bindPoint, 0, mPipelineLayout, offset);
 
-                model->ForEachMesh([&](Component::Internal::Mesh* mesh) {
+                model->ForEachMesh([&](const Resource::Internal::Mesh* mesh) -> bool {
                     mCommandBuffer.BindPipeline(mPipeline.GetGraphicsPipeline(emptyMacros), bindPoint);
-                    mCommandBuffer.BindVertexBuffer(mesh->GetVertexBuffer(), 0, 0);
+                    mCommandBuffer.BindVertexBuffer(mesh->vertexBuffer.get(), 0, 0);
 
-                    if (mesh->ByIndices())
+                    if (mesh->byIndices)
                     {
-                        mCommandBuffer.BindIndexBuffer(mesh->GetIndexBuffer());
-                        mCommandBuffer.DrawIndexed(mesh->GetPointCount());
+                        mCommandBuffer.BindIndexBuffer(mesh->indexBuffer.get());
+                        mCommandBuffer.DrawIndexed(mesh->pointCount);
                     }
                     else
                     {
-                        mCommandBuffer.Draw(mesh->GetPointCount(), 1);
+                        mCommandBuffer.Draw(mesh->pointCount, 1);
                     }
+
+                    return true;
                 });
             }
 
@@ -157,6 +159,12 @@ void DepthPrePass::Draw(const Scene::Internal::Map& map, const DepthPrePassDrawD
         });
 
         mCommandBuffer.EndRenderPass();
+
+        mCommandBuffer.ImageBarrier(&mDepthTexture,
+                                    VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT, 0,
+                                    VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
 
         if (!mCommandBuffer.End())
         {

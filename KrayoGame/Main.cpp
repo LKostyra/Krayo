@@ -47,20 +47,17 @@ int main(int argc, char* argv[])
     }
 
     Krayo::Resource::Manager& mgr = engine.GetResourceManager();
-    Krayo::Resource::Model* modelRes = mgr.CreateModel("sphere");
+    Krayo::Resource::Model* modelRes = mgr.CreateModel("cube");
     if (!modelRes)
     {
         return 1;
     }
 
-    if (!modelRes->Load("sphere.fbx"))
-    {
-        std::vector<float> vertices;
-        if (!modelRes->LoadMesh(vertices))
-        {
-            return 1;
-        }
-    }
+    //if (!modelRes->Load("cube.fbx"))
+    //{
+    //    std::vector<float> vertices;
+    //    return 1;
+    //}
 
     //Krayo::Resource::Material* material = rf.CreateMaterial();
     //if (!material->Load("Data/Materials/cube.json"))

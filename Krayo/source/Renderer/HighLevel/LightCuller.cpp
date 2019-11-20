@@ -124,25 +124,32 @@ bool LightCuller::Init(const DevicePtr& device, const LightCullerDesc& desc)
     Tools::UpdateBufferDescriptorSet(mDevice, mLightCullerSet, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 5,
                                      mGridLightData.GetBuffer(), mGridLightData.GetSize());
     Tools::UpdateTextureDescriptorSet(mDevice, mLightCullerSet, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 6,
-                                      desc.depthTexture, mSampler);
+                                      desc.depthTexture, mSampler, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL);
 
     mDepthTexture = desc.depthTexture;
 
-    mCommandBuffer.Begin();
-    mDepthTexture->Transition(&mCommandBuffer,
-                              VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
-                              0, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
-                              mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS),
-                              VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
-    mCommandBuffer.End();
+    CommandBuffer cbuffer;
+    cbuffer.Init(mDevice, DeviceQueueType::GRAPHICS);
 
-    if (!mDevice->Execute(DeviceQueueType::COMPUTE, &mCommandBuffer))
+    cbuffer.Begin();
+    cbuffer.BufferBarrier(&mCulledLights,
+                          VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                          0, VK_ACCESS_SHADER_WRITE_BIT,
+                          mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+    cbuffer.BufferBarrier(&mGridLightData,
+                          VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                          0, VK_ACCESS_SHADER_WRITE_BIT,
+                          mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+    cbuffer.End();
+    if (!mDevice->Execute(DeviceQueueType::GRAPHICS, &cbuffer))
     {
-        LOGE("Failed to transition depth texture to depth stencil attachment layout on init");
+        LOGE("Failed to pre-release resources from Graphics Queue");
         return false;
     }
 
-    mDevice->Wait(DeviceQueueType::COMPUTE);
+    mDevice->Wait(DeviceQueueType::GRAPHICS);
+
+    LOGI("Light Culler initialized");
 
     return true;
 }
@@ -162,29 +169,35 @@ void LightCuller::Dispatch(const LightCullerDispatchDesc& desc)
     {
         mCommandBuffer.Begin();
 
+        mCommandBuffer.BufferBarrier(&mCulledLights, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                     0, VK_ACCESS_SHADER_WRITE_BIT,
+                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+        mCommandBuffer.BufferBarrier(&mGridLightData, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                     0, VK_ACCESS_SHADER_WRITE_BIT,
+                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+
+        mCommandBuffer.ImageBarrier(mDepthTexture,
+                                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                    0, VK_ACCESS_SHADER_READ_BIT,
+                                    VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
+
         mCommandBuffer.BindPipeline(mPipeline.GetPipeline(), VK_PIPELINE_BIND_POINT_COMPUTE);
         mCommandBuffer.BindDescriptorSet(mLightCullerSet, VK_PIPELINE_BIND_POINT_COMPUTE, 0, mPipelineLayout);
-
-        mCommandBuffer.BufferBarrier(&mCulledLights, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-                                     0, VK_ACCESS_SHADER_WRITE_BIT,
-                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
-        mCommandBuffer.BufferBarrier(&mGridLightData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-                                     0, VK_ACCESS_SHADER_WRITE_BIT,
-                                     mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE));
-        mDepthTexture->Transition(&mCommandBuffer,
-                                  VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-                                  VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT, VK_ACCESS_MEMORY_READ_BIT,
-                                  mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS), mDevice->GetQueueIndex(DeviceQueueType::COMPUTE),
-                                  VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
         mCommandBuffer.Dispatch(mFrustumsPerWidth, mFrustumsPerHeight, 1);
 
-        mCommandBuffer.BufferBarrier(&mCulledLights, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        mCommandBuffer.BufferBarrier(&mCulledLights, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
                                      VK_ACCESS_SHADER_WRITE_BIT, 0,
                                      mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
-        mCommandBuffer.BufferBarrier(&mGridLightData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        mCommandBuffer.BufferBarrier(&mGridLightData, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
                                      VK_ACCESS_SHADER_WRITE_BIT, 0,
                                      mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
+
+        mCommandBuffer.ImageBarrier(mDepthTexture,
+                                    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                    VK_ACCESS_MEMORY_READ_BIT, 0,
+                                    VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
+                                    mDevice->GetQueueIndex(DeviceQueueType::COMPUTE), mDevice->GetQueueIndex(DeviceQueueType::GRAPHICS));
 
         if (!mCommandBuffer.End())
             LOGW("Light culler failed to record command buffer");

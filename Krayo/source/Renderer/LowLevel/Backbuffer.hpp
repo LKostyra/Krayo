@@ -64,7 +64,6 @@ class Backbuffer
     VkFormat mFormat;
     std::vector<BackbufferImageData> mImages;
     VkImageSubresourceRange mSubresourceRange;
-    VkImageLayout mDefaultLayout;
     uint32_t mCurrentBuffer;
 
     VkSurfaceKHR mSurface;
@@ -88,11 +87,6 @@ class Backbuffer
     void SelectBufferCount(const BackbufferDesc& desc);
     bool CreateSwapchain(const BackbufferDesc& desc);
     bool AllocateImageViews();
-
-    void Transition(CommandBuffer* cmdBuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
-                    VkAccessFlags fromAccess, VkAccessFlags toAccess,
-                    uint32_t fromQueueFamily, uint32_t toQueueFamily,
-                    VkImageLayout targetLayout);
 
 public:
     Backbuffer();

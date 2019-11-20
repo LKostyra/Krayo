@@ -71,7 +71,7 @@ public:
 
     // Updating descriptor sets
     static void UpdateBufferDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, VkBuffer buffer, VkDeviceSize size);
-    static void UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, Texture* texture, VkSampler sampler);
+    static void UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, Texture* texture, VkSampler sampler, VkImageLayout layout);
 };
 
 } // namespace Renderer

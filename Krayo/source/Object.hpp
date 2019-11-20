@@ -20,6 +20,12 @@ public:
     ~Object() = default;
 
     void AttachComponent(Component::Internal::IComponent* component);
+
+    template <typename T>
+    const T* GetComponent() const
+    {
+        return dynamic_cast<T*>(mComponents[T::GetTypeIDStatic()]);
+    }
 };
 
 } // namespace Internal

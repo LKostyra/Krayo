@@ -4,8 +4,14 @@
 #include "Renderer/LowLevel/Device.hpp"
 #include "Renderer/LowLevel/Backbuffer.hpp"
 #include "Renderer/LowLevel/Tools.hpp"
+#include "Renderer/LowLevel/RingBuffer.hpp"
 
 #include "Math/Frustum.hpp"
+
+#include "GridFrustumsGenerator.hpp"
+#include "DepthPrePass.hpp"
+#include "LightCuller.hpp"
+#include "ForwardPass.hpp"
 
 #include <lkCommon/System/Window.hpp>
 #include <lkCommon/Math/Matrix4.hpp>
@@ -71,7 +77,7 @@ public:
     ~Renderer();
 
     bool Init(const RendererDesc& desc);
-    void Draw(const Scene::Internal::Map& map, const Scene::Internal::Camera& camera, float deltaTime, float interpolation);
+    void Draw(const Internal::Map& map, float deltaTime, float interpolation);
 
     // this function should be used only when application finishes
     void WaitForAll() const;

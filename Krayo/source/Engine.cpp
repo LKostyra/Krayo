@@ -9,6 +9,7 @@
 #include <lkCommon/Utils/Timer.hpp>
 #include <lkCommon/Math/Constants.hpp>
 #include <lkCommon/Math/Utilities.hpp>
+#include <lkCommon/Math/RingAverage.hpp>
 
 
 namespace Krayo {
@@ -118,6 +119,7 @@ Engine::Engine()
 
 Engine::~Engine()
 {
+    mRenderer.WaitForAll();
     LOGI("Engine destroyed");
 }
 
@@ -179,12 +181,30 @@ bool Engine::Init(const EngineDesc& desc)
         return false;
     }
 
+    Renderer::RendererDesc rendDesc;
+    LKCOMMON_ZERO_MEMORY(rendDesc);
+    rendDesc.debugEnable = desc.debug;
+    rendDesc.debugVerbose = desc.debugVerbose;
+    rendDesc.vsync = desc.vsync;
+    rendDesc.noAsync = false;
+    rendDesc.window = gWindow.get();
+    rendDesc.fov = 60.0f;
+    rendDesc.nearZ = 0.1f;
+    rendDesc.farZ = 1000.0f;
+    if (!mRenderer.Init(rendDesc))
+    {
+        LOGE("Failed to initialize Renderer");
+        return false;
+    }
+
     LOGI("Engine initialized successfully");
     return true;
 }
 
 void Engine::MainLoop()
 {
+    lkCommon::Math::RingAverage<float, 50> frameAvg;
+
     lkCommon::Utils::Timer timer;
     lkCommon::Utils::Timer updateTimer;
     timer.Start();
@@ -194,6 +214,8 @@ void Engine::MainLoop()
     {
         float frameTime = static_cast<float>(timer.Stop());
         timer.Start();
+        frameAvg.Add(frameTime);
+        gWindow->SetTitle("Krayo - Frame time " + std::to_string(frameAvg.Get() * 1000.0f) + " ms");
 
         uint32_t updateLoop = 0;
         float updateTime = static_cast<float>(updateTimer.Stop());
@@ -220,6 +242,11 @@ void Engine::MainLoop()
         float interpolation = updateTime * TICK_TIME_INV;
         if (interpolation > 1.0f)
             interpolation = 1.0f;
+
+        if (mCurrentMap)
+        {
+            mRenderer.Draw(*mCurrentMap, updateTime, interpolation);
+        }
     }
 }
 

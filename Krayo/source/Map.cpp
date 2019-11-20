@@ -49,5 +49,12 @@ Internal::Object* Map::CreateObject(const std::string& name)
     return mObjectContainer.back().get();
 }
 
+void Map::ForEachObject(const Callback<Object>& callback) const
+{
+    for (const auto& o: mObjectContainer)
+        if (!callback(o.get()))
+            break;
+}
+
 } // namespace Internal
 } // namespace Krayo

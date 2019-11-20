@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <functional>
 
 
 namespace Krayo {
@@ -15,6 +16,9 @@ namespace Internal {
 
 class Map
 {
+    template <typename T>
+    using Callback = std::function<bool(const T*)>;
+
     template <typename T>
     using Ptr = std::shared_ptr<T>;
     template <typename T>
@@ -36,7 +40,18 @@ public:
 
     Component::Internal::IComponent* CreateComponent(Component::Type type, const std::string& name);
     Internal::Object* CreateObject(const std::string& name);
+
+    void ForEachObject(const Callback<Object>& callback) const;
+
+    template <typename T>
+    void ForEachComponent(const Callback<T>& callback) const
+    {
+        ComponentContainer& c = mComponentContainers[T::GetTypeIDStatic()];
+        for (const auto& o: c)
+            if (!callback(o.get()))
+                break;
+    }
 };
 
-} // namespace Krayo
 } // namespace Internal
+} // namespace Krayo

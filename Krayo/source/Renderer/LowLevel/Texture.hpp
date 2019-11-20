@@ -3,6 +3,7 @@
 #include "Prerequisites.hpp"
 
 #include "Renderer/LowLevel/Device.hpp"
+#include "Renderer/LowLevel/Types.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 
@@ -37,6 +38,7 @@ struct TextureDesc
     VkImageLayout layout;
     uint32_t mipmapCount;
     TextureDataDesc* data;
+    DeviceQueueType ownerQueueFamily;
 
     TextureDesc()
         : format(VK_FORMAT_UNDEFINED)
@@ -46,6 +48,7 @@ struct TextureDesc
         , layout(VK_IMAGE_LAYOUT_UNDEFINED)
         , mipmapCount(1)
         , data(nullptr)
+        , ownerQueueFamily(DeviceQueueType::GRAPHICS)
     {
     }
 };
@@ -64,7 +67,6 @@ class Texture
     VkImage mImage;
     VkImageView mImageView;
     VkDeviceMemory mImageMemory;
-    VkImageLayout mImageLayout;
     VkImageSubresourceRange mSubresourceRange;
     VkDescriptorSet mImageDescriptorSet;
 
@@ -99,20 +101,11 @@ public:
         return mImageView;
     }
 
-    LKCOMMON_INLINE VkImageLayout GetImageLayout() const
-    {
-        return mImageLayout;
-    }
-
     LKCOMMON_INLINE const VkDescriptorSet GetDescriptorSet() const
     {
         return mImageDescriptorSet;
     }
 
-    void Transition(CommandBuffer* cmdBuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
-                    VkAccessFlags fromAccess, VkAccessFlags toAccess,
-                    uint32_t fromQueueFamily, uint32_t toQueueFamily,
-                    VkImageLayout targetLayout);
     bool AllocateDescriptorSet(VkDescriptorSetLayout layout, VkSampler sampler);
 };
 

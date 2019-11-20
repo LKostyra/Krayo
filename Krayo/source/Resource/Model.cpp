@@ -25,25 +25,6 @@ bool Model::Load(const std::string& path)
     return true;
 }
 
-bool Model::LoadMesh(const std::vector<float>& vertices)
-{
-    LOGD("Loading from Vertices");
-
-    Renderer::BufferDesc vbDesc;
-    LKCOMMON_ZERO_MEMORY(vbDesc);
-    vbDesc.type = Renderer::BufferType::Static;
-    vbDesc.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    vbDesc.data = vertices.data();
-    vbDesc.dataSize = vertices.size() * sizeof(float);
-    vbDesc.concurrent = false;
-    /*
-    mVertexBuffer = Renderer::ResourceFactory::Instance().CreateBuffer(vbDesc);
-    if (!mVertexBuffer)
-        return false;
-        */
-    return true;
-}
-
 } // namespace Internal
 } // namespace Resource
 } // namespace Krayo

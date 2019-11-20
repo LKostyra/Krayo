@@ -210,6 +210,12 @@ VkRAII<VkSampler> Tools::CreateSampler(const DevicePtr& device)
 
 void Tools::UpdateBufferDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, VkBuffer buffer, VkDeviceSize size)
 {
+    LOGC("set " << reinterpret_cast<void*>(set) <<
+         "; binding " << binding <<
+         "; type " << TranslateVkDescriptorTypeToString(type) <<
+         "; buffer " << reinterpret_cast<void*>(buffer) <<
+         "; size " << size);
+
     VkDescriptorBufferInfo info;
     LKCOMMON_ZERO_MEMORY(info);
     info.buffer = buffer;
@@ -228,13 +234,20 @@ void Tools::UpdateBufferDescriptorSet(const DevicePtr& device, VkDescriptorSet s
     vkUpdateDescriptorSets(device->GetDevice(), 1, &write, 0, nullptr);
 }
 
-void Tools::UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, Texture* texture, VkSampler sampler)
+void Tools::UpdateTextureDescriptorSet(const DevicePtr& device, VkDescriptorSet set, VkDescriptorType type, uint32_t binding, Texture* texture, VkSampler sampler, VkImageLayout layout)
 {
+    LOGC("set " << reinterpret_cast<void*>(set) <<
+         "; binding " << binding <<
+         "; type " << TranslateVkDescriptorTypeToString(type) <<
+         "; texture " << reinterpret_cast<void*>(texture) <<
+         "; sampler " << reinterpret_cast<void*>(sampler) <<
+         "; layout " << TranslateVkImageLayoutToString(layout));
+
     VkDescriptorImageInfo imgInfo;
     LKCOMMON_ZERO_MEMORY(imgInfo);
     imgInfo.sampler = sampler;
     imgInfo.imageView = texture->GetView();
-    imgInfo.imageLayout = texture->GetImageLayout();
+    imgInfo.imageLayout = layout;
 
     VkWriteDescriptorSet writeSet;
     LKCOMMON_ZERO_MEMORY(writeSet);

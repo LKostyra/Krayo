@@ -8,6 +8,8 @@
 
 #include "Renderer/HighLevel/ResourceFactory.hpp"
 
+//#include "Component/Light.hpp"
+
 #include <lkCommon/System/FS.hpp>
 #include <lkCommon/Utils/Logger.hpp>
 #include <lkCommon/Math/Matrix4.hpp>
@@ -258,22 +260,22 @@ bool Renderer::Init(const RendererDesc& desc)
     return true;
 }
 
-void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Camera& camera, float deltaTime, float interpolation)
+void Renderer::Draw(const Internal::Map& map, float deltaTime, float interpolation)
 {
     LKCOMMON_UNUSED(deltaTime);
 
     // Perform view frustum culling for next map
     // TODO readd
-    map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
-        if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
-        {
-            Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
-            //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
-            model->SetToRender(true);
-        }
-
-        return true;
-    });
+    //map.ForEachObject([&](const Krayo::Scene::Internal::Object* o) -> bool {
+    //    if (o->GetComponent()->GetType() == Krayo::Component::Type::Model)
+    //    {
+    //        Component::Internal::Model* model = dynamic_cast<Component::Internal::Model*>(o->GetComponent());
+    //        //model->SetToRender(mViewFrustum.Intersects(model->GetTransform() * model->GetAABB()));
+    //        model->SetToRender(true);
+    //    }
+    //
+    //    return true;
+    //});
 
     // Wait for previous frame
     VkFence fences[] = { mFrameFence };
@@ -302,19 +304,18 @@ void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Came
     // Rendering descriptors update //
     //////////////////////////////////
     VertexShaderCBuffer vsBuffer;
-    vsBuffer.viewMatrix = camera.GetView(interpolation);
+    vsBuffer.viewMatrix = lkCommon::Math::Matrix4(); //camera.GetView(interpolation);
     vsBuffer.projMatrix = mProjection;
     if (!mVertexShaderCBuffer.Write(&vsBuffer, sizeof(vsBuffer)))
         LOGW("Failed to update Vertex Shader Uniform Buffer");
 
     uint32_t lightCount = 0;
-    map.ForEachLight([&](const Krayo::Component::Internal::Light* l) -> bool {
+    /*map.ForEachComponent<Component::Internal::Light>([&](const Component::Internal::Light* l) -> bool {
         if (!mLightContainer.Write(l->GetData(), sizeof(Component::Internal::LightData), lightCount * sizeof(Component::Internal::LightData)))
             LOGW("Failed to update Light Container Storage Buffer");
         lightCount++;
         return true;
-    });
-
+    });*/
 
     ///////////////
     // Rendering //
@@ -345,8 +346,10 @@ void Renderer::Draw(const Scene::Internal::Map& map, const Scene::Internal::Came
     ForwardPassDrawDesc forwardDesc;
     forwardDesc.ringBufferPtr = &mRingBuffer;
     forwardDesc.vertexShaderSet = mVertexShaderSet;
-    forwardDesc.waitFlags = { VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-    forwardDesc.waitSems = { mCullingSem, mImageAcquiredSem };
+    forwardDesc.waitFlags = { VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                              VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+    forwardDesc.waitSems = { mCullingSem,
+                             mImageAcquiredSem };
     forwardDesc.signalSem = mRenderSem;
     forwardDesc.fence = mFrameFence;
     mForwardPass.Draw(map, forwardDesc);

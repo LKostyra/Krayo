@@ -38,6 +38,10 @@ public:
                       VkAccessFlags accessFrom, VkAccessFlags accessTo,
                       VkImageLayout fromLayout, VkImageLayout toLayout,
                       uint32_t fromQueueFamily, uint32_t toQueueFamily);
+    void ImageBarrier(const Backbuffer* backbuffer, VkPipelineStageFlags fromStage, VkPipelineStageFlags toStage,
+                      VkAccessFlags accessFrom, VkAccessFlags accessTo,
+                      VkImageLayout fromLayout, VkImageLayout toLayout,
+                      uint32_t fromQueueFamily, uint32_t toQueueFamily);
     void Begin();
     void BeginRenderPass(VkRenderPass rp, Framebuffer* fb, ClearType types, float clearValues[4], float depthValue = 0.0f);
     void BindVertexBuffer(const Buffer* buffer, uint32_t binding, VkDeviceSize offset);
