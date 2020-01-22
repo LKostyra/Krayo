@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/IModelFile.hpp"
+
 #include <lkCommon/lkCommon.hpp>
 
 #include <fbxsdk.h>
@@ -11,7 +13,7 @@
 namespace Krayo {
 namespace Utils {
 
-class FBXModelFile
+class FBXModelFile: public IModelFile
 {
     using TraverseCallback = std::function<void(FbxNode*)>;
 
@@ -35,7 +37,9 @@ public:
     FBXModelFile();
     ~FBXModelFile();
 
-    bool Open(const std::string& path);
+    static bool ProbeFile(const std::string& path);
+
+    bool Open(const std::string& path) override;
     void Traverse(TraverseCallback func);
     void Close();
 
@@ -49,9 +53,9 @@ public:
         return mIsOpened;
     }
 
-    LKCOMMON_INLINE FbxGeometryConverter* GetConverter() const
+    LKCOMMON_INLINE ModelFileType GetType() const
     {
-        return mFbxConverter.get();
+        return ModelFileType::FBX;
     }
 };
 

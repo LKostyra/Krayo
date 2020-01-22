@@ -6,6 +6,34 @@
 namespace Krayo {
 namespace Utils {
 
+template <typename T>
+class FbxRAII
+{
+    T* mFbxResource;
+
+public:
+    FbxRAII(T* resource)
+        : mFbxResource(resource)
+    {
+    }
+
+    ~FbxRAII()
+    {
+        mFbxResource->Destroy();
+    }
+
+    LKCOMMON_INLINE operator T*()
+    {
+        return mFbxResource;
+    }
+
+    LKCOMMON_INLINE T* operator->()
+    {
+        return mFbxResource;
+    }
+};
+
+
 FBXModelFile::FBXModelFile()
     : mFbxManager(nullptr)
     , mFbxIOSettings(nullptr)
@@ -26,6 +54,35 @@ FBXModelFile::~FBXModelFile()
     Close();
     mFbxConverter.reset();
     mFbxManager->Destroy();
+}
+
+bool FBXModelFile::ProbeFile(const std::string& path)
+{
+    if (path.rfind(".fbx") == std::string::npos)
+    {
+        LOGI("Provided file does not have .fbx extension");
+        return false;
+    }
+
+    FbxRAII<FbxManager> fbxManager(FbxManager::Create());
+    FbxRAII<FbxImporter> fbxImporter(FbxImporter::Create(fbxManager, ""));
+    FbxRAII<FbxScene> fbxScene(FbxScene::Create(fbxManager, ""));
+
+    if (!fbxImporter->Initialize(path.c_str(), -1, fbxManager->GetIOSettings()))
+    {
+        const char* error = fbxImporter->GetStatus().GetErrorString();
+        LOGI("Failed to open FBX file " << path << ": " << error);
+        return false;
+    }
+
+    if (!fbxImporter->IsFBX())
+    {
+        LOGI("File " << path << " is not a valid FBX file according to FBX SDK");
+        return false;
+    }
+
+    LOGI("File " << path << " is an FBX SDK supported file");
+    return true;
 }
 
 std::string FBXModelFile::GetAttributeTypeName(FbxNodeAttribute::EType type)

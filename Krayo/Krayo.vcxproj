@@ -81,6 +81,7 @@
     <ClCompile Include="source\Resource\Manager.cpp" />
     <ClCompile Include="source\Resource\Model.cpp" />
     <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp" />
+    <ClCompile Include="source\Utils\ModelFiles\OBJModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelLoader.cpp" />
     <ClCompile Include="source\Utils\TypeID.cpp" />
   </ItemGroup>
@@ -160,11 +161,15 @@
     <ClInclude Include="source\Resource\IResource.hpp" />
     <ClInclude Include="source\Resource\Manager.hpp" />
     <ClInclude Include="source\Resource\Model.hpp" />
-    <ClInclude Include="source\Utils\ModelFile.hpp" />
+    <ClInclude Include="source\Utils\IModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp" />
+    <ClInclude Include="source\Utils\ModelFiles\OBJModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelLoader.hpp" />
     <ClInclude Include="source\Utils\Traits.hpp" />
     <ClInclude Include="source\Utils\TypeID.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

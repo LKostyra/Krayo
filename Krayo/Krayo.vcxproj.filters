@@ -228,6 +228,9 @@
     <ClCompile Include="source\Renderer\HighLevel\ShaderMacroDefinitions.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClCompile>
+    <ClCompile Include="source\Utils\ModelFiles\OBJModelFile.cpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp">
@@ -262,9 +265,6 @@
     </ClInclude>
     <ClInclude Include="source\Events\Manager.hpp">
       <Filter>source\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Utils\ModelFile.hpp">
-      <Filter>source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="source\Utils\ModelLoader.hpp">
       <Filter>source\Utils</Filter>
@@ -425,5 +425,14 @@
     <ClInclude Include="source\Renderer\HighLevel\ShaderMacroDefinitions.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClInclude>
+    <ClInclude Include="source\Utils\ModelFiles\OBJModelFile.hpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\IModelFile.hpp">
+      <Filter>source\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

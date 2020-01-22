@@ -324,9 +324,7 @@ void ForwardPass::Draw(const Internal::Map& map, const ForwardPassDrawDesc& desc
                 uint32_t offset = 0;
                 if (transform)
                 {
-                    // TODO unlock when transform works
-                    //offset = desc.ringBufferPtr->Write(&transform->Get(), sizeof(lkCommon::Math::Matrix4));
-                    offset = desc.ringBufferPtr->Write(&lkCommon::Math::Matrix4::IDENTITY, sizeof(lkCommon::Math::Matrix4));
+                    offset = desc.ringBufferPtr->Write(transform->Get().Data(), sizeof(lkCommon::Math::Matrix4));
                 }
                 else
                 {

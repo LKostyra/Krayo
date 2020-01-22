@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Krayo/Resource/IResource.hpp"
+#include "Krayo/Resource/Type.hpp"
 
 #include <string>
 #include <memory>

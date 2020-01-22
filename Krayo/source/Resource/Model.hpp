@@ -36,6 +36,7 @@ public:
     Model(const std::string& name);
 
     bool Load(const std::string& path);
+    bool LoadVertices(const std::vector<float>& vertices);
 };
 
 } // namespace Internal

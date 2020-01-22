@@ -13,10 +13,13 @@ enum class ModelFileType: unsigned char
     OBJ
 };
 
-class ModelFile
+class IModelFile
 {
 public:
-    virtual LKCOMMON_INLINE ModelFileType GetType() = 0;
+    virtual ~IModelFile() {};
+
+    virtual bool Open(const std::string& path) = 0;
+    virtual LKCOMMON_INLINE ModelFileType GetType() const = 0;
 };
 
 

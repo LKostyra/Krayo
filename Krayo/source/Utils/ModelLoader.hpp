@@ -1,8 +1,9 @@
 #pragma once
 
-#include "ModelFile.hpp"
+#include "IModelFile.hpp"
 
 #include <string>
+#include <memory>
 
 
 namespace Krayo {
@@ -10,20 +11,10 @@ namespace Utils {
 
 class ModelLoader
 {
-    enum class ModelType
-    {
-        Unknown = 0,
-        FBX,
-        OBJ,
-    };
-
-    static ModelType DetermineModelType(const std::string& path);
-
-    static ModelFile* OpenFBX(const std::string& path);
-    static ModelFile* OpenOBJ(const std::string& path);
+    static ModelFileType DetermineModelType(const std::string& path);
 
 public:
-    static ModelFile* Open(const std::string& path);
+    static std::unique_ptr<IModelFile> Open(const std::string& path);
 };
 
 } // namespace Utils

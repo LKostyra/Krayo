@@ -14,7 +14,7 @@ Model::Model(const std::string& name)
 
 bool Model::Load(const std::string& path)
 {
-    Utils::ModelFile* file = Utils::ModelLoader::Open(path);
+    std::unique_ptr<Utils::IModelFile> file = Utils::ModelLoader::Open(path);
 
     if (file == nullptr)
     {
