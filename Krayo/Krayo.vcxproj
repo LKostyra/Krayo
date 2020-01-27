@@ -228,7 +228,7 @@
       <AdditionalDependencies>lkCommon.lib;libfbxsdk-md.lib;shaderc.lib;shaderc_util.lib;SPIRV-Tools.lib;SPIRV-Tools-opt.lib;glslangd.lib;HLSLd.lib;OSDependentd.lib;OGLCompilerd.lib;SPIRVd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)Deps\prepare_deps.bat" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)Deps\deps_builder.py" --noanim -p $(Platform) -c $(Configuration)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -252,7 +252,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Deps\fbxsdk\lib\vs2015\$(PlatformShortName)\$(Configuration)\;$(SolutionDir)Deps\Bin\$(Platform)\$(Configuration)\;$(VULKAN_SDK)\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)Deps\prepare_deps.bat" $(Platform) $(Configuration)</Command>
+      <Command>"$(SolutionDir)Deps\deps_builder.py" --noanim -p $(Platform) -c $(Configuration)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
