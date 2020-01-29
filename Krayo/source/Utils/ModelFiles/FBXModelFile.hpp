@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/IModelFile.hpp"
+#include "IModelFile.hpp"
 
 #include <lkCommon/lkCommon.hpp>
 
@@ -40,6 +40,7 @@ public:
     static bool ProbeFile(const std::string& path);
 
     bool Open(const std::string& path) override;
+    uint32_t GetMeshCount() const override;
     void Traverse(TraverseCallback func);
     void Close();
 

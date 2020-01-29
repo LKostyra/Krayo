@@ -32,6 +32,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{C61E
 		Data\Shaders\ParticlePass.vert = Data\Shaders\ParticlePass.vert
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{0A837804-CDC0-42FC-A3EF-9ABEF637849A}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Models\cube.krayojson = Data\Models\cube.krayojson
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -52,6 +57,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C61EF277-0DBB-496E-92C6-D4340BB4E043} = {A93C423F-19FD-49C3-A81E-B6BAB5666ED9}
+		{0A837804-CDC0-42FC-A3EF-9ABEF637849A} = {A93C423F-19FD-49C3-A81E-B6BAB5666ED9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {111DE834-D42A-4602-B0ED-2F128FA1BB55}

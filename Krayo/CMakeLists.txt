@@ -41,9 +41,11 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Resource/IResource.cpp
                source/Resource/Manager.cpp
                source/Resource/Model.cpp
+               source/Utils/FileMesh.cpp
                source/Utils/ModelLoader.cpp
                source/Utils/TypeID.cpp
                source/Utils/ModelFiles/FBXModelFile.cpp
+               source/Utils/ModelFiles/KrayoJSONModelFile.cpp
                source/Utils/ModelFiles/OBJModelFile.cpp
                )
 
@@ -93,11 +95,13 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Resource/IResource.hpp
                source/Resource/Manager.hpp
                source/Resource/Model.hpp
-               source/Utils/IModelFile.hpp
+               source/Utils/FileMesh.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/TypeID.hpp
+               source/Utils/ModelFiles/IModelFile.hpp
                source/Utils/ModelFiles/FBXModelFile.hpp
+               source/Utils/ModelFiles/KrayoJSONModelFile.hpp
                source/Utils/ModelFiles/OBJModelFile.hpp
                )
 
@@ -139,26 +143,28 @@ ADD_DEPENDENCIES(${KRAYO_TARGET} lkCommon shaderc)
 TARGET_INCLUDE_DIRECTORIES(${KRAYO_TARGET}
                            PRIVATE ${KRAYO_ROOT_DIRECTORY}/Deps/lkCommon/lkCommon/include
                            PRIVATE ${KRAYO_ROOT_DIRECTORY}/Deps/fbxsdk/include
+                           PRIVATE ${KRAYO_ROOT_DIRECTORY}/Deps/rapidjson/include
+                           PRIVATE ${KRAYO_ROOT_DIRECTORY}/Deps/tinyobjloader
                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/source
                            )
 
 TARGET_COMPILE_DEFINITIONS(${KRAYO_TARGET}
-                           PRIVATE "-DKRAYO_ROOT_REL_TO_BIN=\"../..\""
+                           PRIVATE -DKRAYO_ROOT_REL_TO_BIN="../.."
                            PRIVATE "-DKRAYO_ROOT_DIR=R\"(${KRAYO_ROOT_DIRECTORY}/)\""
-                           PRIVATE "-DKRAYO_EXPORTS"
-                           PRIVATE "-DVK_USE_PLATFORM_XCB_KHR"
-                           PRIVATE "-DVK_NO_PROTOTYPES"
+                           PRIVATE -DKRAYO_EXPORTS
+                           PRIVATE -DVK_USE_PLATFORM_XCB_KHR
+                           PRIVATE -DVK_NO_PROTOTYPES
                            )
 
 TARGET_COMPILE_OPTIONS(${KRAYO_TARGET}
-                       PRIVATE "-std=c++1y"
-                       PRIVATE "-msse4.1"
-                       PRIVATE "-fvisibility=hidden"
-                       PRIVATE "-fPIC"
+                       PRIVATE -std=c++1y
+                       PRIVATE -msse4.1
+                       PRIVATE -fvisibility=hidden
+                       PRIVATE -fPIC
                        )
 
-TARGET_LINK_LIBRARIES(${KRAYO_TARGET} lkCommon dl libfbxsdk.a shaderc ${KRAYO_PKG_DEPS_LIBRARIES})
+TARGET_LINK_LIBRARIES(${KRAYO_TARGET} lkCommon dl libfbxsdk.a shaderc)
 
 KRAYO_COPY_RESULT(${KRAYO_TARGET})

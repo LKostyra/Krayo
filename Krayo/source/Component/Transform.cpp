@@ -8,6 +8,7 @@ namespace Internal {
 
 Transform::Transform(const std::string& name)
     : ComponentBase<Transform>(name)
+    , mTransform(lkCommon::Math::Matrix4::IDENTITY)
 {
 }
 

@@ -80,7 +80,9 @@
     <ClCompile Include="source\Resource\IResource.cpp" />
     <ClCompile Include="source\Resource\Manager.cpp" />
     <ClCompile Include="source\Resource\Model.cpp" />
+    <ClCompile Include="source\Utils\FileMesh.cpp" />
     <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp" />
+    <ClCompile Include="source\Utils\ModelFiles\KrayoJSONModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelFiles\OBJModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelLoader.cpp" />
     <ClCompile Include="source\Utils\TypeID.cpp" />
@@ -161,8 +163,10 @@
     <ClInclude Include="source\Resource\IResource.hpp" />
     <ClInclude Include="source\Resource\Manager.hpp" />
     <ClInclude Include="source\Resource\Model.hpp" />
-    <ClInclude Include="source\Utils\IModelFile.hpp" />
+    <ClInclude Include="source\Utils\FileMesh.hpp" />
+    <ClInclude Include="source\Utils\ModelFiles\IModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp" />
+    <ClInclude Include="source\Utils\ModelFiles\KrayoJSONModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFiles\OBJModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelLoader.hpp" />
     <ClInclude Include="source\Utils\Traits.hpp" />
@@ -217,7 +221,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(SolutionDir)Deps\rapidjson\include\;$(SolutionDir)Deps\tinyobjloader\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;_ENABLE_EXTENDED_ALIGNED_STORAGE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
@@ -239,7 +243,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)source\;$(ProjectDir)include\;$(SolutionDir)Deps\lkCommon\lkCommon\include\;$(SolutionDir)Deps\fbxsdk\include\;$(SolutionDir)Deps\rapidjson\include\;$(SolutionDir)Deps\tinyobjloader\;$(VULKAN_SDK)\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>KRAYO_ROOT_DIR=R"($(SolutionDir))";KRAYO_ROOT_REL_TO_BIN=R"(../../..)";KRAYO_EXPORTS;WIN32;NOMINMAX;VK_USE_PLATFORM_WIN32_KHR;VK_NO_PROTOTYPES;_ENABLE_EXTENDED_ALIGNED_STORAGE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>

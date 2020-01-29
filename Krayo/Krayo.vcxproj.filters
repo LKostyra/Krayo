@@ -231,6 +231,12 @@
     <ClCompile Include="source\Utils\ModelFiles\OBJModelFile.cpp">
       <Filter>source\Utils\ModelFiles</Filter>
     </ClCompile>
+    <ClCompile Include="source\Utils\FileMesh.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFiles\KrayoJSONModelFile.cpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp">
@@ -428,8 +434,14 @@
     <ClInclude Include="source\Utils\ModelFiles\OBJModelFile.hpp">
       <Filter>source\Utils\ModelFiles</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\IModelFile.hpp">
+    <ClInclude Include="source\Utils\ModelFiles\IModelFile.hpp">
+      <Filter>source\Utils\ModelFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\FileMesh.hpp">
       <Filter>source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFiles\KrayoJSONModelFile.hpp">
+      <Filter>source\Utils\ModelFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

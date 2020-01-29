@@ -258,6 +258,12 @@ bool FBXModelFile::Open(const std::string& path)
     return true;
 }
 
+uint32_t FBXModelFile::GetMeshCount() const
+{
+    // TODO
+    return 0;
+}
+
 void FBXModelFile::Traverse(TraverseCallback func)
 {
     FbxNode* root = mFbxScene->GetRootNode();

@@ -102,7 +102,7 @@ void main()
         #endif // HAS_NORMAL == 1
 
         if (coeff < 0.0f) coeff = 0.0f;
-        float att = (1.0f / (1.0f + 1.0f * distance * distance));
+        float att = (1.0f / (1.0f + distance * distance));
 
         if (distance < curLight.range)
             att *= (curLight.range - distance) / curLight.range;
@@ -112,7 +112,7 @@ void main()
         color += vec4(curLight.diffuse * coeff * att, 1.0f);
     }
 
-    color = materialParams.color;
+    color = vec4(1.0f); //materialParams.color;
 
 #if HAS_TEXTURE == 1
     color *= texture(diffTex, VertUV);

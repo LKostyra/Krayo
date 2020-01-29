@@ -7,3 +7,9 @@
 [submodule "Deps/shaderc"]
 	path = Deps/shaderc
 	url = https://github.com/google/shaderc
+[submodule "Deps/rapidjson"]
+	path = Deps/rapidjson
+	url = https://github.com/Tencent/rapidjson
+[submodule "Deps/tinyobjloader"]
+	path = Deps/tinyobjloader
+	url = https://github.com/syoyo/tinyobjloader

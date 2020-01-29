@@ -1,5 +1,6 @@
 #include "ModelLoader.hpp"
 
+#include "ModelFiles/KrayoJSONModelFile.hpp"
 #include "ModelFiles/FBXModelFile.hpp"
 #include "ModelFiles/OBJModelFile.hpp"
 
@@ -23,7 +24,8 @@ struct ModelFormat
     }
 };
 
-const std::array<ModelFormat, 2> SupportedFormats {
+const std::array<ModelFormat, 3> SupportedFormats {
+    ModelFormat(ModelFileType::KrayoJSON, KrayoJSONModelFile::ProbeFile),
     ModelFormat(ModelFileType::FBX, FBXModelFile::ProbeFile),
     ModelFormat(ModelFileType::OBJ, OBJModelFile::ProbeFile),
 };
@@ -44,6 +46,9 @@ std::unique_ptr<IModelFile> ModelLoader::Open(const std::string& path)
     std::unique_ptr<IModelFile> result;
     switch (type)
     {
+    case ModelFileType::KrayoJSON:
+        result = std::make_unique<KrayoJSONModelFile>();
+        break;
     case ModelFileType::FBX:
         result = std::make_unique<FBXModelFile>();
         break;

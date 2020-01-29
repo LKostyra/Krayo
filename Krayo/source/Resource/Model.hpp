@@ -30,6 +30,7 @@ class Model: public ResourceBase<Model>
 
     using MeshContainer = std::vector<Mesh>;
 
+    std::unique_ptr<Utils::IModelFile> mFile;
     MeshContainer mMeshes;
 
 public:

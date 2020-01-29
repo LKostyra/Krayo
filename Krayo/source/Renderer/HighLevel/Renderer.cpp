@@ -304,7 +304,11 @@ void Renderer::Draw(const Internal::Map& map, float deltaTime, float interpolati
     // Rendering descriptors update //
     //////////////////////////////////
     VertexShaderCBuffer vsBuffer;
-    vsBuffer.viewMatrix = lkCommon::Math::Matrix4(); //camera.GetView(interpolation);
+    vsBuffer.viewMatrix = lkCommon::Math::Matrix4::CreateRHLookAt(
+        lkCommon::Math::Vector4(0.0f, 0.0f, 2.0f, 1.0f),
+        lkCommon::Math::Vector4(0.0f, 0.0f,-1.0f, 0.0f),
+        lkCommon::Math::Vector4(0.0f, 1.0f, 0.0f, 0.0f)
+    ); //camera.GetView(interpolation);
     vsBuffer.projMatrix = mProjection;
     if (!mVertexShaderCBuffer.Write(&vsBuffer, sizeof(vsBuffer)))
         LOGW("Failed to update Vertex Shader Uniform Buffer");

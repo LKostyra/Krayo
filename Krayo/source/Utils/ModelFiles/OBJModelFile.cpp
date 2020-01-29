@@ -23,6 +23,11 @@ bool OBJModelFile::Open(const std::string& path)
     return false;
 }
 
+uint32_t OBJModelFile::GetMeshCount() const
+{
+    return 0;
+}
+
 void OBJModelFile::Close()
 {
 }

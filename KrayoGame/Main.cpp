@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     Krayo::EngineDesc engineDesc;
     engineDesc.debug = debug;
     engineDesc.debugVerbose = true;
-    engineDesc.vsync = false;
+    engineDesc.vsync = true;
     engineDesc.windowWidth = 1280;
     engineDesc.windowHeight = 720;
 
@@ -53,11 +53,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    //if (!modelRes->Load("cube.fbx"))
-    //{
-    //    std::vector<float> vertices;
-    //    return 1;
-    //}
+    if (!modelRes->Load("Data/Models/cube.krayojson"))
+    {
+        return 1;
+    }
 
     //Krayo::Resource::Material* material = rf.CreateMaterial();
     //if (!material->Load("Data/Materials/cube.json"))
