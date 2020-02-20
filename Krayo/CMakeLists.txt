@@ -44,9 +44,9 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Utils/FileMesh.cpp
                source/Utils/ModelLoader.cpp
                source/Utils/TypeID.cpp
-               source/Utils/ModelFiles/FBXModelFile.cpp
-               source/Utils/ModelFiles/KrayoJSONModelFile.cpp
-               source/Utils/ModelFiles/OBJModelFile.cpp
+               source/Utils/ModelFile/FBXModelFile.cpp
+               source/Utils/ModelFile/KrayoJSONModelFile.cpp
+               source/Utils/ModelFile/OBJModelFile.cpp
                )
 
 SET(KRAYO_HDRS source/Engine.hpp
@@ -99,10 +99,10 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/TypeID.hpp
-               source/Utils/ModelFiles/IModelFile.hpp
-               source/Utils/ModelFiles/FBXModelFile.hpp
-               source/Utils/ModelFiles/KrayoJSONModelFile.hpp
-               source/Utils/ModelFiles/OBJModelFile.hpp
+               source/Utils/ModelFile/IModelFile.hpp
+               source/Utils/ModelFile/FBXModelFile.hpp
+               source/Utils/ModelFile/KrayoJSONModelFile.hpp
+               source/Utils/ModelFile/OBJModelFile.hpp
                )
 
 SET(KRAYO_API_SRCS source/API/Engine.cpp

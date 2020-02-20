@@ -22,7 +22,9 @@ class Manager final
     ~Manager() = default;
 
 public:
-    KRAYO_API Model* CreateModel(const std::string& name);
+    KRAYO_API bool LoadFile(const std::string& path);
+
+    KRAYO_API Model GetModel(const std::string& name);
 };
 
 } // namespace Resource

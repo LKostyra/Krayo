@@ -2,7 +2,7 @@
 
 #include <lkCommon/lkCommon.hpp>
 
-#include "Utils/FileMesh.hpp"
+#include "FileMesh.hpp"
 
 
 namespace Krayo {
@@ -26,7 +26,6 @@ public:
     virtual ~IModelFile() {};
 
     virtual bool Open(const std::string& path) = 0;
-    virtual uint32_t GetMeshCount() const = 0;
     virtual LKCOMMON_INLINE ModelFileType GetType() const = 0;
 
     LKCOMMON_INLINE const std::string& GetName() const
@@ -34,9 +33,9 @@ public:
         return mName;
     }
 
-    LKCOMMON_INLINE FileMesh& GetMesh(uint32_t i)
+    LKCOMMON_INLINE std::vector<FileMesh>& GetMeshes()
     {
-        return mMeshes[i];
+        return mMeshes;
     }
 };
 

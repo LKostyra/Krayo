@@ -33,7 +33,7 @@ KrayoJSONModelFile::~KrayoJSONModelFile()
 bool KrayoJSONModelFile::InitializeMesh(const rapidjson::Value& node, FileMesh& mesh)
 {
     // do all the preallocation before loading the data
-    // at this point file was already validated, so just get
+    // at this point file was already validated, so just do the getting
     uint32_t vertCount = 0, indexCount = 0;
     for (auto& o: node.GetObject())
     {
@@ -452,14 +452,14 @@ bool KrayoJSONModelFile::ProbeFile(const std::string& path)
 {
     if (path.rfind(".krayojson") == std::string::npos)
     {
-        LOGI("Provided file does not have .fbx extension");
+        LOGI("Provided file does not have .krayojson extension");
         return false;
     }
 
     std::ifstream file(path);
     if (!file)
     {
-        LOGI("Cannot open KrayoJSON file to probe");
+        LOGI("KrayoJSON file failed to open");
         return false;
     }
 
@@ -522,11 +522,6 @@ bool KrayoJSONModelFile::Open(const std::string& path)
     LOGD("File correct, loading");
     fileJson.Parse(fileString.c_str());
     return LoadMeshes(fileJson.GetObject());
-}
-
-uint32_t KrayoJSONModelFile::GetMeshCount() const
-{
-    return static_cast<uint32_t>(mMeshes.size());
 }
 
 void KrayoJSONModelFile::Close()

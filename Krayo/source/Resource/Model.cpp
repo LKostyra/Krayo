@@ -9,30 +9,21 @@ namespace Internal {
 
 Model::Model(const std::string& name)
     : ResourceBase<Model>(name)
-    , mFile()
     , mMeshes()
 {
 }
 
-bool Model::Load(const std::string& path)
+bool Model::Load(const std::unique_ptr<Utils::IModelFile>& file)
 {
-    mFile = Utils::ModelLoader::Open(path);
-
-    if (!mFile)
-    {
-        LOGE("Failed to load Model from file");
-        return false;
-    }
-
-    uint32_t meshCount = mFile->GetMeshCount();
+    size_t meshCount = file->GetMeshes().size();
     mMeshes.resize(meshCount);
 
     Renderer::ResourceFactory& factory = Renderer::ResourceFactory::Instance();
-    for (uint32_t i = 0; i < meshCount; ++i)
+    for (size_t i = 0; i < meshCount; ++i)
     {
         Renderer::BufferDesc vbDesc;
-        vbDesc.data = mFile->GetMesh(i).GetVertexBufferData();
-        vbDesc.dataSize = mFile->GetMesh(i).GetVertexBufferDataSize();
+        vbDesc.data = file->GetMeshes()[i].GetVertexBufferData();
+        vbDesc.dataSize = file->GetMeshes()[i].GetVertexBufferDataSize();
         vbDesc.type = Renderer::BufferType::Static;
         vbDesc.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         vbDesc.concurrent = false;
@@ -40,8 +31,8 @@ bool Model::Load(const std::string& path)
         mMeshes[i].vertexBuffer = factory.CreateBuffer(vbDesc);
 
         Renderer::BufferDesc vbParamsDesc;
-        vbParamsDesc.data = mFile->GetMesh(i).GetVertexBufferParamsData();
-        vbParamsDesc.dataSize = mFile->GetMesh(i).GetVertexBufferParamsDataSize();
+        vbParamsDesc.data = file->GetMeshes()[i].GetVertexBufferParamsData();
+        vbParamsDesc.dataSize = file->GetMeshes()[i].GetVertexBufferParamsDataSize();
         vbParamsDesc.type = Renderer::BufferType::Static;
         vbParamsDesc.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         vbParamsDesc.concurrent = false;
@@ -49,8 +40,8 @@ bool Model::Load(const std::string& path)
         mMeshes[i].vertexParamsBuffer = factory.CreateBuffer(vbParamsDesc);
 
         Renderer::BufferDesc ibDesc;
-        ibDesc.data = mFile->GetMesh(i).GetIndexBufferData();
-        ibDesc.dataSize = mFile->GetMesh(i).GetIndexBufferDataSize();
+        ibDesc.data = file->GetMeshes()[i].GetIndexBufferData();
+        ibDesc.dataSize = file->GetMeshes()[i].GetIndexBufferDataSize();
         ibDesc.type = Renderer::BufferType::Static;
         ibDesc.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
         ibDesc.concurrent = false;
@@ -58,7 +49,7 @@ bool Model::Load(const std::string& path)
         mMeshes[i].indexBuffer = factory.CreateBuffer(ibDesc);
 
         mMeshes[i].byIndices = true;
-        mMeshes[i].pointCount = mFile->GetMesh(i).GetPointCount();
+        mMeshes[i].pointCount = file->GetMeshes()[i].GetPointCount();
     }
 
     return true;

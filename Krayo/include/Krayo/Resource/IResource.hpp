@@ -3,6 +3,8 @@
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/ApiPrerequisites.hpp"
 
+#include "Krayo/Resource/Type.hpp"
+
 #include <string>
 #include <memory>
 
@@ -18,7 +20,12 @@ protected:
     IResource(Internal::IResource* impl);
 
 public:
-    KRAYO_API virtual bool Load(const std::string& path) = 0;
+    virtual Type GetType() const = 0;
+
+    operator bool()
+    {
+        return mImpl != nullptr;
+    }
 };
 
 } // namespace Resource

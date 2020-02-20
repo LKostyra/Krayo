@@ -1,8 +1,8 @@
 #include "ModelLoader.hpp"
 
-#include "ModelFiles/KrayoJSONModelFile.hpp"
-#include "ModelFiles/FBXModelFile.hpp"
-#include "ModelFiles/OBJModelFile.hpp"
+#include "ModelFile/KrayoJSONModelFile.hpp"
+#include "ModelFile/FBXModelFile.hpp"
+#include "ModelFile/OBJModelFile.hpp"
 
 #include <array>
 #include <functional>

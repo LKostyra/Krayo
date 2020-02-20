@@ -19,7 +19,6 @@ public:
     static bool ProbeFile(const std::string& path);
 
     bool Open(const std::string& path) override;
-    uint32_t GetMeshCount() const override;
     void Close();
 
     operator bool() const

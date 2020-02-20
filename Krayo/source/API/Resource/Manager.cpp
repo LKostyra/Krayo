@@ -16,9 +16,20 @@ Manager::Manager(Internal::Manager& manager)
 {
 }
 
-Model* Manager::CreateModel(const std::string& name)
+bool Manager::LoadFile(const std::string& path)
 {
-    return new Model(dynamic_cast<Internal::Model*>(mImpl.CreateResource(Type::Model, name)));
+    return mImpl.LoadFile(path);
+}
+
+Model Manager::GetModel(const std::string& name)
+{
+    Internal::Model* m = dynamic_cast<Internal::Model*>(
+        mImpl.GetResource(Type::Model, name)
+    );
+    if (!m)
+        return Model(nullptr);
+
+    return Model(m);
 }
 
 } // namespace Resource

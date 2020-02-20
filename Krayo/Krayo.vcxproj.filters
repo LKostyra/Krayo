@@ -28,9 +28,6 @@
     <Filter Include="source\API\Resource">
       <UniqueIdentifier>{5f163aae-128f-49ae-a95b-7f66ef7119eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\Utils\ModelFiles">
-      <UniqueIdentifier>{b1a1ab9c-2b69-4816-9334-7c04caf29c89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\Resource">
       <UniqueIdentifier>{9de1dabe-6f5e-43c9-801f-375cb2a77655}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="source\Renderer\LowLevel\Win">
       <UniqueIdentifier>{8e9481e8-86d5-44e0-90bf-e5b278e74250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils\ModelFile">
+      <UniqueIdentifier>{b1a1ab9c-2b69-4816-9334-7c04caf29c89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="source\Utils\ModelLoader.cpp">
       <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Utils\ModelFiles\FBXModelFile.cpp">
-      <Filter>source\Utils\ModelFiles</Filter>
     </ClCompile>
     <ClCompile Include="source\API\Resource\Manager.cpp">
       <Filter>source\API\Resource</Filter>
@@ -228,14 +225,26 @@
     <ClCompile Include="source\Renderer\HighLevel\ShaderMacroDefinitions.cpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\ModelFiles\OBJModelFile.cpp">
-      <Filter>source\Utils\ModelFiles</Filter>
+    <ClCompile Include="source\Utils\ModelFile\FBXModelFile.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\FileMesh.cpp">
-      <Filter>source\Utils</Filter>
+    <ClCompile Include="source\Utils\ModelFile\FileMesh.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\ModelFiles\KrayoJSONModelFile.cpp">
-      <Filter>source\Utils\ModelFiles</Filter>
+    <ClCompile Include="source\Utils\ModelFile\KrayoJSONModelFile.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFile\OBJModelFile.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFile\FileMaterial.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFile\FileTextureSDR.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ModelFile\FileTextureHDR.cpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="source\Utils\ModelLoader.hpp">
       <Filter>source\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Utils\ModelFiles\FBXModelFile.hpp">
-      <Filter>source\Utils\ModelFiles</Filter>
     </ClInclude>
     <ClInclude Include="include\Krayo\Resource\Manager.hpp">
       <Filter>include\Krayo\Resource</Filter>
@@ -431,17 +437,32 @@
     <ClInclude Include="source\Renderer\HighLevel\ShaderMacroDefinitions.hpp">
       <Filter>source\Renderer\HighLevel</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\ModelFiles\OBJModelFile.hpp">
-      <Filter>source\Utils\ModelFiles</Filter>
+    <ClInclude Include="source\Utils\ModelFile\FBXModelFile.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\ModelFiles\IModelFile.hpp">
-      <Filter>source\Utils\ModelFiles</Filter>
+    <ClInclude Include="source\Utils\ModelFile\FileMesh.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\FileMesh.hpp">
-      <Filter>source\Utils</Filter>
+    <ClInclude Include="source\Utils\ModelFile\IModelFile.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
-    <ClInclude Include="source\Utils\ModelFiles\KrayoJSONModelFile.hpp">
-      <Filter>source\Utils\ModelFiles</Filter>
+    <ClInclude Include="source\Utils\ModelFile\KrayoJSONModelFile.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\OBJModelFile.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\FileMaterial.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\FileTextureSDR.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\FileTextureHDR.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\IFileTexture.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,9 +11,8 @@ Model::Model(Internal::Model* model)
 {
 }
 
-bool Model::Load(const std::string& path)
+Model::~Model()
 {
-    return mImpl->Load(path);
 }
 
 } // namespace Resource

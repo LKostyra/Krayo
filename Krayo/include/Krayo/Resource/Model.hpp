@@ -21,7 +21,10 @@ class Model final: public IResource
 public:
     KRAYO_API ~Model();
 
-    KRAYO_API bool Load(const std::string& path);
+    Type GetType() const override
+    {
+        return Type::Model;
+    }
 };
 
 } // namespace Resource

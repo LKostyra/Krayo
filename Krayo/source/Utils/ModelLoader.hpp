@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModelFiles/IModelFile.hpp"
+#include "ModelFile/IModelFile.hpp"
 
 #include <string>
 #include <memory>

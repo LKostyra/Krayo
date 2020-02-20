@@ -47,24 +47,28 @@ int main(int argc, char* argv[])
     }
 
     Krayo::Resource::Manager& mgr = engine.GetResourceManager();
-    Krayo::Resource::Model* modelRes = mgr.CreateModel("cube");
+    /*Krayo::Resource::Model* modelRes = mgr.CreateModel("cube");
     if (!modelRes)
     {
         return 1;
     }
 
-    if (!modelRes->Load("Data/Models/cube.krayojson"))
+    if (!modelRes->Load("Data/Models/cube.obj"))
+    {
+        return 1;
+    }*/
+
+    if (!mgr.LoadFile("Data/Models/cube.krayojson"))
     {
         return 1;
     }
 
-    //Krayo::Resource::Material* material = rf.CreateMaterial();
-    //if (!material->Load("Data/Materials/cube.json"))
-    //{
-    //    return 1;
-    //}
-    //
-    //model.AssignMaterial(material);
+    Krayo::Resource::Model modelRes = mgr.GetModel("Cube");
+    if (!modelRes)
+    {
+        std::cout << "ded" << std::endl;
+        return 1;
+    }
 
     Krayo::Map* map = engine.CreateMap("TEST");
     engine.SetCurrentMap(map);

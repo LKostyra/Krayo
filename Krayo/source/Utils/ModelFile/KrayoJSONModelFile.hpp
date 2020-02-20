@@ -2,6 +2,8 @@
 
 #include "IModelFile.hpp"
 
+#include "FileMesh.hpp"
+
 #include <rapidjson/document.h>
 #include <lkCommon/lkCommon.hpp>
 
@@ -35,7 +37,6 @@ public:
     static bool ProbeFile(const std::string& path);
 
     bool Open(const std::string& path) override;
-    uint32_t GetMeshCount() const override;
     void Close();
 
     operator bool() const

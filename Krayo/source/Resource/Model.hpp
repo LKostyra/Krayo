@@ -30,14 +30,12 @@ class Model: public ResourceBase<Model>
 
     using MeshContainer = std::vector<Mesh>;
 
-    std::unique_ptr<Utils::IModelFile> mFile;
     MeshContainer mMeshes;
 
 public:
     Model(const std::string& name);
 
-    bool Load(const std::string& path);
-    bool LoadVertices(const std::vector<float>& vertices);
+    bool Load(const std::unique_ptr<Utils::IModelFile>& file) override;
 };
 
 } // namespace Internal

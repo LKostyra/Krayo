@@ -15,7 +15,7 @@ class Model final: public IComponent
 public:
     KRAYO_API ~Model();
 
-    KRAYO_API void AttachResource(Resource::Model* modelRes);
+    KRAYO_API void AttachResource(Resource::Model modelRes);
 };
 
 } // namespace Component
