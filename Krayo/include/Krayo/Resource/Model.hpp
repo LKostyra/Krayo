@@ -16,7 +16,7 @@ class Model final: public IResource
     friend class Krayo::Resource::Manager;
     friend class Krayo::Component::Model;
 
-    Model(Internal::Model* impl);
+    Model(const std::shared_ptr<Internal::Model>& impl);
 
 public:
     KRAYO_API ~Model();

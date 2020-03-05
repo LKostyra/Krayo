@@ -20,17 +20,17 @@ class Manager
     std::vector<ResourceContainer> mResourceContainers;
 
     template <typename T>
-    Internal::IResource* CreateResourceGeneric(ResourceContainer& c, const std::string& name);
+    std::shared_ptr<Internal::IResource> CreateResourceGeneric(ResourceContainer& c, const std::string& name);
 
     std::string GetModelNameFromPath(const std::string& path);
 
 public:
     Manager();
 
-    Internal::IResource* CreateResource(const Krayo::Resource::Type type, const std::string& name);
+    std::shared_ptr<Internal::IResource> CreateResource(const Krayo::Resource::Type type, const std::string& name);
 
     bool LoadFile(const std::string& path);
-    Internal::IResource* GetResource(const Krayo::Resource::Type type, const std::string& name);
+    std::shared_ptr<Internal::IResource> GetResource(const Krayo::Resource::Type type, const std::string& name);
 };
 
 } // namespace Internal

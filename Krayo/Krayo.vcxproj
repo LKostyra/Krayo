@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -79,7 +79,9 @@
     <ClCompile Include="source\ResourceDir.cpp" />
     <ClCompile Include="source\Resource\IResource.cpp" />
     <ClCompile Include="source\Resource\Manager.cpp" />
+    <ClCompile Include="source\Resource\Material.cpp" />
     <ClCompile Include="source\Resource\Model.cpp" />
+    <ClCompile Include="source\Resource\Texture.cpp" />
     <ClCompile Include="source\Utils\ModelFile\FBXModelFile.cpp" />
     <ClCompile Include="source\Utils\ModelFile\FileMaterial.cpp" />
     <ClCompile Include="source\Utils\ModelFile\FileMesh.cpp" />
@@ -165,10 +167,13 @@
     <ClInclude Include="source\ResourceDir.hpp" />
     <ClInclude Include="source\Resource\IResource.hpp" />
     <ClInclude Include="source\Resource\Manager.hpp" />
+    <ClInclude Include="source\Resource\Material.hpp" />
     <ClInclude Include="source\Resource\Model.hpp" />
+    <ClInclude Include="source\Resource\Texture.hpp" />
     <ClInclude Include="source\Utils\ModelFile\FBXModelFile.hpp" />
     <ClInclude Include="source\Utils\ModelFile\FileMaterial.hpp" />
     <ClInclude Include="source\Utils\ModelFile\FileMesh.hpp" />
+    <ClInclude Include="source\Utils\ModelFile\IFileData.hpp" />
     <ClInclude Include="source\Utils\ModelFile\IFileTexture.hpp" />
     <ClInclude Include="source\Utils\ModelFile\FileTextureHDR.hpp" />
     <ClInclude Include="source\Utils\ModelFile\FileTextureSDR.hpp" />

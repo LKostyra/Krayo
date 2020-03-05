@@ -13,7 +13,10 @@ class FileTextureHDR: public IFileTexture
     lkCommon::Utils::Image<lkCommon::Utils::PixelFloat4> mImage;
 
 public:
-
+    LKCOMMON_INLINE FileDataType GetType() const override
+    {
+        return FileDataType::TextureHDR;
+    }
 };
 
 } // namespace Utils

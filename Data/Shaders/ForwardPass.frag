@@ -112,7 +112,7 @@ void main()
         color += vec4(curLight.diffuse * coeff * att, 1.0f);
     }
 
-    color = vec4(1.0f); //materialParams.color;
+    color *= materialParams.color;
 
 #if HAS_TEXTURE == 1
     color *= texture(diffTex, VertUV);

@@ -22,11 +22,13 @@ struct Mesh
     Renderer::BufferPtr indexBuffer;
     uint32_t pointCount;
     bool byIndices;
+    std::shared_ptr<Internal::Material> material;
 };
 
 class Model: public ResourceBase<Model>
 {
     friend class Component::Internal::Model;
+    friend class Internal::Manager;
 
     using MeshContainer = std::vector<Mesh>;
 
@@ -35,7 +37,8 @@ class Model: public ResourceBase<Model>
 public:
     Model(const std::string& name);
 
-    bool Load(const std::unique_ptr<Utils::IModelFile>& file) override;
+    bool Load(const std::shared_ptr<Utils::IFileData>& file) override; // load single mesh as a model
+    bool Load(const std::unique_ptr<Utils::IModelFile>& file); // load all meshes as one model
 };
 
 } // namespace Internal

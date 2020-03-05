@@ -15,9 +15,9 @@ namespace Resource {
 class IResource
 {
 protected:
-    Internal::IResource* mImpl;
+    std::shared_ptr<Internal::IResource> mImpl;
 
-    IResource(Internal::IResource* impl);
+    IResource(const std::shared_ptr<Internal::IResource>& impl);
 
 public:
     virtual Type GetType() const = 0;

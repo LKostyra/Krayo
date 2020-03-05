@@ -21,7 +21,7 @@ Model::~Model()
 void Model::AttachResource(Resource::Model modelRes)
 {
     dynamic_cast<Component::Internal::Model*>(mImpl)->AttachResource(
-        dynamic_cast<Resource::Internal::Model*>(modelRes.mImpl)
+        std::dynamic_pointer_cast<Resource::Internal::Model>(modelRes.mImpl)
     );
 }
 

@@ -3,7 +3,7 @@
 #include "Krayo/Resource/Type.hpp"
 #include "Krayo/Resource/IResource.hpp"
 
-#include "Utils/ModelFile/IModelFile.hpp"
+#include "Utils/ModelFile/IFileData.hpp"
 #include "Utils/TypeID.hpp"
 
 #include <string>
@@ -21,7 +21,7 @@ public:
     IResource(const std::string& name);
     virtual ~IResource();
 
-    virtual bool Load(const std::unique_ptr<Utils::IModelFile>& file) = 0;
+    virtual bool Load(const std::shared_ptr<Utils::IFileData>& file) = 0;
     virtual const uint32_t GetTypeID() const = 0;
 
     const std::string& GetName() const
@@ -41,7 +41,7 @@ public:
     {
     }
 
-    bool Load(const std::unique_ptr<Utils::IModelFile>& file)
+    bool Load(const std::shared_ptr<Utils::IFileData>& file)
     {
         return static_cast<T*>(this)->Load(file);
     }

@@ -246,6 +246,12 @@
     <ClCompile Include="source\Utils\ModelFile\FileTextureHDR.cpp">
       <Filter>source\Utils\ModelFile</Filter>
     </ClCompile>
+    <ClCompile Include="source\Resource\Material.cpp">
+      <Filter>source\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Resource\Texture.cpp">
+      <Filter>source\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp">
@@ -462,6 +468,15 @@
       <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
     <ClInclude Include="source\Utils\ModelFile\IFileTexture.hpp">
+      <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource\Material.hpp">
+      <Filter>source\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource\Texture.hpp">
+      <Filter>source\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\ModelFile\IFileData.hpp">
       <Filter>source\Utils\ModelFile</Filter>
     </ClInclude>
   </ItemGroup>

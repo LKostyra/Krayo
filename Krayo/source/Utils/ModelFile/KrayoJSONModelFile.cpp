@@ -1,6 +1,7 @@
 #include "KrayoJSONModelFile.hpp"
 
 #include <lkCommon/Math/Vector3.hpp>
+#include <lkCommon/System/FS.hpp>
 #include <rapidjson/document.h>
 #include <fstream>
 
@@ -9,6 +10,14 @@ namespace {
 
 const std::string MODEL_NAME_NODE_NAME = "name";
 const std::string MODEL_MESHES_NODE_NAME = "meshes";
+const std::string MODEL_MATERIALS_NODE_NAME = "materials";
+
+const std::string MODEL_MATERIAL_NAME_NODE_NAME = "name";
+const std::string MODEL_MATERIAL_COLOR_NODE_NAME = "color";
+const std::string MODEL_MATERIAL_DIFFUSE_NODE_NAME = "texture";
+const std::string MODEL_MATERIAL_NORMAL_NODE_NAME = "normal";
+
+const std::string MODEL_MESH_NAME_NODE_NAME = "name";
 const std::string MODEL_MESH_MATERIAL_NODE_NAME = "material";
 const std::string MODEL_MESH_VERTICES_NODE_NAME = "vertices";
 const std::string MODEL_MESH_NORMALS_NODE_NAME = "normals";
@@ -28,6 +37,65 @@ KrayoJSONModelFile::KrayoJSONModelFile()
 
 KrayoJSONModelFile::~KrayoJSONModelFile()
 {
+}
+
+bool KrayoJSONModelFile::InitializeMaterial(const rapidjson::Value& node, FileMaterial& material)
+{
+    return true;
+}
+
+bool KrayoJSONModelFile::LoadMaterial(const rapidjson::Value& node, FileMaterial& material)
+{
+    if (!node.IsObject())
+    {
+        LOGE("Invalid object node");
+        return false;
+    }
+
+    if (!InitializeMaterial(node, material))
+        return false;
+
+    bool succeeded = true;
+    for (auto& o: node.GetObject())
+    {
+        if (MODEL_MATERIAL_NAME_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            material.mName = o.value.GetString();
+            continue;
+        }
+
+        if (MODEL_MATERIAL_COLOR_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            const auto& pixel = o.value.GetArray();
+            if (pixel.Size() == 3)
+            {
+                material.mColor = lkCommon::Utils::PixelFloat4(
+                    o.value.GetArray()[0].GetFloat(),
+                    o.value.GetArray()[1].GetFloat(),
+                    o.value.GetArray()[2].GetFloat(),
+                    1.0f
+                );
+            }
+            else if (pixel.Size() > 3)
+            {
+                material.mColor = lkCommon::Utils::PixelFloat4(
+                    o.value.GetArray()[0].GetFloat(),
+                    o.value.GetArray()[1].GetFloat(),
+                    o.value.GetArray()[2].GetFloat(),
+                    o.value.GetArray()[3].GetFloat()
+                );
+            }
+            continue;
+        }
+
+        if (MODEL_MATERIAL_DIFFUSE_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            // TODO
+            continue;
+        }
+    }
+
+    return succeeded;
 }
 
 bool KrayoJSONModelFile::InitializeMesh(const rapidjson::Value& node, FileMesh& mesh)
@@ -171,7 +239,7 @@ bool KrayoJSONModelFile::LoadMesh(const rapidjson::Value& node, FileMesh& mesh)
     {
         if (MODEL_MESH_MATERIAL_NODE_NAME.compare(o.name.GetString()) == 0)
         {
-            // TODO
+            mesh.mMaterialName = o.value.GetString();
             continue;
         }
 
@@ -179,42 +247,48 @@ bool KrayoJSONModelFile::LoadMesh(const rapidjson::Value& node, FileMesh& mesh)
         {
             if (!LoadVertices(o.value, mesh))
                 return false;
+            continue;
         }
 
         if (MODEL_MESH_NORMALS_NODE_NAME.compare(o.name.GetString()) == 0)
         {
             if (!LoadNormals(o.value, mesh))
                 return false;
+            continue;
         }
 
         if (MODEL_MESH_TANGENTS_NODE_NAME.compare(o.name.GetString()) == 0)
         {
             if (!LoadTangents(o.value, mesh))
                 return false;
+            continue;
         }
 
         if (MODEL_MESH_UVS_NODE_NAME.compare(o.name.GetString()) == 0)
         {
             if (!LoadUVs(o.value, mesh))
                 return false;
+            continue;
         }
 
         if (MODEL_MESH_INDICES_NODE_NAME.compare(o.name.GetString()) == 0)
         {
             if (!LoadIndices(o.value, mesh))
                 return false;
+            continue;
         }
     }
 
     return true;
 }
 
-bool KrayoJSONModelFile::LoadMeshes(const rapidjson::Value& node)
+bool KrayoJSONModelFile::LoadFile(const rapidjson::Value& node)
 {
     bool succeeded = true;
-    LOGD("node member count " << node.GetObject().MemberCount());
-    for (rapidjson::Value::ConstMemberIterator it = node.MemberBegin();
-         it != node.MemberEnd();
+    rapidjson::Value::ConstMemberIterator materials = node.GetObject().end();
+    rapidjson::Value::ConstMemberIterator meshes = node.GetObject().end();
+    for (rapidjson::Value::ConstMemberIterator it = node.GetObject().begin();
+         it != node.GetObject().end();
          ++it)
     {
         if (MODEL_NAME_NODE_NAME.compare(it->name.GetString()) == 0)
@@ -224,18 +298,45 @@ bool KrayoJSONModelFile::LoadMeshes(const rapidjson::Value& node)
             continue;
         }
 
+        if (MODEL_MATERIALS_NODE_NAME.compare(it->name.GetString()) == 0)
+            materials = it;
+
         if (MODEL_MESHES_NODE_NAME.compare(it->name.GetString()) == 0)
+            meshes = it;
+    }
+
+    if ((materials == node.GetObject().end()) || (meshes == node.GetObject().end()))
+    {
+        LOGE("Failed to get Materials or Meshes array from KrayoJSON file");
+        return false;
+    }
+
+    // load materials (and textures while at it)
+    mMaterials.reserve(materials->value.GetArray().Size());
+    const auto& materialArray = materials->value.GetArray();
+    for (uint32_t i = 0; i < materialArray.Size(); ++i)
+    {
+        mMaterials.emplace_back(new FileMaterial());
+        if (!LoadMaterial(materialArray[i], *mMaterials.back()))
         {
-            mMeshes.resize(it->value.GetArray().Size());
-            const auto& meshArray = it->value.GetArray();
-            for (uint32_t i = 0; i < meshArray.Size(); ++i)
-            {
-                if (!LoadMesh(meshArray[i], mMeshes[i]))
-                {
-                    LOGE("Failed to load mesh " << i);
-                    succeeded = false;
-                }
-            }
+            LOGE("Failed to load material " << i);
+            succeeded = false;
+        }
+    }
+
+    if (!succeeded)
+        return false;
+
+    // having all materials loaded, load meshes
+    mMeshes.reserve(meshes->value.GetArray().Size());
+    const auto& meshArray = meshes->value.GetArray();
+    for (uint32_t i = 0; i < meshArray.Size(); ++i)
+    {
+        mMeshes.emplace_back(new FileMesh());
+        if (!LoadMesh(meshArray[i], *mMeshes.back()))
+        {
+            LOGE("Failed to load mesh " << i);
+            succeeded = false;
         }
     }
 
@@ -271,7 +372,7 @@ bool KrayoJSONModelFile::ValidateArrayOfCoords(const rapidjson::Value& node, con
 
         if (e.GetArray().Size() != dimensions)
         {
-            LOGE("An element in " << name << " field must have " << dimensions << "-element float vertices");
+            LOGE("An element in " << name << " field must have at least " << dimensions << "-element float vertices");
             succeeded = false;
             break;
         }
@@ -323,6 +424,122 @@ bool KrayoJSONModelFile::ValidateIndices(const rapidjson::Value& node, uint32_t&
     return true;
 }
 
+bool KrayoJSONModelFile::ValidateFloatArray(const rapidjson::Value& node, const char* name, size_t minSize)
+{
+    bool succeeded = true;
+    if (!node.IsArray())
+    {
+        LOGE("An element in " << name << " field should be an array");
+        succeeded = false;
+    }
+
+    if (node.GetArray().Size() < minSize)
+    {
+        LOGE(name << " field must have at least " << minSize << " elements");
+        succeeded = false;
+    }
+
+    std::string fieldValue = "[ ";
+    for (auto& f: node.GetArray())
+    {
+        if (!f.IsFloat())
+        {
+            LOGE(name << " field doesn't have only float vertices");
+            succeeded = false;
+        }
+        else
+            fieldValue += std::to_string(f.GetFloat()) + ' ';
+    }
+
+    if (succeeded)
+        LOGD("    \\_ " << fieldValue << ']');
+
+    return succeeded;
+}
+
+bool KrayoJSONModelFile::ValidateFilePath(const rapidjson::Value& node, const char* name)
+{
+    bool succeeded = true;
+
+    if (!node.IsString())
+    {
+        LOGE("     " << name << " parameter should be a string pointing at material's name");
+        succeeded = false;
+    }
+
+    if (!lkCommon::System::FS::Exists(node.GetString()))
+    {
+        LOGE("     File pointed at by Diffuse element could not be found.");
+        succeeded = false;
+    }
+    else
+    {
+        LOGD("    \\_ " << node.GetString());
+    }
+
+    return succeeded;
+}
+
+bool KrayoJSONModelFile::ValidateMaterial(const rapidjson::Value& node)
+{
+    if (!node.IsObject())
+    {
+        LOGE("   Provided node for mesh is not a JSON object");
+        return false;
+    }
+
+    bool succeeded = true;
+    bool hasColor = false;
+    bool hasTexture = false;
+    for (auto& o: node.GetObject())
+    {
+        if (MODEL_MATERIAL_NAME_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            LOGD("  \\_ " << o.name.GetString());
+
+            if (!o.value.IsString())
+            {
+                LOGE("     Name should be a string pointing at material's name");
+                succeeded = false;
+            }
+
+            if (std::find(mReadMaterialNames.begin(), mReadMaterialNames.end(), o.value.GetString()) !=
+                mReadMaterialNames.end())
+            {
+                LOGE("     Material name " << o.value.GetString() << " duplicated");
+                succeeded = false;
+            }
+            else
+            {
+                LOGD("    \\_ " << o.value.GetString());
+                mReadMaterialNames.emplace_back(o.value.GetString());
+            }
+        }
+
+        if (MODEL_MATERIAL_COLOR_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            LOGD("  \\_ " << o.name.GetString());
+            succeeded = ValidateFloatArray(o.value, o.name.GetString(), 3);
+            hasColor = succeeded;
+        }
+
+        if (MODEL_MATERIAL_DIFFUSE_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            LOGD("  \\_ " << o.name.GetString());
+            succeeded = ValidateFilePath(o.value, o.name.GetString());
+            hasTexture = succeeded;
+        }
+    }
+
+    if (!hasColor && !hasTexture)
+    {
+        LOGE("     Material should contain at least a color property or diffuse property");
+        succeeded = false;
+    }
+
+    return succeeded;
+}
+
 bool KrayoJSONModelFile::ValidateMesh(const rapidjson::Value& node)
 {
     if (!node.IsObject())
@@ -338,15 +555,37 @@ bool KrayoJSONModelFile::ValidateMesh(const rapidjson::Value& node)
     {
         LOGD("  \\_ " << o.name.GetString());
 
+        if (MODEL_MESH_NAME_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            if (!o.value.IsString())
+            {
+                LOGE("     Material should be a string pointing at material name");
+                succeeded = false;
+            }
+            else
+            {
+                LOGD("    \\_ " << o.value.GetString());
+            }
+        }
+
         if (MODEL_MESH_MATERIAL_NODE_NAME.compare(o.name.GetString()) == 0)
         {
             if (!o.value.IsString())
             {
-                LOGE("     Material should be a string pointing at material description");
+                LOGE("     Material should be a string pointing at material name");
+                succeeded = false;
+            }
+
+            if (std::find(mReadMaterialNames.begin(), mReadMaterialNames.end(), o.value.GetString()) ==
+                mReadMaterialNames.end())
+            {
+                LOGE("     Provided material name was not defined in Material collection");
                 succeeded = false;
             }
             else
+            {
                 LOGD("    \\_ " << o.value.GetString());
+            }
         }
 
         if (MODEL_MESH_VERTICES_NODE_NAME.compare(o.name.GetString()) == 0)
@@ -400,14 +639,14 @@ bool KrayoJSONModelFile::ValidateFile(const rapidjson::Value& node)
         return false;
     }
 
+    // first find materials property and read through it
     bool succeeded = true;
-    LOGD("node member count " << node.GetObject().MemberCount());
     for (auto& o: node.GetObject())
     {
-        LOGD("\\_ " << o.name.GetString());
-
         if (MODEL_NAME_NODE_NAME.compare(o.name.GetString()) == 0)
         {
+            LOGD("\\_ " << o.name.GetString());
+
             if (!o.value.IsString())
             {
                 LOGE("   Field " << o.name.GetString() << " should be a String object");
@@ -417,8 +656,42 @@ bool KrayoJSONModelFile::ValidateFile(const rapidjson::Value& node)
                 LOGD("  \\_ " << o.value.GetString());
         }
 
+        if (MODEL_MATERIALS_NODE_NAME.compare(o.name.GetString()) == 0)
+        {
+            LOGD("\\_ " << o.name.GetString());
+
+            if (!o.value.IsArray())
+            {
+                LOGE("   Field " << o.name.GetString() << " should be an array of objects");
+                succeeded = false;
+            }
+
+            if (o.value.GetArray().Size() == 0)
+            {
+                LOGE("   Field " << o.name.GetString() << " should have at least one object");
+                succeeded = false;
+            }
+
+            if (!succeeded) break;
+
+            const auto& meshArray = o.value.GetArray();
+            for (uint32_t i = 0; i < meshArray.Size(); ++i)
+            {
+                if (!ValidateMaterial(meshArray[i]))
+                {
+                    LOGE("   Failed to validate material #" << i);
+                    succeeded = false;
+                }
+            }
+        }
+    }
+
+    for (auto& o: node.GetObject())
+    {
         if (MODEL_MESHES_NODE_NAME.compare(o.name.GetString()) == 0)
         {
+            LOGD("\\_ " << o.name.GetString());
+
             if (!o.value.IsArray())
             {
                 LOGE("   Field " << o.name.GetString() << " should be an array of objects");
@@ -521,7 +794,7 @@ bool KrayoJSONModelFile::Open(const std::string& path)
 
     LOGD("File correct, loading");
     fileJson.Parse(fileString.c_str());
-    return LoadMeshes(fileJson.GetObject());
+    return LoadFile(fileJson.GetObject());
 }
 
 void KrayoJSONModelFile::Close()

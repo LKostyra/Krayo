@@ -2,8 +2,6 @@
 
 #include "IModelFile.hpp"
 
-#include "FileMesh.hpp"
-
 #include <rapidjson/document.h>
 #include <lkCommon/lkCommon.hpp>
 
@@ -14,6 +12,10 @@ namespace Utils {
 class KrayoJSONModelFile: public IModelFile
 {
     bool mIsOpened;
+    std::vector<std::string> mReadMaterialNames; // for validation
+
+    bool InitializeMaterial(const rapidjson::Value& node, FileMaterial& material);
+    bool LoadMaterial(const rapidjson::Value& node, FileMaterial& material);
 
     bool InitializeMesh(const rapidjson::Value& node, FileMesh& mesh);
     bool LoadVertices(const rapidjson::Value& node, FileMesh& mesh);
@@ -22,11 +24,17 @@ class KrayoJSONModelFile: public IModelFile
     bool LoadUVs(const rapidjson::Value& node, FileMesh& mesh);
     bool LoadIndices(const rapidjson::Value& node, FileMesh& mesh);
     bool LoadMesh(const rapidjson::Value& node, FileMesh& mesh);
-    bool LoadMeshes(const rapidjson::Value& node);
+
+    bool LoadFile(const rapidjson::Value& node);
+
 
     bool ValidateArrayOfCoords(const rapidjson::Value& node, const char* name,
                                size_t dimensions, size_t& elements);
+    bool ValidateFloatArray(const rapidjson::Value& node, const char* name, size_t minSize);
+    bool ValidateFilePath(const rapidjson::Value& node, const char* name);
     bool ValidateIndices(const rapidjson::Value& node, uint32_t& maxInd);
+
+    bool ValidateMaterial(const rapidjson::Value& node);
     bool ValidateMesh(const rapidjson::Value& node);
     bool ValidateFile(const rapidjson::Value& node);
 

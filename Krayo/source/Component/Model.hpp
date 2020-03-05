@@ -14,13 +14,13 @@ class Model: public ComponentBase<Model>
     template <typename T>
     using Callback = std::function<bool(const T*)>;
 
-    Resource::Internal::Model* mModelResource;
+    std::shared_ptr<Resource::Internal::Model> mModelResource;
 
 public:
     Model(const std::string& name);
 
-    void AttachResource(Resource::Internal::Model* modelRes);
-    Resource::Internal::Model* GetResource() const;
+    void AttachResource(const std::shared_ptr<Resource::Internal::Model>& modelRes);
+    const std::shared_ptr<Resource::Internal::Model>& GetResource() const;
     void ForEachMesh(const Callback<Resource::Internal::Mesh>& callback) const;
 };
 

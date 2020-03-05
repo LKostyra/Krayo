@@ -6,7 +6,7 @@
 namespace Krayo {
 namespace Resource {
 
-IResource::IResource(Internal::IResource* impl)
+IResource::IResource(const std::shared_ptr<Internal::IResource>& impl)
     : mImpl(impl)
 {
 }

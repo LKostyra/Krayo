@@ -3,6 +3,8 @@
 #include <lkCommon/lkCommon.hpp>
 
 #include "FileMesh.hpp"
+#include "FileMaterial.hpp"
+#include "IFileTexture.hpp"
 
 
 namespace Krayo {
@@ -18,9 +20,15 @@ enum class ModelFileType: unsigned char
 
 class IModelFile
 {
+public:
+    template<typename T>
+    using ResourceContainer = std::vector<std::shared_ptr<T>>;
+
 protected:
     std::string mName;
-    std::vector<FileMesh> mMeshes;
+    ResourceContainer<FileMesh> mMeshes;
+    ResourceContainer<FileMaterial> mMaterials;
+    ResourceContainer<IFileTexture> mTextures;
 
 public:
     virtual ~IModelFile() {};
@@ -33,9 +41,19 @@ public:
         return mName;
     }
 
-    LKCOMMON_INLINE std::vector<FileMesh>& GetMeshes()
+    LKCOMMON_INLINE const ResourceContainer<FileMesh>& GetMeshes() const
     {
         return mMeshes;
+    }
+
+    LKCOMMON_INLINE const ResourceContainer<FileMaterial>& GetMaterials() const
+    {
+        return mMaterials;
+    }
+
+    LKCOMMON_INLINE const ResourceContainer<IFileTexture>& GetTextures() const
+    {
+        return mTextures;
     }
 };
 

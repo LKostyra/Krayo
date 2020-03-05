@@ -11,13 +11,13 @@ Model::Model(const std::string& name)
 {
 }
 
-void Model::AttachResource(Resource::Internal::Model* modelRes)
+void Model::AttachResource(const std::shared_ptr<Resource::Internal::Model>& modelRes)
 {
     mModelResource = modelRes;
-    LOGD("Attached resource " << reinterpret_cast<void*>(mModelResource));
+    LOGD("Attached resource " << reinterpret_cast<void*>(mModelResource.get()));
 }
 
-Resource::Internal::Model* Model::GetResource() const
+const std::shared_ptr<Resource::Internal::Model>& Model::GetResource() const
 {
     return mModelResource;
 }

@@ -41,10 +41,13 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Resource/IResource.cpp
                source/Resource/Manager.cpp
                source/Resource/Model.cpp
-               source/Utils/FileMesh.cpp
                source/Utils/ModelLoader.cpp
                source/Utils/TypeID.cpp
                source/Utils/ModelFile/FBXModelFile.cpp
+               source/Utils/ModelFile/FileMaterial.cpp
+               source/Utils/ModelFile/FileMesh.cpp
+               source/Utils/ModelFile/FileTextureHDR.cpp
+               source/Utils/ModelFile/FileTextureSDR.cpp
                source/Utils/ModelFile/KrayoJSONModelFile.cpp
                source/Utils/ModelFile/OBJModelFile.cpp
                )
@@ -95,12 +98,17 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Resource/IResource.hpp
                source/Resource/Manager.hpp
                source/Resource/Model.hpp
-               source/Utils/FileMesh.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/TypeID.hpp
-               source/Utils/ModelFile/IModelFile.hpp
                source/Utils/ModelFile/FBXModelFile.hpp
+               source/Utils/ModelFile/FileMaterial.hpp
+               source/Utils/ModelFile/FileMesh.hpp
+               source/Utils/ModelFile/FileTextureHDR.hpp
+               source/Utils/ModelFile/FileTextureSDR.hpp
+               source/Utils/ModelFile/IFileData.hpp
+               source/Utils/ModelFile/IFileTexture.hpp
+               source/Utils/ModelFile/IModelFile.hpp
                source/Utils/ModelFile/KrayoJSONModelFile.hpp
                source/Utils/ModelFile/OBJModelFile.hpp
                )

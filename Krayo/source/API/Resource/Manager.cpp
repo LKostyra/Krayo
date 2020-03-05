@@ -23,7 +23,7 @@ bool Manager::LoadFile(const std::string& path)
 
 Model Manager::GetModel(const std::string& name)
 {
-    Internal::Model* m = dynamic_cast<Internal::Model*>(
+    std::shared_ptr<Internal::Model> m = std::dynamic_pointer_cast<Internal::Model>(
         mImpl.GetResource(Type::Model, name)
     );
     if (!m)

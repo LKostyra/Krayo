@@ -9,6 +9,7 @@
 #include "Object.hpp"
 #include "Component/Model.hpp"
 #include "Component/Transform.hpp"
+#include "Resource/Material.hpp"
 
 
 namespace {
@@ -338,15 +339,14 @@ void ForwardPass::Draw(const Internal::Map& map, const ForwardPassDrawDesc& desc
                     macros.fragmentShader[1].value = 0;
                     macros.fragmentShader[2].value = 0;
 
-                    // FIXME temporarily turned off Material support for simplicity
-                    /*const Scene::Material* material = mesh->GetMaterial();
-                    if (material != nullptr)
+                    const std::shared_ptr<Resource::Internal::Material>& material = mesh->material;
+                    if (material)
                     {
                         // material data update
                         materialBuf.color = material->GetColor();
                         offset = desc.ringBufferPtr->Write(&materialBuf, sizeof(materialBuf));
                         mCommandBuffer.BindDescriptorSet(mFragmentShaderSet, bindPoint, 1, mPipelineLayout, offset);
-
+                        /*
                         if (material->GetDiffuse())
                         {
                             macros.fragmentShader[0].value = 1;
@@ -364,9 +364,13 @@ void ForwardPass::Draw(const Internal::Map& map, const ForwardPassDrawDesc& desc
                         {
                             macros.fragmentShader[2].value = 1;
                             mCommandBuffer.BindDescriptorSet(AcquireDescriptorSetFromTexture(material->GetMask()), bindPoint, 4, mPipelineLayout);
-                        }
-                    }*/
-                    materialBuf.color = lkCommon::Utils::PixelFloat4(0.0f, 0.0f, 0.0f, 1.0f);
+                        }*/
+                    }
+                    else
+                    {
+                        materialBuf.color = lkCommon::Utils::PixelFloat4(0.0f, 0.0f, 0.0f, 1.0f);
+                    }
+
                     offset = desc.ringBufferPtr->Write(&materialBuf, sizeof(materialBuf));
                     mCommandBuffer.BindDescriptorSet(mFragmentShaderSet, bindPoint, 1, mPipelineLayout, offset);
 
