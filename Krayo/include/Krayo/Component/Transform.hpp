@@ -10,7 +10,7 @@ class Transform final: public IComponent
 {
     friend class Krayo::Map;
 
-    Transform(Internal::Transform* impl);
+    Transform(const std::shared_ptr<Internal::Transform>& impl);
 
 public:
     KRAYO_API ~Transform();

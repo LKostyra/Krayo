@@ -4,7 +4,7 @@
 namespace Krayo {
 namespace Component {
 
-IComponent::IComponent(Internal::IComponent* impl)
+IComponent::IComponent(const std::shared_ptr<Internal::IComponent>& impl)
     : mImpl(impl)
 {
 }

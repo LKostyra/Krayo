@@ -17,12 +17,14 @@ namespace Krayo {
     namespace Component {
 
         class IComponent;
+        class Camera;
         class Model;
         class Transform;
 
         namespace Internal {
 
             class IComponent;
+            class Camera;
             class Model;
             class Transform;
 

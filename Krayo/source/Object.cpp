@@ -15,10 +15,10 @@ Object::Object(const std::string& name)
 {
 }
 
-void Object::AttachComponent(Component::Internal::IComponent* component)
+void Object::AttachComponent(std::shared_ptr<Component::Internal::IComponent>& component)
 {
     mComponents[component->GetTypeID()] = component;
-    LOGD("Attached component " << reinterpret_cast<void*>(component) <<
+    LOGD("Attached component " << reinterpret_cast<void*>(component.get()) <<
          " as type " << component->GetTypeID());
 }
 

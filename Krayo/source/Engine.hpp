@@ -19,7 +19,7 @@ namespace Internal {
 
 class Engine
 {
-    using MapContainer = std::list<Internal::Map>;
+    using MapContainer = std::list<std::shared_ptr<Internal::Map>>;
 
     lkCommon::Math::RingAverage<float, 300> mAvgTime;
 
@@ -29,7 +29,7 @@ class Engine
     Renderer::Renderer mRenderer;
 
     MapContainer mMaps;
-    Internal::Map* mCurrentMap;
+    std::shared_ptr<Internal::Map> mCurrentMap;
 
     // captures CWD, navigates to app root dir and verifies if it's correct
     bool SetDirTree() const;
@@ -42,8 +42,8 @@ public:
     bool Init(const EngineDesc& desc);
     void MainLoop();
 
-    Internal::Map* CreateMap(const std::string& name);
-    void SetCurrentMap(Internal::Map* map);
+    std::shared_ptr<Internal::Map>& CreateMap(const std::string& name);
+    void SetCurrentMap(std::shared_ptr<Internal::Map>& map);
 
     Resource::Manager& GetResourceManager();
 

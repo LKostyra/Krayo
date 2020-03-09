@@ -3,6 +3,8 @@
 #include "Krayo/ApiDef.hpp"
 #include "Krayo/ApiPrerequisites.hpp"
 
+#include <memory>
+
 
 namespace Krayo {
 namespace Component {
@@ -13,9 +15,9 @@ protected:
     friend class Krayo::Map;
     friend class Krayo::Object;
 
-    Internal::IComponent* mImpl;
+    std::shared_ptr<Internal::IComponent> mImpl;
 
-    IComponent(Internal::IComponent* impl);
+    IComponent(const std::shared_ptr<Internal::IComponent>& impl);
 
 public:
     KRAYO_API virtual ~IComponent() = default;

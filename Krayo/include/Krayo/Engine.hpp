@@ -86,12 +86,12 @@ public:
     /**
      * Create a new Map in engine
      */
-    KRAYO_API Krayo::Map* CreateMap(const std::string& name);
+    KRAYO_API Krayo::Map CreateMap(const std::string& name);
 
     /**
      * Set Map to be used as a current one for Renderer
      */
-    KRAYO_API void SetCurrentMap(Krayo::Map* map);
+    KRAYO_API void SetCurrentMap(Krayo::Map& map);
 
     /**
      * @defgroup EventAPI Event API

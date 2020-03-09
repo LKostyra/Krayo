@@ -10,7 +10,7 @@ class Model final: public IComponent
 {
     friend class Krayo::Map;
 
-    Model(Internal::Model* impl);
+    Model(const std::shared_ptr<Internal::Model>& impl);
 
 public:
     KRAYO_API ~Model();

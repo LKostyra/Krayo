@@ -8,7 +8,7 @@
 namespace Krayo {
 namespace Component {
 
-Transform::Transform(Internal::Transform* impl)
+Transform::Transform(const std::shared_ptr<Internal::Transform>& impl)
     : IComponent(impl)
 {
     LOGD("Transform's Component ID: " << impl->GetTypeID());

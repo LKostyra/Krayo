@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\API\Component\Camera.cpp" />
     <ClCompile Include="source\API\Component\IComponent.cpp" />
     <ClCompile Include="source\API\Component\Model.cpp" />
     <ClCompile Include="source\API\Component\Transform.cpp" />
@@ -21,6 +22,7 @@
     <ClCompile Include="source\API\Resource\IResource.cpp" />
     <ClCompile Include="source\API\Resource\Manager.cpp" />
     <ClCompile Include="source\API\Resource\Model.cpp" />
+    <ClCompile Include="source\Component\Camera.cpp" />
     <ClCompile Include="source\Component\IComponent.cpp" />
     <ClCompile Include="source\Component\Model.cpp" />
     <ClCompile Include="source\Component\Transform.cpp" />
@@ -95,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp" />
     <ClInclude Include="include\Krayo\ApiPrerequisites.hpp" />
+    <ClInclude Include="include\Krayo\Component\Camera.hpp" />
     <ClInclude Include="include\Krayo\Component\IComponent.hpp" />
     <ClInclude Include="include\Krayo\Component\Model.hpp" />
     <ClInclude Include="include\Krayo\Component\Transform.hpp" />
@@ -107,6 +110,7 @@
     <ClInclude Include="include\Krayo\Resource\Manager.hpp" />
     <ClInclude Include="include\Krayo\Resource\Model.hpp" />
     <ClInclude Include="include\Krayo\Resource\Type.hpp" />
+    <ClInclude Include="source\Component\Camera.hpp" />
     <ClInclude Include="source\Component\IComponent.hpp" />
     <ClInclude Include="source\Component\Model.hpp" />
     <ClInclude Include="source\Component\Transform.hpp" />

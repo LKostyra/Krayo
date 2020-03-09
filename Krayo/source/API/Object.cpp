@@ -5,14 +5,14 @@
 
 namespace Krayo {
 
-Object::Object(Internal::Object* impl)
+Object::Object(const std::shared_ptr<Internal::Object>& impl)
     : mImpl(impl)
 {
 }
 
-void Object::AttachComponent(Component::IComponent* component)
+void Object::AttachComponent(Component::IComponent& component)
 {
-    mImpl->AttachComponent(component->mImpl);
+    mImpl->AttachComponent(component.mImpl);
 }
 
 } // namespace Krayo

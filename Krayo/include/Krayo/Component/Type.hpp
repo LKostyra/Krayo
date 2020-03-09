@@ -8,8 +8,9 @@ enum class Type: unsigned char
 {
     Model = 0,
     Transform,
-    Light,
-    Emitter,
+    Camera,
+    //Light,
+    //Emitter,
     Count
 };
 

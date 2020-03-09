@@ -12,14 +12,14 @@ class Object final
 {
     friend class Krayo::Map;
 
-    Internal::Object* mImpl;
+    std::shared_ptr<Internal::Object> mImpl;
 
-    Object(Internal::Object* impl);
+    Object(const std::shared_ptr<Internal::Object>& impl);
 
 public:
     KRAYO_API ~Object() = default;
 
-    KRAYO_API void AttachComponent(Component::IComponent* component);
+    KRAYO_API void AttachComponent(Component::IComponent& component);
 };
 
 } // namespace Krayo

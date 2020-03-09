@@ -70,17 +70,17 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Krayo::Map* map = engine.CreateMap("TEST");
+    Krayo::Map map = engine.CreateMap("TEST");
     engine.SetCurrentMap(map);
 
-    Krayo::Component::Model* mc = map->CreateModelComponent("cubeComponent");
-    mc->AttachResource(modelRes);
+    Krayo::Component::Model mc = map.CreateModelComponent("cubeComponent");
+    mc.AttachResource(modelRes);
 
-    Krayo::Component::Transform* tc = map->CreateTransformComponent("cubeTransform");
+    Krayo::Component::Transform tc = map.CreateTransformComponent("cubeTransform");
 
-    Krayo::Object* o = map->CreateObject("cubeObject");
-    o->AttachComponent(mc);
-    o->AttachComponent(tc);
+    Krayo::Object o = map.CreateObject("cubeObject");
+    o.AttachComponent(mc);
+    o.AttachComponent(tc);
 
     engine.MainLoop();
 

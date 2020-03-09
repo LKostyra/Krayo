@@ -252,6 +252,12 @@
     <ClCompile Include="source\Resource\Texture.cpp">
       <Filter>source\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="source\Component\Camera.cpp">
+      <Filter>source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="source\API\Component\Camera.cpp">
+      <Filter>source\API\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Krayo\ApiDef.hpp">
@@ -478,6 +484,12 @@
     </ClInclude>
     <ClInclude Include="source\Utils\ModelFile\IFileData.hpp">
       <Filter>source\Utils\ModelFile</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\Camera.hpp">
+      <Filter>source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Krayo\Component\Camera.hpp">
+      <Filter>include\Krayo\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

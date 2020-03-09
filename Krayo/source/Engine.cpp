@@ -250,16 +250,16 @@ void Engine::MainLoop()
     }
 }
 
-Internal::Map* Engine::CreateMap(const std::string& name)
+std::shared_ptr<Internal::Map>& Engine::CreateMap(const std::string& name)
 {
-    mMaps.emplace_back(name);
-    return &mMaps.back();
+    mMaps.emplace_back(new Internal::Map(name));
+    return mMaps.back();
 }
 
-void Engine::SetCurrentMap(Internal::Map* map)
+void Engine::SetCurrentMap(std::shared_ptr<Internal::Map>& map)
 {
     mCurrentMap = map;
-    LOGD("Set map " << reinterpret_cast<void*>(mCurrentMap));
+    LOGD("Set map " << reinterpret_cast<void*>(mCurrentMap.get()));
 }
 
 Krayo::Resource::Manager& Engine::GetResourceManager()

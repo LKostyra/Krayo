@@ -8,7 +8,7 @@
 namespace Krayo {
 namespace Component {
 
-Model::Model(Internal::Model* impl)
+Model::Model(const std::shared_ptr<Internal::Model>& impl)
     : IComponent(impl)
 {
     LOGD("Model's Component ID: " << impl->GetTypeID());
@@ -20,7 +20,7 @@ Model::~Model()
 
 void Model::AttachResource(Resource::Model modelRes)
 {
-    dynamic_cast<Component::Internal::Model*>(mImpl)->AttachResource(
+    std::dynamic_pointer_cast<Internal::Model>(mImpl)->AttachResource(
         std::dynamic_pointer_cast<Resource::Internal::Model>(modelRes.mImpl)
     );
 }
