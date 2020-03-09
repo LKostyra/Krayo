@@ -80,10 +80,6 @@ bool Instance::Init(VkDebugReportFlagsEXT debugFlags)
     #error "Target platform not supported."
 #endif
 
-    const char* enabledLayers[] = {
-        "VK_LAYER_LUNARG_standard_validation"
-    };
-
     VkInstanceCreateInfo instInfo;
     LKCOMMON_ZERO_MEMORY(instInfo);
     instInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -91,8 +87,15 @@ bool Instance::Init(VkDebugReportFlagsEXT debugFlags)
     instInfo.pApplicationInfo = &appInfo;
     instInfo.enabledExtensionCount = static_cast<uint32_t>(enabledExtensions.size());
     instInfo.ppEnabledExtensionNames = enabledExtensions.data();
-    instInfo.enabledLayerCount = 1;
-    instInfo.ppEnabledLayerNames = enabledLayers;
+    if (debugFlags)
+    {
+        const char* enabledLayers[] = {
+            "VK_LAYER_LUNARG_standard_validation"
+        };
+
+        instInfo.enabledLayerCount = 1;
+        instInfo.ppEnabledLayerNames = enabledLayers;
+    }
 
     VkResult result = vkCreateInstance(&instInfo, nullptr, &mInstance);
     RETURN_FALSE_IF_FAILED(result, "Failed to create Vulkan Instance");

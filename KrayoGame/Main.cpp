@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 #endif
 
     Krayo::EngineDesc engineDesc;
-    engineDesc.debug = debug;
+    engineDesc.debug = false;//debug;
     engineDesc.debugVerbose = true;
     engineDesc.vsync = true;
     engineDesc.windowWidth = 1280;
