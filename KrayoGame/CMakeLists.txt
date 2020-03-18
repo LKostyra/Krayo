@@ -1,5 +1,5 @@
 PKG_CHECK_MODULES(KRAYOGAME_PKG_DEPS REQUIRED
-                  xcb xcb-image
+                  xcb xcb-image libxml-2.0
                   )
 
 SET(KRAYOGAME_SRCS Main.cpp

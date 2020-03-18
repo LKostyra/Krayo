@@ -2,6 +2,7 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Engine.cpp
                source/Map.cpp
                source/Object.cpp
+               source/Component/Camera.cpp
                source/Component/IComponent.cpp
                source/Component/Model.cpp
                source/Component/Transform.cpp
@@ -40,7 +41,9 @@ SET(KRAYO_SRCS source/ResourceDir.cpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.cpp
                source/Resource/IResource.cpp
                source/Resource/Manager.cpp
+               source/Resource/Material.cpp
                source/Resource/Model.cpp
+               source/Resource/Texture.cpp
                source/Utils/ModelLoader.cpp
                source/Utils/TypeID.cpp
                source/Utils/ModelFile/FBXModelFile.cpp
@@ -57,6 +60,7 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Object.hpp
                source/Prerequisites.hpp
                source/ResourceDir.hpp
+               source/Component/Camera.cpp
                source/Component/IComponent.hpp
                source/Component/Model.hpp
                source/Component/Transform.hpp
@@ -97,7 +101,9 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Renderer/HighLevel/ShaderMacroDefinitions.hpp
                source/Resource/IResource.hpp
                source/Resource/Manager.hpp
+               source/Resource/Material.hpp
                source/Resource/Model.hpp
+               source/Resource/Texture.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/TypeID.hpp
@@ -117,6 +123,7 @@ SET(KRAYO_API_SRCS source/API/Engine.cpp
                    source/API/Events.cpp
                    source/API/Map.cpp
                    source/API/Object.cpp
+                   source/API/Component/Camera.cpp
                    source/API/Component/IComponent.cpp
                    source/API/Component/Model.cpp
                    source/API/Component/Transform.cpp
@@ -131,6 +138,7 @@ SET(KRAYO_API_HDRS include/Krayo/ApiDef.hpp
                    include/Krayo/Events.hpp
                    include/Krayo/Map.hpp
                    include/Krayo/Object.hpp
+                   include/Krayo/Component/Camera.hpp
                    include/Krayo/Component/IComponent.hpp
                    include/Krayo/Component/Model.hpp
                    include/Krayo/Component/Transform.hpp

@@ -4,6 +4,7 @@
 #include <lkCommon/System/FS.hpp>
 #include <rapidjson/document.h>
 #include <fstream>
+#include <algorithm>
 
 
 namespace {
