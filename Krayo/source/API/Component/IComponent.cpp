@@ -4,8 +4,8 @@
 namespace Krayo {
 namespace Component {
 
-IComponent::IComponent(const std::shared_ptr<Internal::IComponent>& impl)
-    : mImpl(impl)
+IComponent::IComponent(const ComponentID id)
+    : mID(id)
 {
 }
 

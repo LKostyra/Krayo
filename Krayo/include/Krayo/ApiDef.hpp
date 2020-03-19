@@ -19,3 +19,5 @@
         #define KRAYO_API
     #endif
 #endif
+
+#define KRAYO_INVALID_ID(idType) static_cast<idType>(-1)

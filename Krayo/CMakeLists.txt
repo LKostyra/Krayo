@@ -104,6 +104,8 @@ SET(KRAYO_HDRS source/Engine.hpp
                source/Resource/Material.hpp
                source/Resource/Model.hpp
                source/Resource/Texture.hpp
+               source/Utils/Container.hpp
+               source/Utils/ContainerImpl.hpp
                source/Utils/ModelLoader.hpp
                source/Utils/Traits.hpp
                source/Utils/TypeID.hpp

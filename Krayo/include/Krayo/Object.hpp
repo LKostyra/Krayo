@@ -8,6 +8,8 @@
 
 namespace Krayo {
 
+using ObjectID = uint32_t;
+
 class Object final
 {
     friend class Krayo::Map;

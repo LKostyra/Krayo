@@ -1,9 +1,12 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <array>
+
+#include <lkCommon/Utils/Logger.hpp>
 
 #include "Component/IComponent.hpp"
+#include "Krayo/Component/Type.hpp"
 
 
 namespace Krayo {
@@ -12,19 +15,29 @@ namespace Internal {
 class Object final
 {
     std::string mName;
-
-    std::vector<std::shared_ptr<Component::Internal::IComponent>> mComponents;
+    std::array<Component::ComponentID, static_cast<size_t>(Component::Type::Count)> mComponents;
 
 public:
-    Object(const std::string& name);
+    Object::Object(const std::string& name)
+        : mName(name)
+        , mComponents()
+    {
+    }
+
     ~Object() = default;
 
-    void AttachComponent(std::shared_ptr<Component::Internal::IComponent>& component);
+    template <typename T>
+    void AttachComponent(Component::ComponentID componentID)
+    {
+        mComponents[T::GetTypeIDStatic()] = componentID;
+        LOGD("Attached component " << componentID << " as type " << T::GetTypeIDStatic());
+    }
 
     template <typename T>
     const T* GetComponent() const
     {
-        return dynamic_cast<T*>(mComponents[T::GetTypeIDStatic()].get());
+        const Component::ComponentID id = mComponents[T::GetTypeIDStatic()];
+        return dynamic_cast<T*>();
     }
 };
 

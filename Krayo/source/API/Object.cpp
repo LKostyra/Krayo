@@ -12,7 +12,7 @@ Object::Object(const std::shared_ptr<Internal::Object>& impl)
 
 void Object::AttachComponent(Component::IComponent& component)
 {
-    mImpl->AttachComponent(component.mImpl);
+    mImpl->AttachComponent(component.mID);
 }
 
 } // namespace Krayo

@@ -491,6 +491,12 @@
     <ClInclude Include="include\Krayo\Component\Camera.hpp">
       <Filter>include\Krayo\Component</Filter>
     </ClInclude>
+    <ClInclude Include="source\Utils\ContainerImpl.hpp">
+      <Filter>source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\Container.hpp">
+      <Filter>source\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

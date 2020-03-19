@@ -27,7 +27,8 @@ class Map
     std::string mName;
     std::shared_ptr<Component::Internal::IComponent> mNullComponent;
     std::vector<ComponentContainer> mComponentContainers;
-    Container<Object> mObjectContainer;
+    Container<Internal::Object> mObjectContainer;
+    std::shared_ptr<Internal::Object> mActiveCamera;
 
     template <typename T>
     std::shared_ptr<Component::Internal::IComponent>& CreateComponentGeneric(ComponentContainer& c, const std::string& name);
@@ -39,6 +40,7 @@ public:
 
     std::shared_ptr<Component::Internal::IComponent>& CreateComponent(Component::Type type, const std::string& name);
     std::shared_ptr<Internal::Object>& CreateObject(const std::string& name);
+    bool SetActiveCamera(const std::shared_ptr<Internal::Object>& camera);
 
     void ForEachObject(const Callback<Object>& callback) const;
 

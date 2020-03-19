@@ -15,6 +15,11 @@ class Camera: public ComponentBase<Camera>
 
 public:
     Camera(const std::string& name);
+
+    LKCOMMON_INLINE const lkCommon::Math::Matrix4& GetView() const
+    {
+        return mView;
+    }
 };
 
 } // namespace Internal

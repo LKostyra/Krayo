@@ -53,6 +53,18 @@ std::shared_ptr<Internal::Object>& Map::CreateObject(const std::string& name)
     return mObjectContainer.back();
 }
 
+bool Map::SetActiveCamera(const std::shared_ptr<Internal::Object>& camera)
+{
+    if (camera->GetComponent<Component::Internal::Camera>() == nullptr)
+    {
+        LOGE("Object has no Camera component!");
+        return false;
+    }
+
+    mActiveCamera = camera;
+    return true;
+}
+
 void Map::ForEachObject(const Callback<Object>& callback) const
 {
     for (const auto& o: mObjectContainer)
